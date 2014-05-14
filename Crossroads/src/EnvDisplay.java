@@ -72,8 +72,13 @@ public class EnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//run the agent
-				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(1000);
+				//for(int i = 0; i < 1000; i++){
+				//	goal = env.chooseGoal().getName();
+				//	start = env.chooseStart().getName();
+					agent.setEnv(env, start, goal, n);
+					agent.learnTrial(1000);
+					//agent.learnTrial(1);
+				//}
 				
 				double[] vals = agent.getValues();
 				for(int i = 0; i < vals.length; i++){

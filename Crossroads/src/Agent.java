@@ -1,3 +1,7 @@
+/**
+ * @author vkovec
+ *
+ */
 public abstract class Agent{
 	protected Environment env;
 	
@@ -7,9 +11,11 @@ public abstract class Agent{
 	
 	protected String[] actions = {"up", "down", "left", "right"};
 	
-	//values
-	//Q-values (?)
-	//policy
+	//the policy that we find after learning
+	protected String[] policy = null;
+	
+	//the Q-values that we find after learning
+	protected double[][] qValues = null;
 	
 	public void setEnv(Environment e, int start, int goal, int n){
 		env = e;
@@ -18,11 +24,32 @@ public abstract class Agent{
 		if(values == null){
 			values = new double[2*n-1];
 		}
+		if(qValues == null){
+			qValues = new double[2*n-1][4];
+		}
+		if(policy == null){
+			policy = new String[2*n-1];
+		}
 	}
 	
 	public double[] getValues(){
 		return values;
 	}
+	
+	public double[][] getQValues(){
+		return qValues;
+	}
+	
+	/**
+	 * @param isQ whether or not we want to find the policy using Q-values
+	 * @return the policy
+	 */
+	/*public String[] getPolicy(boolean isQ){
+		if(!isQ){
+			
+		}
+		return policy;
+	}*/
 	
 	//public abstract double[] learn(State start, State goal, double[] initialVals, int steps);
 	public abstract void learn(int steps);
