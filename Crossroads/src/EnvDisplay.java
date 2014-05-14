@@ -1,0 +1,162 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+@SuppressWarnings("serial")
+public class EnvDisplay extends JFrame{
+	
+	private Environment env;
+	private int n;
+	private int start;
+	private int goal;
+	private int prev = -1;
+	
+	private Agent agent;
+	
+	private JPanel[][] grid;
+	private ArrayList<JLabel> labels;
+	
+	private DecimalFormat df;
+	
+	public EnvDisplay(int n, Agent a){
+		df = new DecimalFormat("#.###");
+		
+		this.setTitle("Crossroads");
+		
+		this.n = n;
+		
+		env = new Environment();
+		env.initializeStates(n);
+		
+		agent = a;
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public void createDisplay(){
+		displayEnv();
+		
+		//add button to set up agent and goal state
+		JButton setUp = new JButton("Setup");
+		//setUp.setPreferredSize(new Dimension(50,50));
+		setUp.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//clear previous start and goal
+				labels.get(goal).setText("");
+				labels.get(start).setText("");
+				
+				goal = env.chooseGoal().getName();
+				start = env.chooseStart().getName();
+				
+				labels.get(goal).setText("goal");
+				labels.get(start).setText("start");
+			}
+		});
+		grid[0][0].add(setUp);
+		
+		//add button to run the agent, and display the results
+		JButton trial = new JButton("Trial");
+		trial.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//run the agent
+				agent.setEnv(env, start, goal, n);
+				agent.learnTrial(1000);
+				
+				double[] vals = agent.getValues();
+				for(int i = 0; i < vals.length; i++){
+					if(i != start && i != goal){
+						labels.get(i).setText("" + df.format(vals[i]));
+					}
+				}
+			}
+		});
+		grid[1][0].add(trial);
+		
+		//step through what the agent does
+		JButton step = new JButton("Step");
+		step.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//run the agent
+				agent.setEnv(env, start, goal, n);
+				agent.learn(1);
+				
+				if(prev > -1){
+					labels.get(prev).setText("");
+				}
+				prev = env.getCurrentState();
+				labels.get(prev).setText("curr");
+			}
+		});
+		grid[2][0].add(step);
+	}
+	
+	//start with creating and displaying the environment
+	public void displayEnv(){
+		initializeGrid();
+		
+		//we are going to need 2*n-1 grid labels to represent the crossroads
+		labels = new ArrayList<JLabel>();
+		
+		JLabel label;
+		for(int i = 0; i < 2*n-1; i++){
+			label = new JLabel();
+			
+			//add a border to the label
+			Border border = BorderFactory.createLineBorder(Color.BLACK, 3);
+			label.setBorder(border);
+			
+			label.setPreferredSize(new Dimension(70,70));
+			labels.add(label);
+		}
+		
+		//the first n should make a vertical line down the middle of the JFrame
+		for(int i = 0; i < n; i++){
+			grid[i][n/2].add(labels.get(i));
+		}
+		
+		//the rest should make a horizontal line
+		for(int i = n; i < 2*n-1; i++){
+			if(i-n >= n/2){
+				grid[n/2][i-n+1].add(labels.get(i));
+			}
+			else{
+				grid[n/2][i-n].add(labels.get(i));
+			}
+		}
+	}
+	
+	public void initializeGrid(){
+		setLayout(new GridLayout(n,n));
+		
+		grid = new JPanel[n][n];
+		
+		for(int i = 0; i < n; i ++){
+			for(int j = 0; j < n; j++){
+				grid[i][j] = new JPanel();
+				add(grid[i][j]);
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		EnvDisplay e = new EnvDisplay(11, new TDLearning());
+		e.createDisplay();
+		e.pack();
+		e.setVisible(true);
+	}
+	
+}
