@@ -14,6 +14,10 @@ public abstract class Agent{
 	//the policy that we find after learning
 	protected String[] policy = null;
 	
+	//for stochastic policies
+	//(i.e. probability of taking action a in state s)
+	protected double[][] sPolicy = null;
+	
 	//the Q-values that we find after learning
 	protected double[][] qValues = null;
 	
@@ -29,6 +33,9 @@ public abstract class Agent{
 		}
 		if(policy == null){
 			policy = new String[2*n-1];
+		}
+		if(sPolicy == null){
+			sPolicy = new double[2*n-1][4];
 		}
 	}
 	

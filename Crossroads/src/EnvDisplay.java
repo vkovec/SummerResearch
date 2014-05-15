@@ -55,13 +55,17 @@ public class EnvDisplay extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				//clear previous start and goal
 				labels.get(goal).setText("");
+				labels.get(goal).setBackground(Color.WHITE);
 				labels.get(start).setText("");
+				labels.get(start).setBackground(Color.WHITE);
 				
 				goal = env.chooseGoal().getName();
 				start = env.chooseStart().getName();
 				
 				labels.get(goal).setText("goal");
+				labels.get(goal).setBackground(Color.GREEN);
 				labels.get(start).setText("start");
+				labels.get(start).setBackground(Color.BLUE);
 			}
 		});
 		grid[0][0].add(setUp);
@@ -90,6 +94,30 @@ public class EnvDisplay extends JFrame{
 		});
 		grid[1][0].add(trial);
 		
+		//for learning algorithms that use Q-values instead
+		//just averaging the Q-values for each action
+		JButton qtrial = new JButton("QTrial");
+		qtrial.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				agent.setEnv(env, start, goal, n);
+				agent.learnTrial(1000);
+				
+				double[][] qVals = agent.getQValues();
+				for(int i = 0; i < qVals.length; i++){
+					if(i != start && i != goal){
+						double val = 0;
+						//average the values for each action
+						for(int j = 0; j < 4; j++){
+							val = val + qVals[i][j];
+						}
+						labels.get(i).setText("" + df.format(val/4));
+					}
+				}
+			}
+		});
+		grid[2][0].add(qtrial);
+		
 		//step through what the agent does
 		JButton step = new JButton("Step");
 		step.addActionListener(new ActionListener(){
@@ -106,7 +134,7 @@ public class EnvDisplay extends JFrame{
 				labels.get(prev).setText("curr");
 			}
 		});
-		grid[2][0].add(step);
+		grid[3][0].add(step);
 	}
 	
 	//start with creating and displaying the environment
@@ -119,6 +147,8 @@ public class EnvDisplay extends JFrame{
 		JLabel label;
 		for(int i = 0; i < 2*n-1; i++){
 			label = new JLabel();
+			
+			label.setOpaque(true);
 			
 			//add a border to the label
 			Border border = BorderFactory.createLineBorder(Color.BLACK, 3);
@@ -158,7 +188,7 @@ public class EnvDisplay extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		EnvDisplay e = new EnvDisplay(11, new TDLearning());
+		EnvDisplay e = new EnvDisplay(11, new QLearning());
 		e.createDisplay();
 		e.pack();
 		e.setVisible(true);
