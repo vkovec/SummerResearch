@@ -76,13 +76,13 @@ public class EnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//run the agent
-				//for(int i = 0; i < 1000; i++){
-				//	goal = env.chooseGoal().getName();
-				//	start = env.chooseStart().getName();
+				for(int i = 0; i < 1000; i++){
+					goal = env.chooseGoal().getName();
+					start = env.chooseStart().getName();
 					agent.setEnv(env, start, goal, n);
-					agent.learnTrial(1000);
-					//agent.learnTrial(1);
-				//}
+					//agent.learnTrial(1000);
+					agent.learnTrial(1);
+				}
 				
 				double[] vals = agent.getValues();
 				for(int i = 0; i < vals.length; i++){
@@ -100,8 +100,16 @@ public class EnvDisplay extends JFrame{
 		qtrial.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//run the agent
+				/*for(int i = 0; i < 1000; i++){
+					goal = env.chooseGoal().getName();
+					start = env.chooseStart().getName();
+					agent.setEnv(env, start, goal, n);
+					agent.learnTrial(1);
+				}*/
+				
 				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(1000);
+				agent.learnTrial(10);
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -188,7 +196,7 @@ public class EnvDisplay extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		EnvDisplay e = new EnvDisplay(11, new QLearning());
+		EnvDisplay e = new EnvDisplay(11, new InfTheoryLearning());
 		e.createDisplay();
 		e.pack();
 		e.setVisible(true);
