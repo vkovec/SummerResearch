@@ -70,7 +70,8 @@ public class InfTheoryLearning extends Agent{
 			//a)
 			
 			//b)
-			randomizePolicy(qPolicy);
+			//randomizePolicy(qPolicy);
+			qPolicy = sPolicy;
 			
 			//c)
 			
