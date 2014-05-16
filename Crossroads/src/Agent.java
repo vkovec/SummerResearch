@@ -66,10 +66,10 @@ public abstract class Agent{
 			learn(100);
 			env.gotoState(startState);
 		}
-		for(int i = 0; i < sPolicy.length; i++){
+		/*for(int i = 0; i < sPolicy.length; i++){
 			for(int j = 0; j < actions.length; j++){
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
-		}
+		}*/
 	}
 }

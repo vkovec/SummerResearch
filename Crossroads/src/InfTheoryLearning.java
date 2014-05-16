@@ -115,6 +115,18 @@ public class InfTheoryLearning extends Agent{
 			//a)
 				//how to do this calculation?
 				//for now just use whatever was calculated in c)
+				//update ps
+				//this causes NaN (sPolicy is NaN for some reason)
+				/*for(int j = 0; j < ps.length; j++){
+					double sum = 0;
+					for(int x = 0; x < ps.length; x++){
+						for(int a = 0; a < 4; a++){
+							sum += p[x][a][j]*sPolicy[x][a]*ps[x];
+						}
+					}
+					ps[j] = sum;
+				}*/
+			
 			
 			//b)
 			//randomizePolicy(qPolicy);
@@ -219,6 +231,16 @@ public class InfTheoryLearning extends Agent{
 						}*/
 					}
 				}
+				
+				//p should get closer to 1 for going up from state 0 to state 0, because
+				//this will always happen
+				//only transition policy for the up action even changes
+				//probability that we go up in general gets progressively worse, yet we still
+				//have our policy be to go up...
+				//pa just gets continuously worse for every action
+				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[0]);
+				//printSum(pa); //should be 1
+				//printSum(ps); //should be 1 as well
 			}
 			sPolicy = q;
 			
@@ -257,6 +279,15 @@ public class InfTheoryLearning extends Agent{
 				}
 			}*/
 		}
+	}
+	
+	
+	private void printSum(double[] a){
+		double sum = 0;
+		for(int i = 0; i < a.length; i++){
+			sum += a[i];
+		}
+		System.out.println(sum);
 	}
 
 }
