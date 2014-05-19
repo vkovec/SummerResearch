@@ -109,7 +109,7 @@ public class EnvDisplay extends JFrame{
 				}*/
 				
 				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(1);
+				agent.learnTrial(10);
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -196,7 +196,7 @@ public class EnvDisplay extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		EnvDisplay e = new EnvDisplay(11, new InfTheoryLearning());
+		EnvDisplay e = new EnvDisplay(11, new InfTheoryLearning(11));
 		e.createDisplay();
 		e.pack();
 		e.setVisible(true);

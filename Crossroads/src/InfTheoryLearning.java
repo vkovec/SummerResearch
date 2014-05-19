@@ -1,5 +1,45 @@
 public class InfTheoryLearning extends Agent{
 
+	//the probability distribution for states and actions
+	private double[][][] p = null;
+	private double[][] q;
+	private double[] ps;
+	private double[] pa;
+	
+	public InfTheoryLearning(int n){
+		super(n);
+		if(p == null){
+			p = new double[sPolicy.length][4][sPolicy.length];
+			for(int x = 0; x < p.length; x ++){
+				for(int a = 0; a < actions.length; a++){
+					for(int s = 0; s < p.length; s++){
+						p[x][a][s] = 1.0/p.length;
+					}
+				}
+			}
+			
+			//initialize the policy to a uniformly random policy
+			randomizePolicy(sPolicy);
+			
+			//the q(a|x) policy
+			q = new double[sPolicy.length][4];
+			
+			ps = new double[sPolicy.length];
+			
+			//initially just give all states equal probability
+			for(int i = 0; i < ps.length; i++){
+				ps[i] = 1.0/ps.length;
+			}
+			
+			pa = new double[4];
+			
+			//initially just give all actions equal probability
+			for(int i = 0; i < pa.length; i++){
+				pa[i] = 1.0/pa.length;
+			}
+		}
+	}
+	
 	private void randomizePolicy(double[][] policy){
 		for(int i = 0; i < policy.length; i++){
 			for(int j = 0; j < 4; j++){
@@ -93,14 +133,14 @@ public class InfTheoryLearning extends Agent{
 		
 		//probability matrix estimate
 		//given the current state and action, what is the probability of the next state being s'
-		double[][][] p = new double[sPolicy.length][4][sPolicy.length];
+		//double[][][] p = new double[sPolicy.length][4][sPolicy.length];
 		
 		//just randomize to begin? or set to 0?
 		//make p uniformly random
 		for(int x = 0; x < p.length; x ++){
 			for(int a = 0; a < actions.length; a++){
 				for(int s = 0; s < p.length; s++){
-					p[x][a][s] = 1.0/(p.length*actions.length*p.length);
+					p[x][a][s] = 1.0/p.length;
 				}
 			}
 		}
@@ -117,7 +157,7 @@ public class InfTheoryLearning extends Agent{
 				//for now just use whatever was calculated in c)
 				//update ps
 				//this causes NaN (sPolicy is NaN for some reason)
-				/*for(int j = 0; j < ps.length; j++){
+				for(int j = 0; j < ps.length; j++){
 					double sum = 0;
 					for(int x = 0; x < ps.length; x++){
 						for(int a = 0; a < 4; a++){
@@ -125,7 +165,7 @@ public class InfTheoryLearning extends Agent{
 						}
 					}
 					ps[j] = sum;
-				}*/
+				}
 			
 			
 			//b)
@@ -137,7 +177,7 @@ public class InfTheoryLearning extends Agent{
 					//maybe difference between the two probability distributions using D(qj, qj+1)?
 			double[][] qPrev = new double[q.length][4];
 
-			while(Math.abs(getDistrDiff(q, qPrev)) > 0.5){ //this may be completely wrong
+			while(Math.abs(getDistrDiff(q, qPrev)) > 1){ //this may be completely wrong
 
 				qPrev = q;
 

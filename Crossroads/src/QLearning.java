@@ -2,6 +2,10 @@ import java.util.Random;
 
 public class QLearning extends Agent{
 
+	public QLearning(int n) {
+		super(n);
+	}
+
 	public String findBestAction(int s){
 		//action that has given us the best Q values so far for this state
 		String best = null;

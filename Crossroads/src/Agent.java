@@ -25,6 +25,21 @@ public abstract class Agent{
 		env = e;
 		startState = start;
 		goalState = goal;
+		/*if(values == null){
+			values = new double[2*n-1];
+		}
+		if(qValues == null){
+			qValues = new double[2*n-1][4];
+		}
+		if(policy == null){
+			policy = new String[2*n-1];
+		}
+		if(sPolicy == null){
+			sPolicy = new double[2*n-1][4];
+		}*/
+	}
+	
+	public Agent(int n){
 		if(values == null){
 			values = new double[2*n-1];
 		}

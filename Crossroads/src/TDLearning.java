@@ -2,6 +2,10 @@ import java.util.Random;
 
 public class TDLearning extends Agent{
 
+	public TDLearning(int n) {
+		super(n);
+	}
+
 	@Override
 	public void learn(int steps) {
 		//need to input a policy to be evaluated...
