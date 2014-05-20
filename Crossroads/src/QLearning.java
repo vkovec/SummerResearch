@@ -33,14 +33,14 @@ public class QLearning extends Agent{
 		return best;
 	}
 	
-	private int getActionIndex(String action){
+	/*private int getActionIndex(String action){
 		for(int i = 0; i < 4; i++){
 			if(actions[i].equals(action)){
 				return i;
 			}
 		}
 		return -1;
-	}
+	}*/
 	
 	private double getMaxQ(int state){
 		double currBest = Integer.MIN_VALUE;

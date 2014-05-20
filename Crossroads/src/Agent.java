@@ -12,7 +12,7 @@ public abstract class Agent{
 	protected String[] actions = {"up", "down", "left", "right"};
 	
 	//the policy that we find after learning
-	protected String[] policy = null;
+	//protected String[] policy = null;
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -20,6 +20,15 @@ public abstract class Agent{
 	
 	//the Q-values that we find after learning
 	protected double[][] qValues = null;
+	
+	protected int getActionIndex(String action){
+		for(int i = 0; i < 4; i++){
+			if(actions[i].equals(action)){
+				return i;
+			}
+		}
+		return -1;
+	}
 	
 	public void setEnv(Environment e, int start, int goal, int n){
 		env = e;
@@ -46,9 +55,9 @@ public abstract class Agent{
 		if(qValues == null){
 			qValues = new double[2*n-1][4];
 		}
-		if(policy == null){
+		/*if(policy == null){
 			policy = new String[2*n-1];
-		}
+		}*/
 		if(sPolicy == null){
 			sPolicy = new double[2*n-1][4];
 		}
@@ -63,15 +72,36 @@ public abstract class Agent{
 	}
 	
 	/**
-	 * @param isQ whether or not we want to find the policy using Q-values
 	 * @return the policy
 	 */
-	/*public String[] getPolicy(boolean isQ){
-		if(!isQ){
-			
+	public String[] getPolicy(){
+		String[] policy = new String[values.length];
+		//use stochastic policy to get deterministic policy
+		for(int x = 0; x < sPolicy.length; x++){
+			int action = 0;
+			for(int a = 0; a < actions.length; a++){
+				if(sPolicy[x][a] > sPolicy[x][action]){
+					action = a;
+				}
+			}
+			switch(action){
+				case 0: 
+					policy[x] = "^";
+					break;
+				case 1:
+					policy[x] = "v";
+					break;
+				case 2:
+					policy[x] = "<";
+					break;
+				case 3:
+					policy[x] = ">";
+					break;
+			}
 		}
+		
 		return policy;
-	}*/
+	}
 	
 	//public abstract double[] learn(State start, State goal, double[] initialVals, int steps);
 	public abstract void learn(int steps);
@@ -81,10 +111,10 @@ public abstract class Agent{
 			learn(100);
 			env.gotoState(startState);
 		}
-		/*for(int i = 0; i < sPolicy.length; i++){
+		for(int i = 0; i < sPolicy.length; i++){
 			for(int j = 0; j < actions.length; j++){
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
-		}*/
+		}
 	}
 }

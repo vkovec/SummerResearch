@@ -109,7 +109,7 @@ public class EnvDisplay extends JFrame{
 				}*/
 				
 				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(10);
+				agent.learnTrial(1000);
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -117,14 +117,33 @@ public class EnvDisplay extends JFrame{
 						double val = 0;
 						//average the values for each action
 						for(int j = 0; j < 4; j++){
-							val = val + qVals[i][j];
+							//val = val + qVals[i][j];
+							if(qVals[i][j] > val){
+								val = qVals[i][j];
+							}
 						}
-						labels.get(i).setText("" + df.format(val/4));
+						labels.get(i).setText("" + df.format(val));
 					}
 				}
 			}
 		});
 		grid[2][0].add(qtrial);
+		
+		//display the policy found
+		JButton policy = new JButton("Policy");
+		policy.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] p = agent.getPolicy();
+				
+				for(int i = 0; i < p.length; i++){
+					if(i != start && i != goal){
+						labels.get(i).setText(p[i]);
+					}
+				}
+			}
+		});
+		grid[3][0].add(policy);
 		
 		//step through what the agent does
 		JButton step = new JButton("Step");
@@ -142,7 +161,7 @@ public class EnvDisplay extends JFrame{
 				labels.get(prev).setText("curr");
 			}
 		});
-		grid[3][0].add(step);
+		grid[4][0].add(step);
 	}
 	
 	//start with creating and displaying the environment

@@ -3,8 +3,10 @@ public class InfTheoryLearning extends Agent{
 	//the probability distribution for states and actions
 	private double[][][] p = null;
 	private double[][] q;
-	private double[] ps;
-	private double[] pa;
+	private double[][] ps; //this has to be based on time
+
+	private double lambda = 100;
+	private double alpha = 5;
 	
 	public InfTheoryLearning(int n){
 		super(n);
@@ -17,6 +19,7 @@ public class InfTheoryLearning extends Agent{
 					}
 				}
 			}
+			//initializeP();
 			
 			//initialize the policy to a uniformly random policy
 			randomizePolicy(sPolicy);
@@ -24,18 +27,118 @@ public class InfTheoryLearning extends Agent{
 			//the q(a|x) policy
 			q = new double[sPolicy.length][4];
 			
-			ps = new double[sPolicy.length];
+			//assuming 100 time steps
+			ps = new double[100][sPolicy.length];
 			
-			//initially just give all states equal probability
-			for(int i = 0; i < ps.length; i++){
-				ps[i] = 1.0/ps.length;
+			for(int i = 0; i < 100; i++){
+				for(int j = 0; j < sPolicy.length; j++){
+					ps[i][j] = 1.0/sPolicy.length;
+				}
 			}
-			
-			pa = new double[4];
-			
-			//initially just give all actions equal probability
-			for(int i = 0; i < pa.length; i++){
-				pa[i] = 1.0/pa.length;
+		}
+	}
+	
+	//initialize the probability distribution over
+	//state and action combinations
+	private void initializeP(){
+		int n = (sPolicy.length+1)/2;
+		
+		//vertical strip starting from north		
+		//State center = null;
+		int center = n/2;
+		for(int i = 0; i < n; i++){
+			//temp = states.get(i);
+			if(i == 0){
+				//temp.setNeighbors(temp, states.get(i+1), temp, temp);
+				p[i][0][i] = 1;
+				p[i][1][i] = 0.3;
+				p[i][1][i+1] = 0.7;
+				p[i][2][i] = 1;
+				p[i][3][i] = 1;
+			}
+			else if(i == n-1){
+				//temp.setNeighbors(states.get(i-1), temp, temp, temp);
+				p[i][0][i-1] = 0.7;
+				p[i][0][i] = 0.3;
+				p[i][1][i] = 1;
+				p[i][2][i] = 1;
+				p[i][3][i] = 1;
+			}
+			//center
+			else if(i == n/2){
+				//temp.setNeighbors(states.get(i-1), states.get(i+1),
+				//		states.get(n + n/2 -1), states.get(n + n/2));
+				//center = temp;
+				p[i][0][i-1] = 0.7;
+				p[i][0][i] = 0.3;
+				p[i][1][i+1] = 0.7;
+				p[i][1][i] = 0.3;
+				p[i][2][n+(n/2)-1] = 0.7;
+				p[i][2][i] = 0.3;
+				p[i][3][n+n/2] = 0.7;
+				p[i][3][i] = 0.3;
+			}
+			else{
+				//temp.setNeighbors(states.get(i-1), states.get(i+1), temp, temp);
+				p[i][0][i-1] = 0.7;
+				p[i][0][i] = 0.3;
+				p[i][1][i+1] = 0.7;
+				p[i][1][i] = 0.3;
+				p[i][2][i] = 1;
+				p[i][3][i] = 1;
+			}
+		}
+				
+		//horizontal strip starting from left
+		for(int i = n; i < 2*n-1; i ++){
+			//temp = states.get(i);
+			if(i == n){
+			//	temp.setNeighbors(temp, temp, temp, states.get(i+1));
+				p[i][0][i] = 1;
+				p[i][1][i] = 1;
+				p[i][2][i] = 1;
+				p[i][3][i] = 0.3;
+				p[i][3][i+1] = 0.7;
+				
+			}
+			else if(i == 2*n-2){
+			//	temp.setNeighbors(temp, temp, states.get(i -1), temp);
+				p[i][0][i] = 1;
+				p[i][1][i] = 1;
+				p[i][2][i-1] = 0.7;
+				p[i][2][i] = 0.3;
+				p[i][3][i] = 1;
+			}
+			//one before the center
+			else if(i == n + n/2 - 1){
+				//temp.setNeighbors(temp, temp, states.get(i -1), center);
+				p[i][0][i] = 1;
+				p[i][1][i] = 1;
+				p[i][2][i-1] = 0.7;
+				p[i][2][i] = 0.3;
+				p[i][3][center] = 0.7;
+				p[i][3][i] = 0.3;
+			}
+			//one after the center
+			else if(i == n + n/2){
+			//	temp.setNeighbors(temp, temp, center, states.get(i+1));
+				p[i][0][i] = 1;
+				p[i][1][i] = 1;
+				
+				p[i][2][center] = 0.7;
+				p[i][2][i] = 0.3;
+				p[i][3][i+1] = 0.7;
+				p[i][3][i] = 0.3;
+			}
+			else{
+			//	temp.setNeighbors(temp, temp, states.get(i -1), states.get(i+1));
+				p[i][0][i] = 1;
+				p[i][1][i] = 1;
+				
+				p[i][2][i-1] = 0.7;
+				p[i][2][i] = 0.3;
+				p[i][3][i+1] = 0.7;
+				p[i][3][i] = 0.3;
 			}
 		}
 	}
@@ -70,15 +173,6 @@ public class InfTheoryLearning extends Agent{
 		}
 	}
 	
-	private int getActionIndex(String action){
-		for(int i = 0; i < 4; i++){
-			if(actions[i].equals(action)){
-				return i;
-			}
-		}
-		return -1;
-	}
-	
 	private double getMaxQ(int state){
 		double currBest = Integer.MIN_VALUE;
 		
@@ -93,8 +187,20 @@ public class InfTheoryLearning extends Agent{
 		return currBest;
 	}
 	
-	//calculates the difference between two probability distributions
+	//calculate distribution difference by summing the absolute values of the differences
+	//diff should be < 0.1
 	private double getDistrDiff(double[][] d1, double[][] d2){
+		double sum = 0;
+		for(int x = 0; x < d1.length; x++){
+			for(int a = 0; a < actions.length; a++){
+				sum += Math.abs(d1[x][a] - d2[x][a]);
+			}
+		}
+		return sum;
+	}
+	
+	//calculates the difference between two probability distributions
+	/*private double getDistrDiff(double[][] d1, double[][] d2){
 		double sum = 0;
 		for(int x = 0; x < d1.length; x++){
 			for(int a = 0; a < actions.length; a++){
@@ -107,143 +213,135 @@ public class InfTheoryLearning extends Agent{
 			}
 		}
 		return sum;
-	}
+	}*/
 	
 	@Override
 	public void learn(int steps) {
-		//initialize the policy to a uniformly random policy
-		randomizePolicy(sPolicy);
 		
-		//the q(a|x) policy
-		double[][] q = new double[sPolicy.length][4];
-		
-		double[] ps = new double[sPolicy.length];
-		
-		//initially just give all states equal probability
-		for(int i = 0; i < ps.length; i++){
-			ps[i] = 1.0/ps.length;
-		}
+		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[4];
-		
-		//initially just give all actions equal probability
-		for(int i = 0; i < pa.length; i++){
-			pa[i] = 1.0/pa.length;
-		}
-		
-		//probability matrix estimate
-		//given the current state and action, what is the probability of the next state being s'
-		//double[][][] p = new double[sPolicy.length][4][sPolicy.length];
-		
-		//just randomize to begin? or set to 0?
-		//make p uniformly random
-		for(int x = 0; x < p.length; x ++){
-			for(int a = 0; a < actions.length; a++){
-				for(int s = 0; s < p.length; s++){
-					p[x][a][s] = 1.0/p.length;
-				}
-			}
-		}
 		
 		int state;
 		String action;
 		Info result;
-		float lambda = 10;
 		for(int i = 0; i < steps; i++){
 			state = env.getCurrentState();
+			if(state == goalState){
+				return;
+			}
 			
 			//a)
 				//how to do this calculation?
-				//for now just use whatever was calculated in c)
-				//update ps
-				//this causes NaN (sPolicy is NaN for some reason)
-				for(int j = 0; j < ps.length; j++){
-					double sum = 0;
-					for(int x = 0; x < ps.length; x++){
-						for(int a = 0; a < 4; a++){
-							sum += p[x][a][j]*sPolicy[x][a]*ps[x];
-						}
-					}
-					ps[j] = sum;
-				}
+				//calculate the new probability of visiting each state
+				//using the current state we are at
+				//(i.e. increase the probability that we end up at the state we are at right now
+				//at time step t, and decrease the others)
 			
+			//add 1 to the current state estimate
+			ps[i][state] += 1;
+			
+			for(int x = 0; x < q.length; x++){
+				ps[i][x] = ps[i][x]/2;
+			}
 			
 			//b)
-			//randomizePolicy(qPolicy);
-			q = sPolicy;
+			
+			//just set q to some random policy
+			randomizePolicy(q);
 			
 			//c)
-				//what does it mean for the difference between q(j) and q(j+1) to be small?
+				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
 					//maybe difference between the two probability distributions using D(qj, qj+1)?
 			double[][] qPrev = new double[q.length][4];
 
-			while(Math.abs(getDistrDiff(q, qPrev)) > 1){ //this may be completely wrong
-
+			//sometimes gets stuck in this loop
+			while(Math.abs(getDistrDiff(q, qPrev)) > 0.1){ 
 				qPrev = q;
 
-				//update pa
+				//update pa (this is ok)
 				for(int j = 0; j < 4; j++){
 					double sum = 0;
 					
 					//for each state
 					for(int k = 0; k < q.length; k++){
-						sum += q[k][j]*ps[k];
+						sum += q[k][j]*ps[i][k];
 					}
 					pa[j] = sum;
-					
-					//because q is 0
-					/*if(sum == 0){
-						System.out.println("zero");
-					}*/
 				}
 				
-				//update ps
-				for(int j = 0; j < ps.length; j++){
+				//update pj
+				for(int j = 0; j < pj.length; j++){
 					double sum = 0;
-					for(int x = 0; x < ps.length; x++){
+					for(int x = 0; x < pj.length; x++){
 						for(int a = 0; a < 4; a++){
-							//infinity times 0 happens here
-							//but how does ps become infinity??
-							sum += p[x][a][j]*q[x][a]*ps[x];
-							/*if(Double.isNaN(sum)){
-								//System.out.println("q: " + q[x][a]);
-								//System.out.println("ps: " + ps[x]);
-								//System.out.println("p: " + p[x][a][j]);
-								System.out.println("ps");
-								return;
-							}*/
-							//if(Double.isInfinite(sum)){
-								//q somehow ends up as infinity, which makes ps infinite
-								//System.out.println("q: " + q[x][a]);
-								//System.out.println("ps: " + ps[x]);
-								//System.out.println("p: " + p[x][a][j]);
-							//}
+							sum += p[x][a][j]*q[x][a]*ps[i][x];
 						}
 					}
-					ps[j] = sum;
+					pj[j] = sum;
  				}
 				
 				//update q
-				//lambda = lambda/(i+1);
+				if(lambda > 0.5){
+					lambda = 10.0/(i+1);
+				}
+
+				//this is okay
 				double[][] D = new double[q.length][actions.length];
 				double[] Z = new double[q.length];
+				
 				for(int x = 0; x < q.length; x++){
+					for(int a = 0; a < actions.length; a++){
+						
+						//set D
+						//use pj or ps? pj doesn't seem to get used if we don't use it here
+						double sum = 0;
+						for(int k = 0; k < D.length; k++){
+							if(p[x][a][k] != 0 && pj[k] != 0){
+								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
+							}
+							else if(pj[k] == 0){
+								sum = Double.POSITIVE_INFINITY;
+							}
+						}
+						D[x][a] = sum;
+					}
+				}
+				
+				for(int x = 0; x < q.length; x++){
+					for(int a = 0; a < actions.length; a++){
+						//set Z
+						double sum = 0;
+						for(int k = 0; k < actions.length; k++){
+							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
+						}
+						Z[x] = sum;
+						
+						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]));
+						
+						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
+							q[x][a] = 1;
+						}
+						else{
+							q[x][a] = (pa[a]*exp)/Z[x];
+						}
+						//System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", other: " +
+						//		Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a])) 
+						//		+ ", lambda: " + lambda);
+					}
+				}
+				
+				/*for(int x = 0; x < q.length; x++){
 					for(int a = 0; a < actions.length; a++){
 						
 						//set D
 						double sum = 0;
 						for(int k = 0; k < D.length; k++){
-							if(p[x][a][k] != 0 && ps[k] != 0){
-								sum += p[x][a][k]*(Math.log(p[x][a][k]/ps[k])/Math.log(2));
-								/*if(Double.isNaN(sum)){
-									//System.out.println("p: " + p[x][a][k] + ", ps: " + ps[k]);
-									System.out.println("D");
-								}*/
+							if(p[x][a][k] != 0 && ps[i][k] != 0){
+								sum += p[x][a][k]*(Math.log(p[x][a][k]/ps[i][k])/Math.log(2));
 							}
-							else if(ps[k] == 0){
+							else if(ps[i][k] == 0){
 								sum = Double.POSITIVE_INFINITY;
-								/*System.out.println("inf");
-								return;*/
 							}
 						}
 						D[x][a] = sum;
@@ -251,36 +349,17 @@ public class InfTheoryLearning extends Agent{
 						//set Z
 						sum = 0;
 						for(int k = 0; k < actions.length; k++){
-							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + 2*qValues[x][k]));
+							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
 						}
 						Z[x] = sum;
 						
-						//update q
-						q[x][a] = (pa[a]*Math.exp((1/lambda)*(D[x][a] + 2*qValues[x][a])))/Z[x];
-						//THE FIRST NaN (only when lambda gets smaller with time?)
-						/*if(Double.isNaN(q[x][a])){
-							System.out.println(pa[a]);
-							//System.out.println("D: " + Math.exp(1/lambda*(D[x][a] + 3*qValues[x][a])));
-							//System.out.println("q: " + (pa[a]*Math.exp(1/lambda*(D[x][a] + 3*qValues[x][a]))));
-							return;
-						}*/
-						/*if(q[x][a] == 0){
-							System.out.println("zer0: " + (D[x][a] + 3*qValues[x][a]));
-							System.out.println(lambda);
-							return; 
-						}*/
+						q[x][a] = (pa[a]*Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a])))/Z[x];
 					}
-				}
+				}*/
 				
 				//p should get closer to 1 for going up from state 0 to state 0, because
 				//this will always happen
-				//only transition policy for the up action even changes
-				//probability that we go up in general gets progressively worse, yet we still
-				//have our policy be to go up...
-				//pa just gets continuously worse for every action
-				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[0]);
-				//printSum(pa); //should be 1
-				//printSum(ps); //should be 1 as well
+				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[i][0]);
 			}
 			sPolicy = q;
 			
@@ -289,16 +368,24 @@ public class InfTheoryLearning extends Agent{
 			result = env.performAction(action); 
 			
 			//compute new estimate for probability distribution
+			//this is probably wrong
 			int s = result.getState().getName();
 			for(int x = 0; x < p.length; x++){
 				int a = getActionIndex(action);
 				//the state the action actually led to
 				if(x == s){
-					p[state][a][s] += 0.1*(1 - p[state][a][s]);
+					p[state][a][x] += 0.3*(1 - p[state][a][x]);
+					if(p[state][a][x] > 1){
+						p[state][a][x] = 1;
+					}
 				}
 				//the states the action didn't lead to
 				else{
-					p[state][a][s] += 0.1*(0 - p[state][a][s]);
+					p[state][a][x] += 0.3*(0 - p[state][a][x]);
+					
+					if(p[state][a][x] < 0){
+						p[state][a][x] = 0;
+					}
 				}
 			}
 			
@@ -319,6 +406,8 @@ public class InfTheoryLearning extends Agent{
 				}
 			}*/
 		}
+		
+		//printP();
 	}
 	
 	
@@ -328,6 +417,16 @@ public class InfTheoryLearning extends Agent{
 			sum += a[i];
 		}
 		System.out.println(sum);
+	}
+	
+	public void printP(){
+		for(int x = 0; x < p.length; x ++){
+			for(int a = 0; a < actions.length; a++){
+				for(int s = 0; s < p.length; s++){
+					System.out.println("State " + x + " to " + s + " with action " + actions[a]+" : " + p[x][a][s]);
+				}
+			}
+		}
 	}
 
 }
