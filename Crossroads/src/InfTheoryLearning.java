@@ -3,10 +3,10 @@ public class InfTheoryLearning extends Agent{
 	//the probability distribution for states and actions
 	private double[][][] p = null;
 	private double[][] q;
-	private double[][] ps; //this has to be based on time
+	private double[][] ps;
 
-	private double lambda = 100;
-	private double alpha = 5;
+	private double lambda = 100.0;
+	private double alpha = 6;
 	
 	public InfTheoryLearning(int n){
 		super(n);
@@ -144,11 +144,23 @@ public class InfTheoryLearning extends Agent{
 	}
 	
 	private void randomizePolicy(double[][] policy){
+		
+		double sum = 0;
 		for(int i = 0; i < policy.length; i++){
-			for(int j = 0; j < 4; j++){
-				policy[i][j] = 0.25;
+			for(int j = 0; j < actions.length; j++){
+				//policy[i][j] = 0.25;
+				policy[i][j] = Math.random();
+				sum += policy[i][j];
 			}
 		}
+		
+		//normalize
+		for(int i = 0; i < policy.length; i++){
+			for(int j = 0; j < actions.length; j++){
+				policy[i][j] = policy[i][j]/sum;
+			}
+		}
+		
 	}
 	
 	//select an action using the probabilities specified in pi
@@ -215,6 +227,32 @@ public class InfTheoryLearning extends Agent{
 		return sum;
 	}*/
 	
+	private double[][] copyArray(double[][] a){
+		double[][] array = new double[a.length][a[0].length];
+		
+		for(int i = 0; i < a.length; i++){
+			System.arraycopy(a[i], 0, array[i], 0, a[i].length);
+		}
+		
+		return array;
+	}
+	
+	//learn using deterministic annealing
+	/*@Override
+	public void learn(int steps){
+		//by convergence until the policy doesn't change...
+		double[][] prevPol = new double[sPolicy.length][actions.length];
+		while(getDistrDiff(sPolicy, prevPol) > 0){
+			prevPol = copyArray(sPolicy);
+			detAnnlearn(steps);
+			env.gotoState(startState);
+		}
+		
+		if(lambda > 0.1){
+			lambda = lambda/2;
+		}
+	}*/
+	
 	@Override
 	public void learn(int steps) {
 		
@@ -232,13 +270,13 @@ public class InfTheoryLearning extends Agent{
 			}
 			
 			//a)
-				//how to do this calculation?
 				//calculate the new probability of visiting each state
 				//using the current state we are at
 				//(i.e. increase the probability that we end up at the state we are at right now
 				//at time step t, and decrease the others)
 			
-			//add 1 to the current state estimate
+			//add 1 to the current state estimate (seems too simple though)
+			//maybe use the policy or the probability distribution, or both
 			ps[i][state] += 1;
 			
 			for(int x = 0; x < q.length; x++){
@@ -282,11 +320,11 @@ public class InfTheoryLearning extends Agent{
  				}
 				
 				//update q
-				if(lambda > 0.5){
-					lambda = 10.0/(i+1);
+				if(lambda > 0.1){
+					//lambda = lambda/(i+1);
+					lambda = lambda/2;
 				}
 
-				//this is okay
 				double[][] D = new double[q.length][actions.length];
 				double[] Z = new double[q.length];
 				
@@ -319,6 +357,7 @@ public class InfTheoryLearning extends Agent{
 						
 						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]));
 						
+						//maybe this is the wrong way to handle this
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
 							q[x][a] = 1;
 						}
@@ -331,32 +370,6 @@ public class InfTheoryLearning extends Agent{
 					}
 				}
 				
-				/*for(int x = 0; x < q.length; x++){
-					for(int a = 0; a < actions.length; a++){
-						
-						//set D
-						double sum = 0;
-						for(int k = 0; k < D.length; k++){
-							if(p[x][a][k] != 0 && ps[i][k] != 0){
-								sum += p[x][a][k]*(Math.log(p[x][a][k]/ps[i][k])/Math.log(2));
-							}
-							else if(ps[i][k] == 0){
-								sum = Double.POSITIVE_INFINITY;
-							}
-						}
-						D[x][a] = sum;
-						
-						//set Z
-						sum = 0;
-						for(int k = 0; k < actions.length; k++){
-							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
-						}
-						Z[x] = sum;
-						
-						q[x][a] = (pa[a]*Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a])))/Z[x];
-					}
-				}*/
-				
 				//p should get closer to 1 for going up from state 0 to state 0, because
 				//this will always happen
 				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[i][0]);
@@ -368,7 +381,6 @@ public class InfTheoryLearning extends Agent{
 			result = env.performAction(action); 
 			
 			//compute new estimate for probability distribution
-			//this is probably wrong
 			int s = result.getState().getName();
 			for(int x = 0; x < p.length; x++){
 				int a = getActionIndex(action);
@@ -395,7 +407,7 @@ public class InfTheoryLearning extends Agent{
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 					+ 0.9*getMaxQ(result.getState().getName()) - qValues[state][index]);
 			
-			//dynamic programming attempt (doesn't appear to be working properly)
+			//dynamic programming attempt
 			/*qValues[state][index] = 0;
 			for(int x = 0; x < qValues.length; x++){
 				if(x == goalState){ //should be the states around the goal
@@ -407,7 +419,11 @@ public class InfTheoryLearning extends Agent{
 			}*/
 		}
 		
-		//printP();
+		//attempt at deterministic annealing (may be wrong as this does not appear to be more
+		//computationally expensive)
+		/*if(lambda > 0.1){
+			lambda = lambda/2;
+		}*/
 	}
 	
 	

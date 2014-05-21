@@ -11,9 +11,6 @@ public abstract class Agent{
 	
 	protected String[] actions = {"up", "down", "left", "right"};
 	
-	//the policy that we find after learning
-	//protected String[] policy = null;
-	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
 	protected double[][] sPolicy = null;
@@ -34,18 +31,6 @@ public abstract class Agent{
 		env = e;
 		startState = start;
 		goalState = goal;
-		/*if(values == null){
-			values = new double[2*n-1];
-		}
-		if(qValues == null){
-			qValues = new double[2*n-1][4];
-		}
-		if(policy == null){
-			policy = new String[2*n-1];
-		}
-		if(sPolicy == null){
-			sPolicy = new double[2*n-1][4];
-		}*/
 	}
 	
 	public Agent(int n){
@@ -55,9 +40,6 @@ public abstract class Agent{
 		if(qValues == null){
 			qValues = new double[2*n-1][4];
 		}
-		/*if(policy == null){
-			policy = new String[2*n-1];
-		}*/
 		if(sPolicy == null){
 			sPolicy = new double[2*n-1][4];
 		}
@@ -103,7 +85,6 @@ public abstract class Agent{
 		return policy;
 	}
 	
-	//public abstract double[] learn(State start, State goal, double[] initialVals, int steps);
 	public abstract void learn(int steps);
 	
 	public void learnTrial(int eps){

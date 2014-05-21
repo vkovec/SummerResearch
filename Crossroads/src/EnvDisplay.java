@@ -109,7 +109,7 @@ public class EnvDisplay extends JFrame{
 				}*/
 				
 				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(1000);
+				agent.learnTrial(100);
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
