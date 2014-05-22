@@ -6,7 +6,7 @@ public class InfTheoryLearning extends Agent{
 	private double[][] ps;
 
 	private double lambda = 100.0;
-	private double alpha = 6;
+	private double alpha = 4;
 	
 	public InfTheoryLearning(int n){
 		super(n);
@@ -336,7 +336,8 @@ public class InfTheoryLearning extends Agent{
 						double sum = 0;
 						for(int k = 0; k < D.length; k++){
 							if(p[x][a][k] != 0 && pj[k] != 0){
-								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
+								//sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
+								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k]));
 							}
 							else if(pj[k] == 0){
 								sum = Double.POSITIVE_INFINITY;
@@ -349,7 +350,7 @@ public class InfTheoryLearning extends Agent{
 				for(int x = 0; x < q.length; x++){
 					for(int a = 0; a < actions.length; a++){
 						//set Z
-						double sum = 0;
+						/*double sum = 0;
 						for(int k = 0; k < actions.length; k++){
 							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
 						}
@@ -359,14 +360,38 @@ public class InfTheoryLearning extends Agent{
 						
 						//maybe this is the wrong way to handle this
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
+							System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", D: " +
+									D[x][a]
+									+ ", lambda: " + lambda);
 							q[x][a] = 1;
 						}
 						else{
 							q[x][a] = (pa[a]*exp)/Z[x];
+						}*/
+						
+						//attempt to avoid inf/inf problem using logs
+						//doesn't completely solve the problem..numbers still become too large
+						//set Z
+						double temp;
+						double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+						double logZ = 1;
+						for(int k = 1; k < actions.length; k++){
+							temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
+							logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
 						}
-						//System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", other: " +
-						//		Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a])) 
-						//		+ ", lambda: " + lambda);
+						logZ = Math.log(logZ);
+						logZ += log0;
+						Z[x] = logZ;
+						
+						double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
+						
+						q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+						q[x][a] = Math.exp(q[x][a]);
+						
+						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
+							System.out.println("Didn't work");
+						}
+						
 					}
 				}
 				
