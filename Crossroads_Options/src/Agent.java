@@ -79,6 +79,12 @@ public abstract class Agent{
 				case 3:
 					policy[x] = ">";
 					break;
+				case 4:
+					policy[x] = "^^";
+					break;
+				case 5:
+					policy[x] = "vv";
+					break;
 			}
 		}
 		

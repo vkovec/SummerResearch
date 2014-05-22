@@ -11,7 +11,7 @@ public class InfTheoryLearning extends Agent{
 	public InfTheoryLearning(int n){
 		super(n);
 		if(p == null){
-			p = new double[sPolicy.length][4][sPolicy.length];
+			p = new double[sPolicy.length][actions.length][sPolicy.length];
 			for(int x = 0; x < p.length; x ++){
 				for(int a = 0; a < actions.length; a++){
 					for(int s = 0; s < p.length; s++){
@@ -25,7 +25,7 @@ public class InfTheoryLearning extends Agent{
 			randomizePolicy(sPolicy);
 			
 			//the q(a|x) policy
-			q = new double[sPolicy.length][4];
+			q = new double[sPolicy.length][actions.length];
 			
 			//assuming 100 time steps
 			ps = new double[100][sPolicy.length];
@@ -166,12 +166,27 @@ public class InfTheoryLearning extends Agent{
 	//select an action using the probabilities specified in pi
 	private String selectAction(int s){
 		
-		double[] helper = {sPolicy[s][0], sPolicy[s][0] + sPolicy[s][1],
-				sPolicy[s][0] + sPolicy[s][1] + sPolicy[s][2]};
+		double[] helper = new double[actions.length-1];
 		
+		for(int i = 0; i < helper.length; i++){
+			for(int j = 0; j <= i; j++){
+				helper[i] += sPolicy[s][j];
+			}
+		}
+		
+		//		{sPolicy[s][0], sPolicy[s][0] + sPolicy[s][1],
+		//	sPolicy[s][0] + sPolicy[s][1] + sPolicy[s][2]};		
+				
 		double x = Math.random();
 		
-		if(x > helper[2]){
+		for(int i = helper.length-1; i >= 0; i--){
+			if(x > helper[i]){
+				return actions[i+1];
+			}
+		}
+		return actions[0];
+		
+		/*if(x > helper[2]){
 			return actions[3];
 		}
 		else if(x > helper[1]){
@@ -182,14 +197,14 @@ public class InfTheoryLearning extends Agent{
 		}
 		else{
 			return actions[0];
-		}
+		}*/
 	}
 	
 	private double getMaxQ(int state){
 		double currBest = Integer.MIN_VALUE;
 		
 		double currVal;
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < actions.length; i++){
 			currVal = qValues[state][i];
 			
 			if(currVal > currBest){
@@ -258,7 +273,7 @@ public class InfTheoryLearning extends Agent{
 		
 		double[] pj = new double[sPolicy.length];
 		
-		double[] pa = new double[4];
+		double[] pa = new double[actions.length];
 		
 		int state;
 		String action;
@@ -291,14 +306,14 @@ public class InfTheoryLearning extends Agent{
 			//c)
 				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
 					//maybe difference between the two probability distributions using D(qj, qj+1)?
-			double[][] qPrev = new double[q.length][4];
+			double[][] qPrev = new double[q.length][actions.length];
 
 			//sometimes gets stuck in this loop
 			while(Math.abs(getDistrDiff(q, qPrev)) > 0.1){ 
 				qPrev = q;
 
 				//update pa (this is ok)
-				for(int j = 0; j < 4; j++){
+				for(int j = 0; j < actions.length; j++){
 					double sum = 0;
 					
 					//for each state
@@ -312,7 +327,7 @@ public class InfTheoryLearning extends Agent{
 				for(int j = 0; j < pj.length; j++){
 					double sum = 0;
 					for(int x = 0; x < pj.length; x++){
-						for(int a = 0; a < 4; a++){
+						for(int a = 0; a < actions.length; a++){
 							sum += p[x][a][j]*q[x][a]*ps[i][x];
 						}
 					}
