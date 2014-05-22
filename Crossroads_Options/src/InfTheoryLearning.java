@@ -403,7 +403,7 @@ public class InfTheoryLearning extends Agent{
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
-			result = env.performAction(action); 
+			result = env.performOption(action); 
 			
 			//compute new estimate for probability distribution
 			int s = result.getState().getName();

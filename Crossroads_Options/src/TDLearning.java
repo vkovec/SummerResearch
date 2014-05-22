@@ -21,11 +21,11 @@ public class TDLearning extends Agent{
 				return;
 			}
 			
-			action = actions[rand.nextInt(4)];
+			action = actions[rand.nextInt(actions.length)];
 			
 			//System.out.println(action);
 			
-			result = env.performAction(action);
+			result = env.performOption(action);
 			values[state] = values[state] + 0.1*(result.getReward() 
 					+ 0.9*values[result.getState().getName()] - values[state]);
 			

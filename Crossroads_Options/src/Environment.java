@@ -1,8 +1,12 @@
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 
 public class Environment{
 
+	//list of options
+	private Hashtable<String, Option> options;
+	
 	//list of states
 	private ArrayList<State> states;
 	
@@ -14,6 +18,30 @@ public class Environment{
 	//private State startState;
 	//goal state
 	private State goalState = null;
+	
+	public void initializeOptions(int n){
+		options = new Hashtable<String, Option>();
+		
+		int[] ini = new int[n/2];
+		String[] pol = new String[n/2];
+		
+		for(int i = 0; i < ini.length; i++){
+			ini[i] = i;
+			pol[i] = "down";
+		}
+		
+		options.put("oup", new Option("oup", n, ini, pol));
+		
+		ini = new int[n/2];
+		pol = new String[n/2];
+		
+		for(int i = n/2+1; i < n; i++){
+			ini[i-(n/2+1)] = i;
+			pol[i-(n/2+1)] = "up";
+		}
+		
+		options.put("odown", new Option("odown", n, ini, pol));
+	}
 	
 	//initialize the state space
 	//n represents the length of the crossroads, and must be odd
@@ -68,6 +96,8 @@ public class Environment{
 				temp.setNeighbors(temp, temp, states.get(i -1), states.get(i+1));
 			}
 		}
+		
+		initializeOptions(n);
 	}
 	
 	//maybe return a copy instead
@@ -117,19 +147,44 @@ public class Environment{
 		return x;
 	}
 	
-	//perform the action and return the new state and reward
-	public Info performAction(String a){
-		//actions succeed with probability 0.7
-		if(getBernouilli(0.7) == 1){
-			currState = currState.performAction(a);
-			Info i = new Info(currState, currState.getReward());
-			return i;
+	public Info performOption(String o){
+		ArrayList<State> n = currState.getNeighbors();
+		
+		State s = currState;
+		
+		if(o.equals("up")){
+			s = n.get(0);
+		}
+		else if(o.equals("down")){
+			s =  n.get(1);
+		}
+		else if(o.equals("left")){
+			s = n.get(2);
+		}
+		else if(o.equals("right")){
+			s = n.get(3);
 		}
 		else{
-			//assume we don't get any reward if we stay in the current state
-			//(or should I treat it as having transitioned to the current state?)
-			return new Info(currState, 0);
+			//unsure whether this actually works
+			Option op = options.get(o);
+			int reward = 0;
+			Info inf;
+			while(op.isExecutable(currState.getName()) && !op.terminate(currState.getName())){
+				inf = performOption(op.getAction(currState.getName()));
+				reward += inf.getReward();
+			}
+			
+			return new Info(currState, reward);
 		}
+		
+		//if the action succeeds
+		if(getBernouilli(0.7) == 1){
+			currState = s;
+		}
+
+		Info i = new Info(currState, currState.getReward());
+		
+		return i;
 	}
 	
 	public void gotoState(int s){

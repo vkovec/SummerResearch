@@ -14,7 +14,7 @@ public class QLearning extends Agent{
 		int same = 0;
 		double currBest = Integer.MIN_VALUE;
 		double currVal;
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < actions.length; i++){
 			currVal = qValues[s][i];
 			
 			if(currVal > currBest){
@@ -26,9 +26,9 @@ public class QLearning extends Agent{
 				same++;
 			}
 		}
-		if(same >= 3){
+		if(same >= actions.length-1){
 			Random rand = new Random();
-			best = actions[rand.nextInt(4)];
+			best = actions[rand.nextInt(actions.length)];
 		}
 		return best;
 	}
@@ -46,7 +46,7 @@ public class QLearning extends Agent{
 		double currBest = Integer.MIN_VALUE;
 		
 		double currVal;
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < actions.length; i++){
 			currVal = qValues[state][i];
 			
 			if(currVal > currBest){
@@ -74,10 +74,10 @@ public class QLearning extends Agent{
 			//the best action
 			if(env.getBernouilli(0.7) != 1){
 				Random rand = new Random();
-				action = actions[rand.nextInt(4)];
+				action = actions[rand.nextInt(actions.length)];
 			}
 			
-			result = env.performAction(action);
+			result = env.performOption(action);
 			
 			int index = getActionIndex(action);
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()

@@ -9,7 +9,7 @@ public abstract class Agent{
 	protected int startState;
 	protected int goalState;
 	
-	protected String[] actions = {"up", "down", "left", "right"};
+	protected String[] actions = {"up", "down", "left", "right", "oup", "odown"};
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -19,7 +19,7 @@ public abstract class Agent{
 	protected double[][] qValues = null;
 	
 	protected int getActionIndex(String action){
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < actions.length; i++){
 			if(actions[i].equals(action)){
 				return i;
 			}
@@ -38,10 +38,10 @@ public abstract class Agent{
 			values = new double[2*n-1];
 		}
 		if(qValues == null){
-			qValues = new double[2*n-1][4];
+			qValues = new double[2*n-1][actions.length];
 		}
 		if(sPolicy == null){
-			sPolicy = new double[2*n-1][4];
+			sPolicy = new double[2*n-1][actions.length];
 		}
 	}
 	

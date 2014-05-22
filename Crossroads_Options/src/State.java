@@ -31,32 +31,8 @@ public class State{
 	public int getName(){
 		return name;
 	}
-	
-	public State performAction(String action){
-		if(action.equals("up")){
-			return neighbors.get(0);
-		}
-		else if(action.equals("down")){
-			return neighbors.get(1);
-		}
-		else if(action.equals("left")){
-			return neighbors.get(2);
-		}
-		else{
-			return neighbors.get(3);
-		}
+
+	public ArrayList<State> getNeighbors(){
+		return neighbors;
 	}
-	
-	/*@Override
-	public State clone(){
-		try{
-			State clone = (State) super.clone();
-			
-			
-			return clone;
-		}
-		catch(CloneNotSupportedException e){
-			return null;
-		}
-	}*/
 }
