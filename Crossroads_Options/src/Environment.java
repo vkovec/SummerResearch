@@ -167,11 +167,17 @@ public class Environment{
 		else{
 			//unsure whether this actually works
 			Option op = options.get(o);
-			int reward = 0;
+			
+			//discount factor
+			double gamma = 0.9;
+			int i = 0;
+			
+			double reward = 0;
 			Info inf;
 			while(op.isExecutable(currState.getName()) && !op.terminate(currState.getName())){
 				inf = performOption(op.getAction(currState.getName()));
-				reward += inf.getReward();
+				reward += Math.pow(gamma, i)*inf.getReward();
+				i++;
 			}
 			
 			return new Info(currState, reward);
@@ -181,10 +187,12 @@ public class Environment{
 		if(getBernouilli(0.7) == 1){
 			currState = s;
 		}
-
-		Info i = new Info(currState, currState.getReward());
 		
-		return i;
+		return new Info(currState, currState.getReward());
+	}
+	
+	public Option getOption(String o){
+		return options.get(o);
 	}
 	
 	public void gotoState(int s){

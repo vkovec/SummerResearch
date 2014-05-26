@@ -40,7 +40,7 @@ public class InfTheoryLearning extends Agent{
 	
 	//initialize the probability distribution over
 	//state and action combinations
-	private void initializeP(){
+	/*private void initializeP(){
 		int n = (sPolicy.length+1)/2;
 		
 		//vertical strip starting from north		
@@ -141,7 +141,7 @@ public class InfTheoryLearning extends Agent{
 				p[i][3][i] = 0.3;
 			}
 		}
-	}
+	}*/
 	
 	private void randomizePolicy(double[][] policy){
 		
@@ -163,14 +163,44 @@ public class InfTheoryLearning extends Agent{
 		
 	}
 	
+	
+	//figure out which options are available in state s
+	private String[] getOptions(int s){
+		Option oup = env.getOption("oup");
+		Option odown = env.getOption("odown");
+		
+		if(oup.isExecutable(s)){
+			if(odown.isExecutable(s)){
+				return actions;
+			}
+			//oup but not odown
+			return actions2;
+		}
+		//odown but not oup
+		else if(odown.isExecutable(s)){
+			return actions3;
+		}
+		
+		return actions1;
+	}
+	
 	//select an action using the probabilities specified in pi
 	private String selectAction(int s){
 		
-		double[] helper = new double[actions.length-1];
+		//reduces the number of possible actions for the state
+		String[] actions = getOptions(s);
+		
+		double[] helper = new double[actions.length-1]; //length 3
 		
 		for(int i = 0; i < helper.length; i++){
-			for(int j = 0; j <= i; j++){
+			/*for(int j = 0; j <= i; j++){
 				helper[i] += sPolicy[s][j];
+			}*/
+			if(i > 0){
+				helper[i] = helper[i-1] + sPolicy[s][i]; 
+			}
+			else{
+				helper[i] = sPolicy[s][i];
 			}
 		}
 		
@@ -271,9 +301,12 @@ public class InfTheoryLearning extends Agent{
 	@Override
 	public void learn(int steps) {
 		
+		lambda = 100.0;
+		
 		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[actions.length];
+		//double[] pa = new double[6];
 		
 		int state;
 		String action;
@@ -365,7 +398,7 @@ public class InfTheoryLearning extends Agent{
 				for(int x = 0; x < q.length; x++){
 					for(int a = 0; a < actions.length; a++){
 						//set Z
-						/*double sum = 0;
+						double sum = 0;
 						for(int k = 0; k < actions.length; k++){
 							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
 						}
@@ -382,12 +415,12 @@ public class InfTheoryLearning extends Agent{
 						}
 						else{
 							q[x][a] = (pa[a]*exp)/Z[x];
-						}*/
+						}
 						
 						//attempt to avoid inf/inf problem using logs
 						//doesn't completely solve the problem..numbers still become too large
 						//set Z
-						double temp;
+						/*double temp;
 						double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
 						double logZ = 1;
 						for(int k = 1; k < actions.length; k++){
@@ -405,7 +438,7 @@ public class InfTheoryLearning extends Agent{
 						
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
 							System.out.println("Didn't work");
-						}
+						}*/
 						
 					}
 				}
@@ -418,6 +451,9 @@ public class InfTheoryLearning extends Agent{
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
+			
+			//System.out.println(action);
+			
 			result = env.performOption(action); 
 			
 			//compute new estimate for probability distribution
@@ -467,7 +503,7 @@ public class InfTheoryLearning extends Agent{
 	}
 	
 	
-	private void printSum(double[] a){
+	public void printSum(double[] a){
 		double sum = 0;
 		for(int i = 0; i < a.length; i++){
 			sum += a[i];

@@ -11,6 +11,11 @@ public abstract class Agent{
 	
 	protected String[] actions = {"up", "down", "left", "right", "oup", "odown"};
 	
+	//just trying something to avoid performing options in states not in the initiation set
+	protected String[] actions1 = {"up", "down", "left", "right"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
+	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
+	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
 	protected double[][] sPolicy = null;
@@ -27,7 +32,7 @@ public abstract class Agent{
 		return -1;
 	}
 	
-	public void setEnv(Environment e, int start, int goal, int n){
+	public void setEnv(Environment e, int start, int goal){
 		env = e;
 		startState = start;
 		goalState = goal;
@@ -80,10 +85,10 @@ public abstract class Agent{
 					policy[x] = ">";
 					break;
 				case 4:
-					policy[x] = "^^";
+					policy[x] = "vv";
 					break;
 				case 5:
-					policy[x] = "vv";
+					policy[x] = "^^";
 					break;
 			}
 		}

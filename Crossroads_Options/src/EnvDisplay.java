@@ -76,20 +76,20 @@ public class EnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//run the agent
-				/*for(int i = 0; i < 1000; i++){
-					goal = env.chooseGoal().getName();
+				for(int i = 0; i < 1000; i++){
+					//goal = env.chooseGoal().getName();
 					start = env.chooseStart().getName();
-					agent.setEnv(env, start, goal, n);
+					agent.setEnv(env, start, goal);
 					//agent.learnTrial(1000);
 					agent.learnTrial(1);
-				}*/
+				}
 				
-				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(100);
+				//agent.setEnv(env, start, goal);
+				//agent.learnTrial(100);
 				
 				double[] vals = agent.getValues();
 				for(int i = 0; i < vals.length; i++){
-					if(i != start && i != goal){
+					if(i != goal){
 						labels.get(i).setText("" + df.format(vals[i]));
 					}
 				}
@@ -104,19 +104,19 @@ public class EnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//run the agent
-				/*for(int i = 0; i < 100; i++){
-					goal = env.chooseGoal().getName();
+				/*for(int i = 0; i < 1000; i++){
+					//goal = env.chooseGoal().getName();
 					start = env.chooseStart().getName();
-					agent.setEnv(env, start, goal, n);
+					agent.setEnv(env, start, goal);
 					agent.learnTrial(1);
 				}*/
 				
-				agent.setEnv(env, start, goal, n);
-				agent.learnTrial(100);
+				agent.setEnv(env, start, goal);
+				agent.learnTrial(1000);
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
-					if(i != start && i != goal){
+					if(i != goal){
 						double val = 0;
 						//average the values for each action
 						for(int j = 0; j < 4; j++){
@@ -154,7 +154,7 @@ public class EnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//run the agent
-				agent.setEnv(env, start, goal, n);
+				agent.setEnv(env, start, goal);
 				agent.learn(1);
 				
 				if(prev > -1){

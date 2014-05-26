@@ -1,8 +1,8 @@
 public class Info{
 	private State s;
-	private int reward;
+	private double reward;
 	
-	public Info(State state, int r){
+	public Info(State state, double r){
 		s = state;
 		reward = r;
 	}
@@ -11,7 +11,7 @@ public class Info{
 		return s;
 	}
 	
-	public int getReward(){
+	public double getReward(){
 		return reward;
 	}
 }
