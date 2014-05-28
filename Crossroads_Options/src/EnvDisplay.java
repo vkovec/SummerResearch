@@ -119,8 +119,7 @@ public class EnvDisplay extends JFrame{
 					if(i != goal){
 						double val = 0;
 						//average the values for each action
-						for(int j = 0; j < 4; j++){
-							//val = val + qVals[i][j];
+						for(int j = 0; j < 6; j++){
 							if(qVals[i][j] > val){
 								val = qVals[i][j];
 							}

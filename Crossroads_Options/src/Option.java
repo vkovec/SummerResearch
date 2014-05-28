@@ -1,4 +1,5 @@
 import java.util.Hashtable;
+import java.util.Random;
 
 public class Option{
 	private String name;
@@ -68,5 +69,18 @@ public class Option{
 	//change the policy to a new policy
 	public void setPolicy(Hashtable<Integer, String> p){
 		policy = p;
+	}
+	
+	public int sizeI(){
+		return initiationSet.length;
+	}
+	
+	
+	/**
+	 * @return a random state from the initiation set
+	 */
+	public int getRandomState(){
+		Random rand = new Random();
+		return initiationSet[rand.nextInt(initiationSet.length)];
 	}
 }
