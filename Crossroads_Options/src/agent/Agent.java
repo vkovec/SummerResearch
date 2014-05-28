@@ -1,3 +1,6 @@
+package agent;
+import crossenv.Environment;
+
 /**
  * @author vkovec
  *

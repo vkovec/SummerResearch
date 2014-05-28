@@ -1,6 +1,12 @@
+package crossenv;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
+
+import tools.Info;
+import tools.Option;
+import tools.State;
 
 public class Environment{
 	
@@ -197,6 +203,7 @@ public class Environment{
 		return new Info(currState, currState.getReward(), 1);
 	}
 	
+	//NOT IMPORTANT FOR NOW
 	//need to learn the policies for the options
 	//have to give manual subgoals to learn from and then set the policy
 	//based on what was learned (only deterministic policies for now)

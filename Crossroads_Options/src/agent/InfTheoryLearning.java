@@ -1,3 +1,7 @@
+package agent;
+import tools.Info;
+import tools.Option;
+
 public class InfTheoryLearning extends Agent{
 
 	//the probability distribution for states and actions
@@ -314,6 +318,7 @@ public class InfTheoryLearning extends Agent{
 		for(int i = 0; i < steps; i++){
 			state = env.getCurrentState();
 			if(state == goalState){
+				//System.out.println("goal");
 				return;
 			}
 			
@@ -369,7 +374,6 @@ public class InfTheoryLearning extends Agent{
 				
 				//update q
 				if(lambda > 0.1){
-					//lambda = lambda/(i+1);
 					lambda = lambda/2;
 				}
 
@@ -380,12 +384,11 @@ public class InfTheoryLearning extends Agent{
 					for(int a = 0; a < actions.length; a++){
 						
 						//set D
-						//use pj or ps? pj doesn't seem to get used if we don't use it here
 						double sum = 0;
 						for(int k = 0; k < D.length; k++){
 							if(p[x][a][k] != 0 && pj[k] != 0){
-								//sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
-								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k]));
+								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
+								//sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k]));
 							}
 							else if(pj[k] == 0){
 								sum = Double.POSITIVE_INFINITY;

@@ -1,3 +1,7 @@
+package tools;
+
+
+
 public class Info{
 	private State s;
 	private double reward;

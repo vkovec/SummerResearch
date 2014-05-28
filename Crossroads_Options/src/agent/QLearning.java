@@ -1,4 +1,11 @@
+package agent;
+
+
 import java.util.Random;
+
+import tools.Info;
+
+
 
 public class QLearning extends Agent{
 

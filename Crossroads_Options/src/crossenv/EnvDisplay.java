@@ -1,3 +1,5 @@
+package crossenv;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -12,6 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
+import agent.Agent;
+import agent.InfTheoryLearning;
+
 
 @SuppressWarnings("serial")
 public class EnvDisplay extends JFrame{
