@@ -1,0 +1,72 @@
+import java.util.Hashtable;
+
+public class Option{
+	private String name;
+	
+	private int[] initiationSet;
+	private Hashtable<Integer, String> policy; //deterministic
+	
+	private double[] beta;
+	
+	public Option(String name, int n, int[] ini, String[] pol){
+		this.name = name;
+		
+		initiationSet = ini;
+		
+		policy = new Hashtable<Integer, String>();
+		
+		//set the policy
+		for(int i = 0; i < initiationSet.length; i++){
+			policy.put(initiationSet[i], pol[i]);
+		}
+		
+		beta = new double[2*n-1];
+		for(int i = 0; i < beta.length; i++){
+			if(isExecutable(i)){
+				//for now we want to continue execution until
+				//we leave the initiation set
+				beta[i] = 0;
+			}
+			else{
+				beta[i] = 1;
+			}
+		}
+	}
+	
+	//we can execute an option if the current state is in the initiation set
+	public boolean isExecutable(int s){
+		/*for(State s1 : initiationSet){
+			if(s1.getName() == s.getName()){
+				return true;
+			}
+		}*/
+		for(int i = 0; i < initiationSet.length; i++){
+			if(initiationSet[i] == s){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//should we terminate the option at this state?
+	public boolean terminate(int s){
+		if(beta[s] == 1){
+			return true;
+		}
+		return false;
+	}
+	
+	//get the action for a state in the initiation set
+	public String getAction(int s){
+		return policy.get(s);
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	//change the policy to a new policy
+	public void setPolicy(Hashtable<Integer, String> p){
+		policy = p;
+	}
+}
