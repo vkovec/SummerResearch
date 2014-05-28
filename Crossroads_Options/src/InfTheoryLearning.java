@@ -481,7 +481,8 @@ public class InfTheoryLearning extends Agent{
 			//take from Q-learning (for now, eventually want to do a full Q value evaluation)
 			int index = getActionIndex(action);
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
-					+ 0.9*getMaxQ(result.getState().getName()) - qValues[state][index]);
+					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName()) 
+					- qValues[state][index]);
 			
 			//dynamic programming attempt
 			/*qValues[state][index] = 0;

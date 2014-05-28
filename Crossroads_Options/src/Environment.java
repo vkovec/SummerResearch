@@ -174,13 +174,15 @@ public class Environment{
 			
 			double reward = 0;
 			Info inf;
+			
+			//this may change if the policy is no longer deterministic (but prob not)
 			while(op.isExecutable(currState.getName()) && !op.terminate(currState.getName())){
 				inf = performOption(op.getAction(currState.getName()));
 				reward += Math.pow(gamma, i)*inf.getReward();
 				i++;
 			}
 			
-			return new Info(currState, reward);
+			return new Info(currState, reward, i);
 		}
 		
 		//if the action succeeds
@@ -188,7 +190,20 @@ public class Environment{
 			currState = s;
 		}
 		
-		return new Info(currState, currState.getReward());
+		return new Info(currState, currState.getReward(), 1);
+	}
+	
+	//need to learn the policies for the options
+	//have to give manual subgoals to learn from and then set the policy
+	//based on what was learned (only deterministic policies for now)
+	public void learnOption(Option o){
+		
+		//figure out how to give subgoals
+		//use the modified Q-learning algorithm and above method to
+		//learn from the environment
+		//find a policy using the highest Q-values
+		//set the policy for the option
+		
 	}
 	
 	public Option getOption(String o){

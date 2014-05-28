@@ -81,7 +81,8 @@ public class QLearning extends Agent{
 			
 			int index = getActionIndex(action);
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
-					+ 0.9*getMaxQ(result.getState().getName()) - qValues[state][index]); 
+					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
+					- qValues[state][index]); 
 		}
 	}
 
