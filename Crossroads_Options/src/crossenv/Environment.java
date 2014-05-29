@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
 
+import tools.IEnvironment;
 import tools.Info;
 import tools.Option;
 import tools.State;
 
-public class Environment{
+public class Environment implements IEnvironment{
 	
 	//list of actions
 	private String[] actions = {"up", "down", "left", "right"};
@@ -22,9 +23,6 @@ public class Environment{
 	//current state
 	private State currState;
 	
-	//(may not need these)
-	//start state
-	//private State startState;
 	//goal state
 	private State goalState = null;
 	
@@ -54,7 +52,8 @@ public class Environment{
 	
 	//initialize the state space
 	//n represents the length of the crossroads, and must be odd
-	public void initializeStates(int n){
+	//previously initializeStates()
+	public Environment(int n){
 		states = new ArrayList<State>();
 		
 		//generate the states:
@@ -175,24 +174,71 @@ public class Environment{
 			s = n.get(3);
 		}
 		else{
-			//unsure whether this actually works
+			//unsure whether this actually works (appears to work though)
 			Option op = options.get(o);
 			
 			//discount factor
 			double gamma = 0.9;
-			int i = 0;
+			int t = 0;
 			
 			double reward = 0;
 			Info inf;
 			
+			//ArrayList<String> acts = new ArrayList<String>();
+			ArrayList<State> states = new ArrayList<State>();
+			ArrayList<Double> rewards = new ArrayList<Double>();
+			
+			String act;
 			//this may change if the policy is no longer deterministic (but prob not)
 			while(op.isExecutable(currState.getName()) && !op.terminate(currState.getName())){
-				inf = performOption(op.getAction(currState.getName()));
-				reward += Math.pow(gamma, i)*inf.getReward();
-				i++;
+				act = op.getAction(currState.getName());
+
+				inf = performOption(act);
+				
+				//store reward from t+1 onwards without discounting
+				rewards.add(inf.getReward());
+				
+				reward += Math.pow(gamma, t)*inf.getReward();
+
+				//not including the first state
+				states.add(inf.getState());
+				//System.out.println(inf.getState().getName());
+				
+				t++;
 			}
 			
-			return new Info(currState, reward, i);
+			//the option could not be executed at this state
+			if(t == 0){
+				//maybe not the best way to do this
+				//we just stayed in the same state and didn't get any reward
+				return new Info(new State[]{currState}, new Double[]{0.0}, 1);
+			}
+			
+			//System.out.println("state size: " + states.size() + ", reward size: " + rewards.size());
+			
+			//the complete discounted rewards for each state except for the last one
+			Double[] discR = new Double[states.size()];
+			//index of the reward corresponds to the index of the state where the reward was obtained
+			//except for the final one which corresponds to the reward for the first action
+			for(int r = 0; r < discR.length-1; r++){
+				discR[r] = 0.0;
+				for(int i = r+1; i < rewards.size(); i++){
+					discR[r] += Math.pow(gamma, i-(r+1))*rewards.get(i);
+				}
+			}
+			discR[discR.length-1] = reward;
+			
+			State[] tempS = new State[states.size()];
+			tempS = states.toArray(tempS);
+			
+			/*Double[] tempR = new Double[rewards.size()];
+			tempR = rewards.toArray(tempR);*/
+			
+			/*String[] tempA = new String[acts.size()];
+			tempA = acts.toArray(tempA);*/
+			
+			return new Info(tempS, discR, t);
+			//return new Info(currState, reward, t);
 		}
 		
 		//if the action succeeds
@@ -200,7 +246,7 @@ public class Environment{
 			currState = s;
 		}
 		
-		return new Info(currState, currState.getReward(), 1);
+		return new Info(new State[]{currState}, new Double[]{(double) currState.getReward()}, 1);
 	}
 	
 	//NOT IMPORTANT FOR NOW

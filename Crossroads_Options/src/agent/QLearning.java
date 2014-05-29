@@ -1,11 +1,10 @@
 package agent;
 
-
 import java.util.Random;
 
 import tools.Info;
-
-
+import tools.Option;
+import tools.State;
 
 public class QLearning extends Agent{
 
@@ -65,6 +64,7 @@ public class QLearning extends Agent{
 	
 	@Override
 	public void learn(int steps) {
+
 		int state;
 		Info result;
 		String action;
@@ -73,6 +73,7 @@ public class QLearning extends Agent{
 			if(state == goalState){
 				return;
 			}
+			
 			//choose A from S using policy derived from Q
 			//using e-greedy here
 			//(with probability 0.7 we take best action)
@@ -87,9 +88,34 @@ public class QLearning extends Agent{
 			result = env.performOption(action);
 			
 			int index = getActionIndex(action);
+			
+			int timeSteps = result.getTimeSteps();
+			
+			if(timeSteps > 1){
+				//do additional updates on the previous states
+				State[] states = result.getStates();
+				Double[] rewards = result.getRewards();
+				
+				int s;
+				for(int x = 0; x < states.length-1; x++){
+					s = states[x].getName();
+					//THIS IS PROBABLY WRONG AS NEXT STATE SHOULD BE THE 
+					//STATE WHERE THE OPTION ENDS, AND GAMMA SHOULD BE DISCOUNTED ACCORDING
+					//TO HOW MANY TIMESTEPS HAVE PAST (I think)
+					/*qValues[s][index] = qValues[s][index] + 0.1*(rewards[x]
+							+ 0.9*getMaxQ(states[x+1].getName())
+							- qValues[s][index]);*/
+					
+					//this could be wrong as well (especially the timestep part)
+					qValues[s][index] = qValues[s][index] + 0.1*(rewards[x]
+							+ Math.pow(0.9, timeSteps-(x+1))*getMaxQ(result.getState().getName())
+							- qValues[s][index]);
+				}
+			}
+			
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
-					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
-					- qValues[state][index]); 
+				+ Math.pow(0.9, timeSteps)*getMaxQ(result.getState().getName())
+				- qValues[state][index]);
 		}
 	}
 

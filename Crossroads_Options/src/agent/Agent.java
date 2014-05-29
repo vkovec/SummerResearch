@@ -1,18 +1,18 @@
 package agent;
-import crossenv.Environment;
+import tools.IEnvironment;
 
 /**
  * @author vkovec
  *
  */
 public abstract class Agent{
-	protected Environment env;
+	protected IEnvironment env;
 	
 	protected double[] values = null;
 	protected int startState;
 	protected int goalState;
 	
-	protected String[] actions = {"up", "down", "left", "right", "oup", "odown"};
+	protected String[] actions = {"up", "down", "left", "right"/*, "oup", "odown"*/};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
@@ -35,7 +35,7 @@ public abstract class Agent{
 		return -1;
 	}
 	
-	public void setEnv(Environment e, int start, int goal){
+	public void setEnv(IEnvironment e, int start, int goal){
 		env = e;
 		startState = start;
 		goalState = goal;
@@ -43,10 +43,12 @@ public abstract class Agent{
 	
 	public Agent(int n){
 		if(values == null){
-			values = new double[2*n-1];
+		//	values = new double[2*n-1];
+			values = new double[n*n];
 		}
 		if(qValues == null){
-			qValues = new double[2*n-1][actions.length];
+			//qValues = new double[2*n-1][actions.length];
+			qValues = new double[n*n][actions.length];
 		}
 		if(sPolicy == null){
 			sPolicy = new double[2*n-1][actions.length];

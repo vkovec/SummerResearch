@@ -4,11 +4,13 @@ import java.util.ArrayList;
 public class State{
 	private int name;
 	private int reward;
+	private boolean isObstacle;
 	
 	//up, down, left, right
 	private ArrayList<State> neighbors;
 	
 	public State(int n, int r){
+		isObstacle = false;
 		name = n;
 		reward = r;
 		neighbors = new ArrayList<State>();
@@ -35,5 +37,13 @@ public class State{
 
 	public ArrayList<State> getNeighbors(){
 		return neighbors;
+	}
+	
+	public boolean isObstacle(){
+		return isObstacle;
+	}
+	
+	public void setAsObstacle(boolean b){
+		isObstacle = b;
 	}
 }

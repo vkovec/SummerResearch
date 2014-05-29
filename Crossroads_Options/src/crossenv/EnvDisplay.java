@@ -17,7 +17,7 @@ import javax.swing.border.Border;
 
 import agent.Agent;
 import agent.InfTheoryLearning;
-
+import agent.QLearning;
 
 @SuppressWarnings("serial")
 public class EnvDisplay extends JFrame{
@@ -42,8 +42,8 @@ public class EnvDisplay extends JFrame{
 		
 		this.n = n;
 		
-		env = new Environment();
-		env.initializeStates(n);
+		env = new Environment(n);
+		//env.initializeStates(n);
 		
 		agent = a;
 		
@@ -223,10 +223,9 @@ public class EnvDisplay extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		EnvDisplay e = new EnvDisplay(11, new InfTheoryLearning(11));
+		EnvDisplay e = new EnvDisplay(11, new QLearning(11));
 		e.createDisplay();
 		e.pack();
 		e.setVisible(true);
-	}
-	
+	}	
 }

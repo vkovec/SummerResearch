@@ -1,6 +1,7 @@
 package agent;
 import tools.Info;
 import tools.Option;
+import tools.State;
 
 public class InfTheoryLearning extends Agent{
 
@@ -481,11 +482,32 @@ public class InfTheoryLearning extends Agent{
 			}
 			
 			//e)
-			//take from Q-learning (for now, eventually want to do a full Q value evaluation)
+			
 			int index = getActionIndex(action);
+			
+			if(result.getTimeSteps() > 1){
+				//do additional updates on the previous states
+				State[] states = result.getStates();
+				Double[] rewards = result.getRewards();
+				
+				int st;
+				for(int x = 0; x < states.length-1; x++){
+					st = states[x].getName();
+					qValues[st][index] = qValues[st][index] + 0.1*(rewards[x]
+							+ 0.9*getMaxQ(states[x+1].getName())
+							- qValues[st][index]);
+				}
+			}
+			
+			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
+				+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
+				- qValues[state][index]);
+			
+			//take from Q-learning (for now, eventually want to do a full Q value evaluation)
+			/*int index = getActionIndex(action);
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName()) 
-					- qValues[state][index]);
+					- qValues[state][index]);*/
 			
 			//dynamic programming attempt
 			/*qValues[state][index] = 0;
