@@ -223,7 +223,7 @@ public class EnvDisplay extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		EnvDisplay e = new EnvDisplay(11, new QLearning(11));
+		EnvDisplay e = new EnvDisplay(11, new InfTheoryLearning(11));
 		e.createDisplay();
 		e.pack();
 		e.setVisible(true);

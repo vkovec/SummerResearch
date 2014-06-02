@@ -1,6 +1,7 @@
 package gridenv;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 
 import tools.IEnvironment;
@@ -16,6 +17,9 @@ public class GridEnvironment implements IEnvironment{
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
 	private int gridSize;
+	
+	//list of options
+	private Hashtable<String, Option> options;
 	
 	private State currentState = null;
 	
@@ -39,6 +43,72 @@ public class GridEnvironment implements IEnvironment{
 		states[gridSize-1][gridSize-1].setReward(1);
 		
 		setObstacles();
+		initializeOptions();
+	}
+	
+	public void initializeOptions(){
+		options = new Hashtable<String, Option>();
+		
+		
+		//find which state this is in the array
+		
+		/*		if(s > gridSize*gridSize){
+					return;
+				}
+				
+				//i is the first number
+				int i = s/gridSize;
+
+				//remainder when dividing by gridSize will give j
+				int j = s%gridSize;
+
+				currentState = states[i][j];
+				
+		how to get s if we know i and j?
+		
+		gridSize*i + j (?) <- looks correct
+		
+		*/
+		
+		//two different options, one for getting to the entrance of each corridor
+		int[] ini = new int[9];
+		String[] pol = new String[9];
+		
+		ini[0] = 0;
+		ini[1] = 1;
+		ini[2] = 2;
+		ini[3] = 10;
+		ini[4] = 11;
+		ini[5] = 12;
+		ini[6] = 20;
+		ini[7] = 21;
+		ini[8] = 22;
+		
+		for(int i = 0; i < ini.length; i++){
+			if(i%3 == 0){
+				pol[i] = "down";
+			}
+			else{
+				pol[i] = "left";
+			}
+		}
+		
+		int size = (gridSize*gridSize - 1)/2;
+		
+		options.put("odown", new Option("odown", size, ini, pol));
+	
+		pol = new String[9];
+		
+		for(int i = 0; i < ini.length; i++){
+			if(i < 6){
+				pol[i] = "right";
+			}
+			else{
+				pol[i] = "up";
+			}
+		}
+		
+		options.put("oright", new Option("oright", size, ini, pol));
 	}
 	
 	//initializes the obstacles in the environment
@@ -95,6 +165,63 @@ public class GridEnvironment implements IEnvironment{
 		//it chooses among the remaining three actions with equal probability
 		//and that action succeeds for sure
 
+		//if this is an option
+		if(o.charAt(0) == 'o'){
+			//unsure whether this actually works (appears to work though)
+			Option op = options.get(o);
+			
+			//discount factor
+			double gamma = 0.9;
+			int t = 0;
+			
+			double reward = 0;
+			Info inf;
+			
+			ArrayList<State> states = new ArrayList<State>();
+			ArrayList<Double> rewards = new ArrayList<Double>();
+			
+			String act;
+			//this may change if the policy is no longer deterministic (but prob not)
+			while(op.isExecutable(currentState.getName()) && !op.terminate(currentState.getName())){
+				act = op.getAction(currentState.getName());
+
+				inf = performOption(act);
+				
+				//store reward from t+1 onwards without discounting
+				rewards.add(inf.getReward());
+				
+				reward += Math.pow(gamma, t)*inf.getReward();
+				//not including the first state
+				states.add(inf.getState());
+				t++;
+			}
+			
+			//the option could not be executed at this state
+			if(t == 0){
+				//maybe not the best way to do this
+				//we just stayed in the same state and didn't get any reward
+				return new Info(new State[]{currentState}, new Double[]{0.0}, 1);
+			}
+			
+			//the complete discounted rewards for each state except for the last one
+			Double[] discR = new Double[states.size()];
+			//index of the reward corresponds to the index of the state where the reward was obtained
+			//except for the final one which corresponds to the reward for the first action
+			for(int r = 0; r < discR.length-1; r++){
+				discR[r] = 0.0;
+				for(int i = r+1; i < rewards.size(); i++){
+					discR[r] += Math.pow(gamma, i-(r+1))*rewards.get(i);
+				}
+			}
+			discR[discR.length-1] = reward;
+			
+			State[] tempS = new State[states.size()];
+			tempS = states.toArray(tempS);
+			
+			return new Info(tempS, discR, t);
+		}
+		
+		
 		//if the action succeeds
 		if(getBernouilli(0.7) == 1){
 			currentState = getState(o);
@@ -194,8 +321,7 @@ public class GridEnvironment implements IEnvironment{
 
 	@Override
 	public Option getOption(String o) {
-		// TODO Auto-generated method stub
-		return null;
+		return options.get(o);
 	}
 	
 	public State[][] getStates(){

@@ -1,4 +1,5 @@
 package agent;
+
 import tools.Info;
 import tools.Option;
 import tools.State;
@@ -10,7 +11,7 @@ public class InfTheoryLearning extends Agent{
 	private double[][] q;
 	private double[][] ps;
 
-	private double lambda = 100.0;
+	private double lambda = 1000.0;
 	private double alpha = 4;
 	
 	public InfTheoryLearning(int n){
@@ -33,121 +34,16 @@ public class InfTheoryLearning extends Agent{
 			q = new double[sPolicy.length][actions.length];
 			
 			//assuming 100 time steps
-			ps = new double[100][sPolicy.length];
+			ps = new double[1000][sPolicy.length];
 			
-			for(int i = 0; i < 100; i++){
+			for(int i = 0; i < 1000; i++){
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[i][j] = 1.0/sPolicy.length;
 				}
 			}
 		}
 	}
-	
-	//initialize the probability distribution over
-	//state and action combinations
-	/*private void initializeP(){
-		int n = (sPolicy.length+1)/2;
-		
-		//vertical strip starting from north		
-		//State center = null;
-		int center = n/2;
-		for(int i = 0; i < n; i++){
-			//temp = states.get(i);
-			if(i == 0){
-				//temp.setNeighbors(temp, states.get(i+1), temp, temp);
-				p[i][0][i] = 1;
-				p[i][1][i] = 0.3;
-				p[i][1][i+1] = 0.7;
-				p[i][2][i] = 1;
-				p[i][3][i] = 1;
-			}
-			else if(i == n-1){
-				//temp.setNeighbors(states.get(i-1), temp, temp, temp);
-				p[i][0][i-1] = 0.7;
-				p[i][0][i] = 0.3;
-				p[i][1][i] = 1;
-				p[i][2][i] = 1;
-				p[i][3][i] = 1;
-			}
-			//center
-			else if(i == n/2){
-				//temp.setNeighbors(states.get(i-1), states.get(i+1),
-				//		states.get(n + n/2 -1), states.get(n + n/2));
-				//center = temp;
-				p[i][0][i-1] = 0.7;
-				p[i][0][i] = 0.3;
-				p[i][1][i+1] = 0.7;
-				p[i][1][i] = 0.3;
-				p[i][2][n+(n/2)-1] = 0.7;
-				p[i][2][i] = 0.3;
-				p[i][3][n+n/2] = 0.7;
-				p[i][3][i] = 0.3;
-			}
-			else{
-				//temp.setNeighbors(states.get(i-1), states.get(i+1), temp, temp);
-				p[i][0][i-1] = 0.7;
-				p[i][0][i] = 0.3;
-				p[i][1][i+1] = 0.7;
-				p[i][1][i] = 0.3;
-				p[i][2][i] = 1;
-				p[i][3][i] = 1;
-			}
-		}
-				
-		//horizontal strip starting from left
-		for(int i = n; i < 2*n-1; i ++){
-			//temp = states.get(i);
-			if(i == n){
-			//	temp.setNeighbors(temp, temp, temp, states.get(i+1));
-				p[i][0][i] = 1;
-				p[i][1][i] = 1;
-				p[i][2][i] = 1;
-				p[i][3][i] = 0.3;
-				p[i][3][i+1] = 0.7;
-				
-			}
-			else if(i == 2*n-2){
-			//	temp.setNeighbors(temp, temp, states.get(i -1), temp);
-				p[i][0][i] = 1;
-				p[i][1][i] = 1;
-				p[i][2][i-1] = 0.7;
-				p[i][2][i] = 0.3;
-				p[i][3][i] = 1;
-			}
-			//one before the center
-			else if(i == n + n/2 - 1){
-				//temp.setNeighbors(temp, temp, states.get(i -1), center);
-				p[i][0][i] = 1;
-				p[i][1][i] = 1;
-				p[i][2][i-1] = 0.7;
-				p[i][2][i] = 0.3;
-				p[i][3][center] = 0.7;
-				p[i][3][i] = 0.3;
-			}
-			//one after the center
-			else if(i == n + n/2){
-			//	temp.setNeighbors(temp, temp, center, states.get(i+1));
-				p[i][0][i] = 1;
-				p[i][1][i] = 1;
-				
-				p[i][2][center] = 0.7;
-				p[i][2][i] = 0.3;
-				p[i][3][i+1] = 0.7;
-				p[i][3][i] = 0.3;
-			}
-			else{
-			//	temp.setNeighbors(temp, temp, states.get(i -1), states.get(i+1));
-				p[i][0][i] = 1;
-				p[i][1][i] = 1;
-				
-				p[i][2][i-1] = 0.7;
-				p[i][2][i] = 0.3;
-				p[i][3][i+1] = 0.7;
-				p[i][3][i] = 0.3;
-			}
-		}
-	}*/
-	
+
 	private void randomizePolicy(double[][] policy){
 		
 		double sum = 0;
@@ -171,7 +67,7 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup = env.getOption("oup");
+		Option oup = env.getOption("oright");
 		Option odown = env.getOption("odown");
 		
 		if(oup.isExecutable(s)){
@@ -306,12 +202,11 @@ public class InfTheoryLearning extends Agent{
 	@Override
 	public void learn(int steps) {
 		
-		lambda = 100.0;
+		lambda = 1000.0;
 		
 		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[actions.length];
-		//double[] pa = new double[6];
 		
 		int state;
 		String action;
@@ -484,8 +379,8 @@ public class InfTheoryLearning extends Agent{
 			//e)
 			
 			int index = getActionIndex(action);
-			
-			if(result.getTimeSteps() > 1){
+			int timeSteps = result.getTimeSteps();
+			if(timeSteps > 1){
 				//do additional updates on the previous states
 				State[] states = result.getStates();
 				Double[] rewards = result.getRewards();
@@ -494,7 +389,7 @@ public class InfTheoryLearning extends Agent{
 				for(int x = 0; x < states.length-1; x++){
 					st = states[x].getName();
 					qValues[st][index] = qValues[st][index] + 0.1*(rewards[x]
-							+ 0.9*getMaxQ(states[x+1].getName())
+							+ Math.pow(0.9, timeSteps-(x+1))*getMaxQ(result.getState().getName())
 							- qValues[st][index]);
 				}
 			}
@@ -526,8 +421,8 @@ public class InfTheoryLearning extends Agent{
 		/*if(lambda > 0.1){
 			lambda = lambda/2;
 		}*/
+		
 	}
-	
 	
 	public void printSum(double[] a){
 		double sum = 0;

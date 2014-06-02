@@ -1,4 +1,8 @@
 package agent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import tools.IEnvironment;
 
 /**
@@ -6,17 +10,20 @@ import tools.IEnvironment;
  *
  */
 public abstract class Agent{
+	protected PrintWriter writer;
+	
 	protected IEnvironment env;
 	
 	protected double[] values = null;
 	protected int startState;
 	protected int goalState;
 	
-	protected String[] actions = {"up", "down", "left", "right"/*, "oup", "odown"*/};
+	//protected String[] actions = {"up", "down", "left", "right", "oup", "odown"};
+	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
 	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
 	
 	//for stochastic policies
@@ -42,8 +49,15 @@ public abstract class Agent{
 	}
 	
 	public Agent(int n){
+		try {
+			writer = new PrintWriter("gc.txt", "UTF-8");
+		} 
+		catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
 		if(values == null){
-		//	values = new double[2*n-1];
+			//values = new double[2*n-1];
 			values = new double[n*n];
 		}
 		if(qValues == null){
@@ -51,7 +65,8 @@ public abstract class Agent{
 			qValues = new double[n*n][actions.length];
 		}
 		if(sPolicy == null){
-			sPolicy = new double[2*n-1][actions.length];
+			//sPolicy = new double[2*n-1][actions.length];
+			sPolicy = new double[n*n][actions.length];
 		}
 	}
 	
@@ -105,13 +120,24 @@ public abstract class Agent{
 	
 	public void learnTrial(int eps){
 		for(int i = 0; i < eps; i++){
-			learn(100);
+			learn(1000);
+			//print the policy for a given state to a file
+			printPolicyToFile(11);
+			
 			env.gotoState(startState);
 		}
-		/*for(int i = 0; i < sPolicy.length; i++){
+		for(int i = 0; i < sPolicy.length; i++){
 			for(int j = 0; j < actions.length; j++){
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
-		}*/
+		}
+		writer.close();
+	}
+	
+	public void printPolicyToFile(int s){
+		writer.println("");
+		for(int i = 0; i < actions.length; i++){
+			writer.print(sPolicy[s][i] + ",");
+		}
 	}
 }

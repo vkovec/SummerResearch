@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 import tools.State;
 
 import agent.Agent;
+import agent.InfTheoryLearning;
 import agent.QLearning;
 import agent.TDLearning;
 
@@ -110,7 +111,7 @@ public class GridEnvDisplay extends JFrame{
 		//for the start and goal states
 		labels.get(0).setText("Start");
 		labels.get(0).setBackground(Color.blue);
-		labels.get(labels.size() -1).setText("Goal");
+		labels.get(labels.size()-1).setText("Goal");
 		labels.get(labels.size()-1).setBackground(Color.green);
 	}
 	
@@ -161,10 +162,26 @@ public class GridEnvDisplay extends JFrame{
 			}
 		});
 		grid[1][0].add(qtrial);
+		
+		//display the policy found
+		JButton policy = new JButton("Policy");
+		policy.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] p = agent.getPolicy();
+				
+				for(int i = 0; i < p.length; i++){
+					if(i != start && i != goal){
+						labels.get(i).setText(p[i]);
+					}
+				}
+			}
+		});
+		grid[2][0].add(policy);
 	}
 	
 	public static void main(String[] args){
-		GridEnvDisplay e = new GridEnvDisplay(new QLearning(10));
+		GridEnvDisplay e = new GridEnvDisplay(new InfTheoryLearning(10));
 		
 		e.createDisplay();
 		e.pack();
