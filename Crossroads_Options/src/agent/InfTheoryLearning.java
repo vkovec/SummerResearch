@@ -61,13 +61,25 @@ public class InfTheoryLearning extends Agent{
 				policy[i][j] = policy[i][j]/sum;
 			}
 		}
-		
 	}
 	
+	/**
+	 * @return the combination of the two inputed policies
+	 */
+	private double[][] combinePolicy(double[][] p1, double[][] p2 , double b){
+		double[][] pol = new double[p1.length][p1[0].length];
+		
+		for(int i = 0; i < pol.length; i++){
+			for(int j = 0; j < pol[0].length; j++){
+				pol[i][j] = (1-b)*p1[i][j] + b*p2[i][j];
+			}
+		}
+		return pol;
+	}
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup = env.getOption("oright");
+		Option oup = env.getOption("oup");
 		Option odown = env.getOption("odown");
 		
 		if(oup.isExecutable(s)){
@@ -235,14 +247,17 @@ public class InfTheoryLearning extends Agent{
 			//b)
 			
 			//just set q to some random policy
+			//(1-b)*sPolicy + b*random (b = 0.3)
+			
 			randomizePolicy(q);
+			q = combinePolicy(sPolicy, q, 0.1);
+			//q = sPolicy;
 			
 			//c)
 				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
 					//maybe difference between the two probability distributions using D(qj, qj+1)?
 			double[][] qPrev = new double[q.length][actions.length];
 
-			//sometimes gets stuck in this loop
 			while(Math.abs(getDistrDiff(q, qPrev)) > 0.1){ 
 				qPrev = q;
 
@@ -297,7 +312,7 @@ public class InfTheoryLearning extends Agent{
 				for(int x = 0; x < q.length; x++){
 					for(int a = 0; a < actions.length; a++){
 						//set Z
-						double sum = 0;
+						/*double sum = 0;
 						for(int k = 0; k < actions.length; k++){
 							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
 						}
@@ -314,12 +329,12 @@ public class InfTheoryLearning extends Agent{
 						}
 						else{
 							q[x][a] = (pa[a]*exp)/Z[x];
-						}
+						}*/
 						
 						//attempt to avoid inf/inf problem using logs
 						//doesn't completely solve the problem..numbers still become too large
 						//set Z
-						/*double temp;
+						double temp;
 						double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
 						double logZ = 1;
 						for(int k = 1; k < actions.length; k++){
@@ -337,7 +352,7 @@ public class InfTheoryLearning extends Agent{
 						
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
 							System.out.println("Didn't work");
-						}*/
+						}
 						
 					}
 				}
@@ -346,6 +361,7 @@ public class InfTheoryLearning extends Agent{
 				//this will always happen
 				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[i][0]);
 			}
+			//sPolicy = copyArray(q);
 			sPolicy = q;
 			
 			//d) choose action a (using pi) and obtain reward and next state
@@ -414,14 +430,7 @@ public class InfTheoryLearning extends Agent{
 					qValues[state][index] += p[state][index][x]*(0 + 0.9*getMaxQ(x));
 				}
 			}*/
-		}
-		
-		//attempt at deterministic annealing (may be wrong as this does not appear to be more
-		//computationally expensive)
-		/*if(lambda > 0.1){
-			lambda = lambda/2;
-		}*/
-		
+		}		
 	}
 	
 	public void printSum(double[] a){
