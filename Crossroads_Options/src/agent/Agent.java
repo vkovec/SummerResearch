@@ -18,7 +18,7 @@ public abstract class Agent{
 	protected int startState;
 	protected int goalState;
 	
-	//protected String[] actions = {"up", "down", "left", "right", "oup", "odown"};
+	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
 	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
@@ -50,7 +50,7 @@ public abstract class Agent{
 	
 	public Agent(int n){
 		try {
-			writer = new PrintWriter("gc.txt", "UTF-8");
+			writer = new PrintWriter("gr.txt", "UTF-8");
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -105,10 +105,10 @@ public abstract class Agent{
 					policy[x] = ">";
 					break;
 				case 4:
-					policy[x] = "vv";
+					policy[x] = "^^";
 					break;
 				case 5:
-					policy[x] = "^^";
+					policy[x] = "vv";
 					break;
 			}
 		}
@@ -122,7 +122,7 @@ public abstract class Agent{
 		for(int i = 0; i < eps; i++){
 			learn(1000);
 			//print the policy for a given state to a file
-			printPolicyToFile(11);
+			printPolicyToFile(15);
 			
 			env.gotoState(startState);
 		}
