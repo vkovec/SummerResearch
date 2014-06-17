@@ -148,7 +148,7 @@ public class EnvDisplay extends JFrame{
 				String[] p = agent.getPolicy();
 				
 				for(int i = 0; i < p.length; i++){
-					if(i != start && i != goal){
+					if(i != goal){
 						labels.get(i).setText(p[i]);
 					}
 				}
@@ -192,7 +192,7 @@ public class EnvDisplay extends JFrame{
 			Border border = BorderFactory.createLineBorder(Color.BLACK, 3);
 			label.setBorder(border);
 			
-			label.setPreferredSize(new Dimension(70,70));
+			label.setPreferredSize(new Dimension(50,50));
 			labels.add(label);
 		}
 		

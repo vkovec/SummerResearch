@@ -68,7 +68,7 @@ public class GridEnvDisplay extends JFrame{
 		for(int i = 0; i < n; i ++){
 			for(int j = 0; j < n+1; j++){
 				grid[i][j] = new JPanel();
-				//grid[i][j].setPreferredSize(new Dimension(70,70));
+				// grid[i][j].setPreferredSize(new Dimension(50,50));
 				if(j != 0){
 					Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 					grid[i][j].setBorder(border);

@@ -18,12 +18,14 @@ public abstract class Agent{
 	protected int startState;
 	protected int goalState;
 	
-	protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
+	protected int timeSteps = 1000;
+	
+	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
+	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
 	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
 	
 	//for stochastic policies
@@ -50,23 +52,23 @@ public abstract class Agent{
 	
 	public Agent(int n){
 		try {
-			writer = new PrintWriter("cs2.txt", "UTF-8");
+			writer = new PrintWriter("gc2.txt", "UTF-8");
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
 		if(values == null){
-			values = new double[2*n-1];
-			//values = new double[n*n];
+			//values = new double[2*n-1];
+			values = new double[n*n];
 		}
 		if(qValues == null){
-			qValues = new double[2*n-1][actions.length];
-			//qValues = new double[n*n][actions.length];
+			//qValues = new double[2*n-1][actions.length];
+			qValues = new double[n*n][actions.length];
 		}
 		if(sPolicy == null){
-			sPolicy = new double[2*n-1][actions.length];
-			//sPolicy = new double[n*n][actions.length];
+			//sPolicy = new double[2*n-1][actions.length];
+			sPolicy = new double[n*n][actions.length];
 		}
 	}
 	
@@ -120,10 +122,15 @@ public abstract class Agent{
 	
 	public void learnTrial(int eps){
 		for(int i = 0; i < eps; i++){
-			learn(1000);
-			//print the policy for a given state to a file
-			printPolicyToFile(2);
 			
+			learn(timeSteps);
+			printPolicyToFile(11);
+			/*for(int j = 0; j < 100; j++){
+				learn(1);
+				//print the policy for a given state to a file
+				printPolicyToFile(2);
+			
+			}*/
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){
