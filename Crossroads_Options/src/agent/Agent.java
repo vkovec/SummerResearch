@@ -11,6 +11,7 @@ import tools.IEnvironment;
  */
 public abstract class Agent{
 	protected PrintWriter writer;
+	protected PrintWriter qWriter;
 	
 	protected IEnvironment env;
 	
@@ -20,12 +21,12 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
+	protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
+	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
 	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
 	
 	//for stochastic policies
@@ -52,23 +53,24 @@ public abstract class Agent{
 	
 	public Agent(int n){
 		try {
-			writer = new PrintWriter("gc2.txt", "UTF-8");
+			writer = new PrintWriter("cs2.txt", "UTF-8");
+			qWriter = new PrintWriter("cs2q.txt", "UTF-8");
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
 		if(values == null){
-			//values = new double[2*n-1];
-			values = new double[n*n];
+			values = new double[2*n-1];
+			//values = new double[n*n];
 		}
 		if(qValues == null){
-			//qValues = new double[2*n-1][actions.length];
-			qValues = new double[n*n][actions.length];
+			qValues = new double[2*n-1][actions.length];
+			//qValues = new double[n*n][actions.length];
 		}
 		if(sPolicy == null){
-			//sPolicy = new double[2*n-1][actions.length];
-			sPolicy = new double[n*n][actions.length];
+			sPolicy = new double[2*n-1][actions.length];
+			//sPolicy = new double[n*n][actions.length];
 		}
 	}
 	
@@ -124,13 +126,13 @@ public abstract class Agent{
 		for(int i = 0; i < eps; i++){
 			
 			learn(timeSteps);
-			printPolicyToFile(11);
+			printPolicyToFile(2);
 			/*for(int j = 0; j < 100; j++){
 				learn(1);
 				//print the policy for a given state to a file
 				printPolicyToFile(2);
 			
-			}*/
+			}*/printPolicyToFile(2);
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){
@@ -145,6 +147,11 @@ public abstract class Agent{
 		writer.println("");
 		for(int i = 0; i < actions.length; i++){
 			writer.print(sPolicy[s][i] + ",");
+		}
+		
+		qWriter.println("");
+		for(int i = 0; i < actions.length; i++){
+			qWriter.print(qValues[s][i] + ",");
 		}
 	}
 }

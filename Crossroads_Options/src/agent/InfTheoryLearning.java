@@ -33,7 +33,6 @@ public class InfTheoryLearning extends Agent{
 			//the q(a|x) policy
 			q = new double[sPolicy.length][actions.length];
 			
-			//assuming 100 time steps
 			ps = new double[timeSteps][sPolicy.length];
 			
 			for(int i = 0; i < timeSteps; i++){
@@ -81,7 +80,7 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup = env.getOption("oright");
+		Option oup = env.getOption("oup");
 		Option odown = env.getOption("odown");
 		
 		if(oup.isExecutable(s)){
@@ -193,7 +192,6 @@ public class InfTheoryLearning extends Agent{
 		for(int i = 0; i < a.length; i++){
 			System.arraycopy(a[i], 0, array[i], 0, a[i].length);
 		}
-		
 		return array;
 	}
 	
@@ -257,14 +255,14 @@ public class InfTheoryLearning extends Agent{
 			
 			//c)
 				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
-					//maybe difference between the two probability distributions using D(qj, qj+1)?
 			double[][] qPrev = new double[q.length][actions.length];
 			
 			//trying something
 			double distDiff = Math.abs(getDistrDiff(q, qPrev));
 			double prevDistDiff = distDiff+1;
 			
-			//also stop if the difference between the two distributions starts increasing
+			//also stop if the difference between the two distributions starts increasing\
+			//or stays the same
 			//(infinite loop otherwise)
 			//AT SOME POINT ALL THE Qs BECOME 0 => probably because Z[x] becomes infinite
 			while(distDiff > 0.1 /*&& distDiff < prevDistDiff*/){ 
@@ -455,7 +453,9 @@ public class InfTheoryLearning extends Agent{
 					qValues[state][index] += p[state][index][x]*(0 + 0.9*getMaxQ(x));
 				}
 			}*/
-		}		
+			
+			//printPolicyToFile(2);
+		}
 	}
 	
 	public void printSum(double[] a){
