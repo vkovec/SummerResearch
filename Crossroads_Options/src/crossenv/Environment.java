@@ -174,7 +174,6 @@ public class Environment implements IEnvironment{
 			s = n.get(3);
 		}
 		else{
-			//unsure whether this actually works (appears to work though)
 			Option op = options.get(o);
 			
 			//discount factor
@@ -183,35 +182,26 @@ public class Environment implements IEnvironment{
 			
 			double reward = 0;
 			Info inf;
-			
-			//ArrayList<String> acts = new ArrayList<String>();
+
 			ArrayList<State> states = new ArrayList<State>();
 			ArrayList<Double> rewards = new ArrayList<Double>();
 			
-			String act;
-			//this may change if the policy is no longer deterministic (but prob not)
 			while(op.isExecutable(currState.getName()) && !op.terminate(currState.getName())){
-				act = op.getAction(currState.getName());
-
-				inf = performOption(act);
+				inf = performOption(op.getAction(currState.getName()));
 				
 				//store reward from t+1 onwards without discounting
 				rewards.add(inf.getReward());
 				
 				reward += Math.pow(gamma, t)*inf.getReward();
 
-				//not including the first state
+				//not including the first state since we already know what it was
 				states.add(inf.getState());
-				//System.out.println(inf.getState().getName());
-				
 				t++;
 			}
 			
 			//the option could not be executed at this state
 			if(t == 0){
-				//maybe not the best way to do this
-				//we just stayed in the same state and didn't get any reward
-				return new Info(new State[]{currState}, new Double[]{0.0}, 1);
+				return new Info(new State[]{currState}, new Double[]{0.0}, t);
 			}
 			
 			//System.out.println("state size: " + states.size() + ", reward size: " + rewards.size());
@@ -230,13 +220,7 @@ public class Environment implements IEnvironment{
 			
 			State[] tempS = new State[states.size()];
 			tempS = states.toArray(tempS);
-			
-			/*Double[] tempR = new Double[rewards.size()];
-			tempR = rewards.toArray(tempR);*/
-			
-			/*String[] tempA = new String[acts.size()];
-			tempA = acts.toArray(tempA);*/
-			
+
 			return new Info(tempS, discR, t);
 			//return new Info(currState, reward, t);
 		}

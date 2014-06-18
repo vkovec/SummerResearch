@@ -25,7 +25,6 @@ public class InfTheoryLearning extends Agent{
 					}
 				}
 			}
-			//initializeP();
 			
 			//initialize the policy to a uniformly random policy
 			randomizePolicy(sPolicy);
@@ -55,13 +54,6 @@ public class InfTheoryLearning extends Agent{
 				policy[i][j] = policy[i][j]/sum;
 			}
 		}
-		
-		//normalize
-		/*for(int i = 0; i < policy.length; i++){
-			for(int j = 0; j < actions.length; j++){
-				policy[i][j] = policy[i][j]/sum;
-			}
-		}*/
 	}
 	
 	/**
@@ -80,7 +72,7 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup = env.getOption("oup");
+		Option oup = env.getOption("oright");
 		Option odown = env.getOption("odown");
 		
 		if(oup.isExecutable(s)){
@@ -186,7 +178,7 @@ public class InfTheoryLearning extends Agent{
 		return sum;
 	}*/
 	
-	private double[][] copyArray(double[][] a){
+	public double[][] copyArray(double[][] a){
 		double[][] array = new double[a.length][a[0].length];
 		
 		for(int i = 0; i < a.length; i++){
@@ -250,25 +242,27 @@ public class InfTheoryLearning extends Agent{
 			//(1-b)*sPolicy + b*random (b = 0.3)
 			
 			randomizePolicy(q);
-			q = combinePolicy(sPolicy, q, 0.3);
+			q = combinePolicy(sPolicy, q, 0.1);
 			//q = copyArray(sPolicy);
 			
 			//c)
 				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
 			double[][] qPrev = new double[q.length][actions.length];
 			
-			//trying something
 			double distDiff = Math.abs(getDistrDiff(q, qPrev));
 			double prevDistDiff = distDiff+1;
 			
 			//also stop if the difference between the two distributions starts increasing\
-			//or stays the same
-			//(infinite loop otherwise)
+			//or stays the same (infinite loop otherwise)
 			//AT SOME POINT ALL THE Qs BECOME 0 => probably because Z[x] becomes infinite
 			while(distDiff > 0.1 /*&& distDiff < prevDistDiff*/){ 
 				//distribution differences are too high (can only find local optimum anyway)
 				if(distDiff >= prevDistDiff){
-					//System.out.println("distDiff: " + distDiff);
+					//try starting with a different q
+					//randomizePolicy(q);
+					//q = combinePolicy(sPolicy, q, 0.6);
+					
+					//System.out.println("distDiff: " + distDiff + ", i: " + i);
 					break;
 				}
 				
@@ -387,6 +381,9 @@ public class InfTheoryLearning extends Agent{
 			
 			if(lambda > 0.1){
 				lambda = lambda/2;
+				
+				//trying a slower decrease for lambda
+				//lambda = 1/(Math.log(i+10));
 			}
 			
 			//d) choose action a (using pi) and obtain reward and next state

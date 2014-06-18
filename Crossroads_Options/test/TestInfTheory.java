@@ -88,4 +88,17 @@ public class TestInfTheory
 	public void testGetOptions(){
 		
 	}
+	
+	@Test
+	public void testArrayCopy(){
+		double[][] a = {{2, 3}, {5, 6}, {7,8}};
+		
+		double[][] copy = test.copyArray(a);
+		
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < a[0].length; j++){
+				assertEquals((int)a[i][j], (int)copy[i][j]);
+			}
+		}
+	}
 }
