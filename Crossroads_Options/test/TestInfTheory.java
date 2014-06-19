@@ -1,12 +1,8 @@
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import agent.Agent;
 import agent.InfTheoryLearning;
 
 public class TestInfTheory
@@ -42,6 +38,35 @@ public class TestInfTheory
 		
 		System.out.println(sum);
 		
+		//int s = (int) sum;
+		//assertEquals(10, s);
+		
+		boolean result = (sum < 10.1 && sum > 9.9);
+		assertEquals(true, result);
+	}
+	
+	@Test
+	public void testRandPolicy(){
+		double[][] pol = new double[10][6];
+		
+		double sum = 0;
+		for(int i = 0; i < pol.length; i++){
+			for(int j = 0; j < pol[0].length; j++){
+				sum += pol[i][j];
+			}
+		}
+		
+		System.out.println(sum);
+		
+		test.randomPolicy(pol);
+		
+		sum = 0;
+		for(int i = 0; i < pol.length; i++){
+			for(int j = 0; j < pol[0].length; j++){
+				sum += pol[i][j];
+				System.out.println(pol[i][j]);
+			}
+		}
 		//int s = (int) sum;
 		//assertEquals(10, s);
 		

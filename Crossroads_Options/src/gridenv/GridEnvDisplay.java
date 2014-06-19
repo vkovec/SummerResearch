@@ -107,6 +107,12 @@ public class GridEnvDisplay extends JFrame{
 				x++;
 			}
 		}
+		//the interesting area
+		for(int i = 53; i < 57; i++){
+			labels.get(i).setBackground(Color.gray);
+		}
+		labels.get(65).setBackground(Color.gray);
+		labels.get(66).setBackground(Color.gray);
 		
 		//for the start and goal states
 		labels.get(0).setText("Start");

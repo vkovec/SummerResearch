@@ -1,5 +1,7 @@
 package agent;
 
+import java.util.Random;
+
 import tools.Info;
 import tools.Option;
 import tools.State;
@@ -57,6 +59,24 @@ public class InfTheoryLearning extends Agent{
 	}
 	
 	/**
+	 * Randomizes the policy so that for every state there is a dominant action.
+	 * @param pol
+	 */
+	public void randomPolicy(double[][] pol){
+		Random rand = new Random();
+		int choice;
+		for(int i = 0; i < pol.length; i++){
+			choice = rand.nextInt(pol[0].length);
+			pol[i][choice] = rand.nextDouble()*(1-0.5) + 0.5;
+			for(int j = 0; j < pol[0].length; j++){
+				if(j != choice){
+					pol[i][j] = (1-pol[i][choice])/(actions.length-1);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * @return the combination of the two inputed policies
 	 */
 	public double[][] combinePolicy(double[][] p1, double[][] p2 , double b){
@@ -72,7 +92,15 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup = env.getOption("oright");
+		Option oup;
+		
+		if(isGrid){
+			oup = env.getOption("oright");
+		}
+		else{
+			oup = env.getOption("oup");
+		}
+		
 		Option odown = env.getOption("odown");
 		
 		if(oup.isExecutable(s)){
@@ -178,15 +206,6 @@ public class InfTheoryLearning extends Agent{
 		return sum;
 	}*/
 	
-	public double[][] copyArray(double[][] a){
-		double[][] array = new double[a.length][a[0].length];
-		
-		for(int i = 0; i < a.length; i++){
-			System.arraycopy(a[i], 0, array[i], 0, a[i].length);
-		}
-		return array;
-	}
-	
 	//learn using deterministic annealing
 	/*@Override
 	public void learn(int steps){
@@ -252,17 +271,20 @@ public class InfTheoryLearning extends Agent{
 			double distDiff = Math.abs(getDistrDiff(q, qPrev));
 			double prevDistDiff = distDiff+1;
 			
+			int count = 0;
+			
 			//also stop if the difference between the two distributions starts increasing\
 			//or stays the same (infinite loop otherwise)
 			//AT SOME POINT ALL THE Qs BECOME 0 => probably because Z[x] becomes infinite
-			while(distDiff > 0.1 /*&& distDiff < prevDistDiff*/){ 
+			while(distDiff > 1){ 
 				//distribution differences are too high (can only find local optimum anyway)
 				if(distDiff >= prevDistDiff){
 					//try starting with a different q
-					//randomizePolicy(q);
-					//q = combinePolicy(sPolicy, q, 0.6);
-					
+					randomPolicy(q);
+					count++;
 					//System.out.println("distDiff: " + distDiff + ", i: " + i);
+				}
+				if(count > 1){
 					break;
 				}
 				
@@ -352,7 +374,8 @@ public class InfTheoryLearning extends Agent{
 						q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
 						q[x][a] = Math.exp(q[x][a]);
 						
-						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
+						//for debugging
+						/*if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
 							System.out.println("Didn't work");
 						}
 						//WHEN Z TENDS TO INFINITY
@@ -361,7 +384,7 @@ public class InfTheoryLearning extends Agent{
 						}
 						if(Double.isInfinite((Math.log(pa[a]) + exp)) && Double.isInfinite(Z[x])){
 							System.out.println("exp: " + exp + ", pa[a]: " + pa[a] + ", action: " + a);
-						}
+						}*/
 						
 					}
 				}

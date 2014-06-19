@@ -10,6 +10,13 @@ import tools.IEnvironment;
  *
  */
 public abstract class Agent{
+	
+	protected boolean isGrid = false;
+	private boolean average = false;
+	
+	private double[][][] avgPol;
+	private double[][][] avgQ;
+	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
 	
@@ -21,12 +28,12 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
+	protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
+	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
 	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
 	
 	//for stochastic policies
@@ -53,24 +60,46 @@ public abstract class Agent{
 	
 	public Agent(int n){
 		try {
-			writer = new PrintWriter("gc2.txt", "UTF-8");
-			qWriter = new PrintWriter("gc2q.txt", "UTF-8");
+			if(isGrid){
+				writer = new PrintWriter("gc2.txt", "UTF-8");
+				qWriter = new PrintWriter("gc2q.txt", "UTF-8");
+			}
+			else{
+				writer = new PrintWriter("cs2.txt", "UTF-8");
+				qWriter = new PrintWriter("cs2q.txt", "UTF-8");
+			}
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
 		if(values == null){
-			//values = new double[2*n-1];
-			values = new double[n*n];
+			if(!isGrid){
+				values = new double[2*n-1];
+			}
+			else{
+				values = new double[n*n];
+			}
 		}
 		if(qValues == null){
-			//qValues = new double[2*n-1][actions.length];
-			qValues = new double[n*n][actions.length];
+			if(!isGrid){
+				qValues = new double[2*n-1][actions.length];
+				avgQ = new double[timeSteps][2*n-1][actions.length];
+			}
+			else{
+				qValues = new double[n*n][actions.length];
+				avgQ = new double[timeSteps][n*n][actions.length];
+			}
 		}
 		if(sPolicy == null){
-			//sPolicy = new double[2*n-1][actions.length];
-			sPolicy = new double[n*n][actions.length];
+			if(!isGrid){
+				sPolicy = new double[2*n-1][actions.length];
+				avgPol = new double[timeSteps][2*n-1][actions.length];
+			}
+			else{
+				sPolicy = new double[n*n][actions.length];
+				avgPol = new double[timeSteps][n*n][actions.length];
+			}
 		}
 	}
 	
@@ -123,16 +152,25 @@ public abstract class Agent{
 	public abstract void learn(int steps);
 	
 	public void learnTrial(int eps){
+		int state;
+		if(!isGrid){
+			state = 2;
+		}
+		else{
+			state = 0;
+		}
+		
 		for(int i = 0; i < eps; i++){
 			
 			learn(timeSteps);
-			printPolicyToFile(11);
-			/*for(int j = 0; j < 100; j++){
-				learn(1);
-				//print the policy for a given state to a file
-				printPolicyToFile(2);
-			
-			}*/
+			if(!average){
+				printPolicyToFile(state);
+			}
+			else{
+				//average the policy and qValues for each trial
+				addArray(avgPol[i], sPolicy);
+				addArray(avgQ[i], qValues);
+			}
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){
@@ -140,6 +178,7 @@ public abstract class Agent{
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
 		}
+		
 		writer.close();
 	}
 	
@@ -152,6 +191,28 @@ public abstract class Agent{
 		qWriter.println("");
 		for(int i = 0; i < actions.length; i++){
 			qWriter.print(qValues[s][i] + ",");
+		}
+	}
+	
+	public void printAverages(){
+		//assuming number of eps == number of timeSteps
+		
+	}
+	
+	public double[][] copyArray(double[][] a){
+		double[][] array = new double[a.length][a[0].length];
+		
+		for(int i = 0; i < a.length; i++){
+			System.arraycopy(a[i], 0, array[i], 0, a[i].length);
+		}
+		return array;
+	}
+	
+	public void addArray(double[][] a, double[][] toAdd){
+		for(int i = 0; i < a.length; i++){
+			for(int j = 0; j < a[0].length; j++){
+				a[i][j] += toAdd[i][j];
+			}
 		}
 	}
 }

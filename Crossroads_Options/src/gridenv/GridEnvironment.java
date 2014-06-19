@@ -18,6 +18,8 @@ public class GridEnvironment implements IEnvironment{
 	private State[][] states;
 	private int gridSize;
 	
+	private Random random = new Random();
+	
 	//list of options
 	private Hashtable<String, Option> options;
 	
@@ -250,6 +252,11 @@ public class GridEnvironment implements IEnvironment{
 			}
 		}
 		
+		//interesting area
+		int s = currentState.getName();
+		if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			return new Info(new State[]{currentState}, new Double[]{random.nextGaussian()}, 1);
+		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}
 	
