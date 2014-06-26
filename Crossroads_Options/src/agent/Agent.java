@@ -2,6 +2,7 @@ package agent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 import tools.IEnvironment;
 
@@ -10,15 +11,23 @@ import tools.IEnvironment;
  *
  */
 public abstract class Agent{
+	//temporary
+	protected double[][] ps;
 	
-	protected boolean isGrid = false;
-	private boolean average = false;
+	protected boolean isGrid = true;
+	protected boolean average = false;
 	
 	private double[][][] avgPol;
 	private double[][][] avgQ;
 	
+	protected int[] actionDist = new int[6];
+	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
+	protected PrintWriter psWriter;
+	protected PrintWriter paWriter;
+	protected PrintWriter pjWriter;
+	protected PrintWriter DWriter;
 	
 	protected IEnvironment env;
 	
@@ -28,12 +37,12 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
+	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
+	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
 	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
 	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
 	
 	//for stochastic policies
@@ -63,10 +72,20 @@ public abstract class Agent{
 			if(isGrid){
 				writer = new PrintWriter("gc2.txt", "UTF-8");
 				qWriter = new PrintWriter("gc2q.txt", "UTF-8");
+				
+				psWriter = new PrintWriter("gc2ps.txt", "UTF-8");
+				paWriter = new PrintWriter("gc2pa.txt", "UTF-8");
+				pjWriter = new PrintWriter("gc2pj.txt", "UTF-8");
+				DWriter = new PrintWriter("gc2D.txt", "UTF-8");
 			}
 			else{
 				writer = new PrintWriter("cs2.txt", "UTF-8");
 				qWriter = new PrintWriter("cs2q.txt", "UTF-8");
+				
+				psWriter = new PrintWriter("cs2ps.txt", "UTF-8");
+				paWriter = new PrintWriter("cs2pa.txt", "UTF-8");
+				pjWriter = new PrintWriter("cs2pj.txt", "UTF-8");
+				DWriter = new PrintWriter("cs2D.txt", "UTF-8");
 			}
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -152,6 +171,9 @@ public abstract class Agent{
 	public abstract void learn(int steps);
 	
 	public void learnTrial(int eps){
+		
+		//Random rand = new Random();
+		
 		int state;
 		if(!isGrid){
 			state = 2;
@@ -161,8 +183,11 @@ public abstract class Agent{
 		}
 		
 		for(int i = 0; i < eps; i++){
-			
+			/*if(i == eps-1){
+				average = true;
+			}*/
 			learn(timeSteps);
+	
 			if(!average){
 				printPolicyToFile(state);
 			}
@@ -171,6 +196,8 @@ public abstract class Agent{
 				addArray(avgPol[i], sPolicy);
 				addArray(avgQ[i], qValues);
 			}
+			//always change starting state after each trial
+			//startState = rand.nextInt(21);
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){
@@ -178,18 +205,26 @@ public abstract class Agent{
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
 		}
+
+		//print ps for state to a file (timestep vs. probability)
+		for(int i = 0; i < timeSteps; i++){
+			psWriter.println("");
+			psWriter.print(ps[i][state]);
+		}
 		
 		writer.close();
+		qWriter.close();
+		psWriter.close();
+		paWriter.close();
+		pjWriter.close();
+		DWriter.close();
 	}
 	
 	public void printPolicyToFile(int s){
 		writer.println("");
-		for(int i = 0; i < actions.length; i++){
-			writer.print(sPolicy[s][i] + ",");
-		}
-		
 		qWriter.println("");
 		for(int i = 0; i < actions.length; i++){
+			writer.print(sPolicy[s][i] + ",");
 			qWriter.print(qValues[s][i] + ",");
 		}
 	}

@@ -127,13 +127,14 @@ public class Environment implements IEnvironment{
 		
 		Random rand = new Random();
 		int n = (states.size()+1)/2;
-		ArrayList<State> corners = new ArrayList<State>();
+		/*ArrayList<State> corners = new ArrayList<State>();
 		corners.add(states.get(0));
 		corners.add(states.get(n-1));
 		corners.add(states.get(n));
 		corners.add(states.get(states.size()-1));
 		
-		State s = corners.get(rand.nextInt(4));
+		State s = corners.get(rand.nextInt(4));*/
+		State s = states.get(states.size()-1);
 		s.setReward(1);
 		
 		goalState = s;
@@ -222,6 +223,7 @@ public class Environment implements IEnvironment{
 			tempS = states.toArray(tempS);
 
 			return new Info(tempS, discR, t);
+			
 			//return new Info(currState, reward, t);
 		}
 		

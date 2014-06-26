@@ -118,9 +118,17 @@ public class EnvDisplay extends JFrame{
 				}*/
 				start = 2;
 				env.gotoState(2);
-				goal = env.chooseGoal().getName();
+				//goal = 21;
+				//goal = env.chooseGoal().getName();
 				
+				//agent.setEnv(env, start, goal);
+				
+				//agent.learnTrial(100);
+				
+				goal = env.chooseGoal().getName();
 				agent.setEnv(env, start, goal);
+				
+				//agent.preLearn(10000);
 				agent.learnTrial(1000);
 				
 				double[][] qVals = agent.getQValues();

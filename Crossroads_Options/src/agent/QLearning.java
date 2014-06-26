@@ -80,9 +80,13 @@ public class QLearning extends Agent{
 			
 			int index = getActionIndex(action);
 			
+			if(state == 2){
+				actionDist[index]++;
+			}
+			
 			int timeSteps = result.getTimeSteps();
 			
-			if(timeSteps > 1){
+			/*if(timeSteps > 1){
 				//do additional updates on the previous states
 				State[] states = result.getStates();
 				Double[] rewards = result.getRewards();
@@ -90,22 +94,16 @@ public class QLearning extends Agent{
 				int s;
 				for(int x = 0; x < states.length-1; x++){
 					s = states[x].getName();
-					//THIS IS PROBABLY WRONG AS NEXT STATE SHOULD BE THE 
-					//STATE WHERE THE OPTION ENDS, AND GAMMA SHOULD BE DISCOUNTED ACCORDING
-					//TO HOW MANY TIMESTEPS HAVE PAST (I think)
-					/*qValues[s][index] = qValues[s][index] + 0.1*(rewards[x]
-							+ 0.9*getMaxQ(states[x+1].getName())
-							- qValues[s][index]);*/
 					
 					//this could be wrong as well (especially the timestep part)
 					qValues[s][index] = qValues[s][index] + 0.1*(rewards[x]
 							+ Math.pow(0.9, timeSteps-(x+1))*getMaxQ(result.getState().getName())
 							- qValues[s][index]);
 				}
-			}
-			
+			}*/
+		
 			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
-				+ Math.pow(0.9, timeSteps)*getMaxQ(result.getState().getName())
+				+ Math.pow(0.6, timeSteps)*getMaxQ(result.getState().getName())
 				- qValues[state][index]);
 		}
 	}
