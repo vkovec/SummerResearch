@@ -39,8 +39,8 @@ public class GridEnvironment implements IEnvironment{
 			}
 		}
 		//magma along larger path
-		states[5][8].setReward(-1);
-		states[5][9].setReward(-1);
+		//states[5][8].setReward(-1);
+		//states[5][9].setReward(-1);
 		
 		currentState = states[0][0];
 		

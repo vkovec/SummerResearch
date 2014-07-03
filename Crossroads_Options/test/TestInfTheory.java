@@ -3,6 +3,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import crossenv.Environment;
+
 import agent.InfTheoryLearning;
 
 public class TestInfTheory
@@ -25,7 +27,7 @@ public class TestInfTheory
 			}
 		}
 		
-		System.out.println(sum);
+		//System.out.println(sum);
 		
 		test.randomizePolicy(pol);
 		
@@ -36,7 +38,7 @@ public class TestInfTheory
 			}
 		}
 		
-		System.out.println(sum);
+		//System.out.println(sum);
 		
 		//int s = (int) sum;
 		//assertEquals(10, s);
@@ -56,7 +58,7 @@ public class TestInfTheory
 			}
 		}
 		
-		System.out.println(sum);
+		//System.out.println(sum);
 		
 		test.randomPolicy(pol);
 		
@@ -64,7 +66,7 @@ public class TestInfTheory
 		for(int i = 0; i < pol.length; i++){
 			for(int j = 0; j < pol[0].length; j++){
 				sum += pol[i][j];
-				System.out.println(pol[i][j]);
+				//System.out.println(pol[i][j]);
 			}
 		}
 		//int s = (int) sum;
@@ -125,5 +127,43 @@ public class TestInfTheory
 				assertEquals((int)a[i][j], (int)copy[i][j]);
 			}
 		}
+	}
+	
+	@Test
+	public void testSelectAction(){
+		test.setEnv(new Environment(11), 0, 0);
+		
+		double [][] pol = test.getSPolicy();
+		
+		System.out.println("policy");
+		for(int i = 0; i < pol[0].length; i++){
+			System.out.println(pol[0][i]);
+		}
+		System.out.println("------");
+		
+		String a;
+		int percentUp = 0;
+		int percentDown = 0;
+		int percentLeft = 0;
+		int percentRight = 0;
+		for(int i = 0; i < 100; i++){
+			a = test.selectAction(0);
+			//System.out.println(a);
+			if(a.equals("up")){
+				percentUp++;
+			}
+			else if(a.equals("down")){
+				percentDown++;
+			}
+			else if(a.equals("left")){
+				percentLeft++;
+			}
+			else if(a.equals("right")){
+				percentRight++;
+			}
+		}
+		System.out.println(percentUp + ", " + percentDown + ", " + percentLeft + ", "
+				+ percentRight);
+		
 	}
 }

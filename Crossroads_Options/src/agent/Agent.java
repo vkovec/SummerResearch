@@ -13,12 +13,15 @@ import tools.IEnvironment;
 public abstract class Agent{
 	//temporary
 	protected double[][] ps;
+	public double alpha = 20.0;
 	
 	protected boolean isGrid = true;
 	protected boolean average = false;
 	
 	private double[][][] avgPol;
 	private double[][][] avgQ;
+	
+	protected int[] stateCount;
 	
 	protected int[] actionDist = new int[6];
 	
@@ -95,9 +98,11 @@ public abstract class Agent{
 		if(values == null){
 			if(!isGrid){
 				values = new double[2*n-1];
+				stateCount = new int[2*n-1];
 			}
 			else{
 				values = new double[n*n];
+				stateCount = new int[n*n];
 			}
 		}
 		if(qValues == null){
@@ -128,6 +133,14 @@ public abstract class Agent{
 	
 	public double[][] getQValues(){
 		return qValues;
+	}
+	
+	public double[][] getSPolicy(){
+		return sPolicy;
+	}
+	
+	public int[] getStateCount(){
+		return stateCount;
 	}
 	
 	/**
@@ -172,6 +185,9 @@ public abstract class Agent{
 	
 	public void learnTrial(int eps){
 		
+		randomizePolicy(sPolicy);
+		qValues =  new double[qValues.length][actions.length];
+		
 		//Random rand = new Random();
 		
 		int state;
@@ -202,6 +218,9 @@ public abstract class Agent{
 		}
 		for(int i = 0; i < sPolicy.length; i++){
 			for(int j = 0; j < actions.length; j++){
+				if(sPolicy[i][j] < (Math.pow(10,-5))){
+					sPolicy[i][j] = 0;
+				}
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
 		}
@@ -232,6 +251,20 @@ public abstract class Agent{
 	public void printAverages(){
 		//assuming number of eps == number of timeSteps
 		
+	}
+	
+	public void randomizePolicy(double[][] policy){
+		
+		for(int i = 0; i < policy.length; i++){
+			double sum = 0;
+			for(int j = 0; j < actions.length; j++){
+				policy[i][j] = Math.random();
+				sum += policy[i][j];
+			}
+			for(int j = 0; j < actions.length; j++){
+				policy[i][j] = policy[i][j]/sum;
+			}
+		}
 	}
 	
 	public double[][] copyArray(double[][] a){

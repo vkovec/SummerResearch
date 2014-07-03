@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -118,18 +121,48 @@ public class EnvDisplay extends JFrame{
 				}*/
 				start = 2;
 				env.gotoState(2);
-				//goal = 21;
-				//goal = env.chooseGoal().getName();
-				
-				//agent.setEnv(env, start, goal);
-				
-				//agent.learnTrial(100);
 				
 				goal = env.chooseGoal().getName();
 				agent.setEnv(env, start, goal);
-				
-				//agent.preLearn(10000);
+			
 				agent.learnTrial(1000);
+				
+			/*	try {
+					PrintWriter alpha = new PrintWriter("alpha.txt", "UTF-8");
+					PrintWriter qAlpha = new PrintWriter("alphaQ.txt", "UTF-8");
+					
+					double[][] sPolicy;
+					double[][] qValues;
+					
+					for(int i = 0; i < 11; i++){
+						start = 2;
+						env.gotoState(2);
+						
+						goal = env.chooseGoal().getName();
+						agent.setEnv(env, start, goal);
+					
+						agent.alpha = i;
+						
+						agent.learnTrial(1000);
+						
+						sPolicy = agent.getSPolicy();
+						qValues = agent.getQValues();
+						
+						alpha.println("");
+						qAlpha.println("");
+						for(int j = 0; j < 6; j++){
+							alpha.print(sPolicy[2][j] + ",");
+							qAlpha.print(qValues[2][j] + ",");
+						}
+					}
+					
+					alpha.close();
+					qAlpha.close();
+					
+				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}*/
 				
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -144,6 +177,14 @@ public class EnvDisplay extends JFrame{
 						labels.get(i).setText("" + df.format(val));
 					}
 				}
+				
+				/*int[] stateCount = agent.getStateCount();
+				for(int i = 0; i < stateCount.length; i++){
+					if(stateCount[i] > 255){
+						stateCount[i] = 255;
+					}
+					labels.get(i).setBackground(new Color(255,0,0, stateCount[i]));
+				}*/
 			}
 		});
 		grid[2][0].add(qtrial);

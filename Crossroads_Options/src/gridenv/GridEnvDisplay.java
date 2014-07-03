@@ -150,19 +150,29 @@ public class GridEnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				agent.setEnv(gridEnv, start, goal);
-				agent.learnTrial(1000);
+				agent.learnTrial(10000);
 						
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
 					if(i != goal){
 						double val = 0;
 						//average the values for each action
-						for(int j = 0; j < 4; j++){
+						for(int j = 0; j < 6; j++){
 							if(qVals[i][j] > val){
 								val = qVals[i][j];
 							}
 						}
 						labels.get(i).setText("" + df.format(val));
+					}
+				}
+				
+				int[] stateCount = agent.getStateCount();
+				for(int i = 0; i < stateCount.length; i++){
+					if(stateCount[i] > 255){
+						stateCount[i] = 255;
+					}
+					if(!labels.get(i).getBackground().equals(Color.black)){
+						labels.get(i).setBackground(new Color(255,0,0, stateCount[i]));
 					}
 				}
 			}

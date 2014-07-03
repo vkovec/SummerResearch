@@ -14,7 +14,7 @@ public class InfTheoryLearning extends Agent{
 	//private double[][] ps;
 
 	private double lambda = 1000.0;
-	private double alpha = 20.0;
+	//private double alpha = 0.5;
 	
 	public InfTheoryLearning(int n){
 		super(n);
@@ -44,20 +44,6 @@ public class InfTheoryLearning extends Agent{
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[i][j] = 1.0/sPolicy.length;
 				}
-			}
-		}
-	}
-
-	public void randomizePolicy(double[][] policy){
-		
-		for(int i = 0; i < policy.length; i++){
-			double sum = 0;
-			for(int j = 0; j < actions.length; j++){
-				policy[i][j] = Math.random();
-				sum += policy[i][j];
-			}
-			for(int j = 0; j < actions.length; j++){
-				policy[i][j] = policy[i][j]/sum;
 			}
 		}
 	}
@@ -123,7 +109,7 @@ public class InfTheoryLearning extends Agent{
 	}
 	
 	//select an action using the probabilities specified in pi
-	private String selectAction(int s){
+	public String selectAction(int s){
 		
 		//reduces the number of possible actions for the state
 		String[] actions = getOptions(s);
@@ -234,14 +220,16 @@ public class InfTheoryLearning extends Agent{
 		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[actions.length];
-		
+
 		int state;
 		String action;
 		Info result;
 		for(int i = 0; i < steps; i++){
 			state = env.getCurrentState();
+			
+			stateCount[state]++;
+			
 			if(state == goalState){
-				//System.out.println("goal");
 				return;
 			}
 			
@@ -253,20 +241,22 @@ public class InfTheoryLearning extends Agent{
 			
 			//add 1 to the current state estimate (seems too simple though)
 			//maybe use the policy or the probability distribution, or both
-			/*ps[i][state] += 1;
+			ps[i][state] += 1;
 			
-			for(int x = 0; x < q.length; x++){
+			/*for(int x = 0; x < q.length; x++){
 				ps[i][x] = ps[i][x]/2;
 			}*/
-			for(int j = 0; j < pj.length; j++){
-				double sum = 0;
-				for(int x = 0; x < pj.length; x++){
-					for(int a = 0; a < actions.length; a++){
-						sum += p[x][a][j]*sPolicy[x][a]*ps[i][x];
+			/*if(i > 0){
+				for(int j = 0; j < pj.length; j++){
+					double sum = 0;
+					for(int x = 0; x < pj.length; x++){
+						for(int a = 0; a < actions.length; a++){
+							sum += p[x][a][j]*sPolicy[x][a]*ps[i-1][x];
+						}
 					}
+					ps[i][j] = sum;
 				}
-				ps[i][j] = sum;
-			}
+			}*/
 			
 			//b)
 			
@@ -284,7 +274,7 @@ public class InfTheoryLearning extends Agent{
 			double distDiff = Math.abs(getDistrDiff(q, qPrev));
 			double prevDistDiff = distDiff+1;
 			
-			int count = 0;
+			//int count = 0;
 			
 			double bestDistDiff = distDiff;
 			double[][] bestPol = q;
@@ -292,7 +282,7 @@ public class InfTheoryLearning extends Agent{
 			//also stop if the difference between the two distributions starts increasing\
 			//or stays the same (infinite loop otherwise)
 			//AT SOME POINT ALL THE Qs BECOME 0 => probably because Z[x] becomes infinite
-			while(distDiff > 1){ 
+			while(distDiff > 0.5){ 
 				/*if(count > 1){
 					break;
 				}*/
@@ -306,8 +296,6 @@ public class InfTheoryLearning extends Agent{
 					//try starting with a different q
 					//randomPolicy(q);
 					//count++;
-					//System.out.println("distDiff: " + distDiff + ", i: " + i);
-					
 					break;
 				}
 				
@@ -324,7 +312,7 @@ public class InfTheoryLearning extends Agent{
 						sum += q[k][j]*ps[i][k];
 					}
 					pa[j] = sum;
-					paWriter.print(pa[j] + ", ");
+					//paWriter.print(pa[j] + ", ");
 				}
 				
 				//update pj
@@ -340,7 +328,7 @@ public class InfTheoryLearning extends Agent{
 					
 					//probability that we transition to state 2
 					if(j == 2){
-						pjWriter.print(pj[j] + ", ");
+						//pjWriter.print(pj[j] + ", ");
 					}
  				}
 				
@@ -372,36 +360,60 @@ public class InfTheoryLearning extends Agent{
 						
 						//only want to look for state 2
 						if(x == 2){
-							DWriter.print(D[x][a] + ", ");
+							//DWriter.print(D[x][a] + ", ");
 						}
 					}
 				}
-			
+				
 				for(int x = 0; x < q.length; x++){
+					
+					String[] acts = getOptions(x);
+					
+					//set Z
+					double temp;
+					double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+					double logZ = 1;
+					for(int k = 1; k < actions.length; k++){
+						
+						//if the current action is an option that is not in the list
+						if(acts.length < actions.length && actions[k].charAt(0) == 'o'
+								&& !acts[acts.length-1].equals(actions[k])){
+							continue;
+						}
+						
+						temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
+						logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
+					}
+					logZ = Math.log(logZ);
+					logZ += log0;
+					Z[x] = logZ;
+					
 					for(int a = 0; a < actions.length; a++){
+						
 						//set Z
 						/*double sum = 0;
 						for(int k = 0; k < actions.length; k++){
-							sum += pa[k]*Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
+							sum += Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]) + Math.log(pa[k]));
 						}
 						Z[x] = sum;
 						
-						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]));
+						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]) + Math.log(pa[a]));
 						
 						//maybe this is the wrong way to handle this
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
-							System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", D: " + D[x][a]
-									+ ", lambda: " + lambda);
+						//	System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", D: " + D[x][a]
+						//			+ ", lambda: " + lambda);
 							q[x][a] = 1;
 						}
 						else{
-							q[x][a] = (pa[a]*exp)/Z[x];
+							q[x][a] = (exp)/Z[x];
 						}*/
+						
 						
 						//attempt to avoid inf/inf problem using logs
 						//doesn't completely solve the problem..numbers still become too large
 						//set Z
-						double temp;
+						/*double temp;
 						double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
 						double logZ = 1;
 						for(int k = 1; k < actions.length; k++){
@@ -410,35 +422,29 @@ public class InfTheoryLearning extends Agent{
 						}
 						logZ = Math.log(logZ);
 						logZ += log0;
-						Z[x] = logZ;
+						Z[x] = logZ;*/
 						
-						double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
-						q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
-						q[x][a] = Math.exp(q[x][a]);
-						
-						//for debugging
-						/*if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
-							System.out.println("Didn't work");
+						//if the current action is an option that is not in the list
+						if(acts.length < actions.length && actions[a].charAt(0) == 'o'
+								&& !acts[acts.length-1].equals(actions[a])){
+							q[x][a] = 0;
 						}
-						//WHEN Z TENDS TO INFINITY
+						else{
+						
+							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
+						
+							q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+							q[x][a] = Math.exp(q[x][a]);
+						}
+						
 						if(Double.isNaN(q[x][a])){
-							System.out.println("Z[x]: " + Z[x] + ", Other: " + (Math.log(pa[a]) + exp));
+							return;
 						}
-						if(Double.isInfinite((Math.log(pa[a]) + exp)) && Double.isInfinite(Z[x])){
-							System.out.println("exp: " + exp + ", pa[a]: " + pa[a] + ", action: " + a);
-						}*/
 						
 					}
 				}
-				
-				//p should get closer to 1 for going up from state 0 to state 0, because
-				//this will always happen
-				//System.out.println("q: " + q[0][0] + ", p: " + p[0][0][0] + ", pa: " + pa[0] + " ps: " + ps[i][0]);
-				
-				//new distribution difference
-				//System.out.println("distr diff: " + getDistrDiff(q,qPrev) + ", q[0][0] : " + q[0][0]);
-				
+
 				prevDistDiff = distDiff;
 				distDiff = getDistrDiff(q,qPrev);
 			}
@@ -450,17 +456,15 @@ public class InfTheoryLearning extends Agent{
 				sPolicy = copyArray(q);
 			}
 			
-			/*if(average){
-				//System.out.println(steps);
-				printPolicyToFile(2);
-			}*/
-			
-			if(lambda > 0.1){
-				lambda = lambda/2;
+			//if(lambda > 0.1){
+				//lambda = lambda/2;
 				
 				//trying a slower decrease for lambda
-				//lambda = 1/(Math.log(i+10));
-			}
+				lambda = 1/(Math.log(i+10));
+				
+			
+				//lambda = Math.sqrt(lambda);
+			//}
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
@@ -529,6 +533,7 @@ public class InfTheoryLearning extends Agent{
 			
 			//printPolicyToFile(2);
 		}
+		System.out.println("trial");
 	}
 	
 	public void printSum(double[] a){
