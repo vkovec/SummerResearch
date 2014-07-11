@@ -1,5 +1,7 @@
 package agent;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Random;
 
 import tools.Info;
@@ -12,6 +14,7 @@ public class InfTheoryLearning extends Agent{
 	private double[][][] p = null;
 	private double[][] q;
 	//private double[][] ps;
+	private int counter = 0;
 
 	private double lambda = 1000.0;
 	//private double alpha = 0.5;
@@ -82,7 +85,7 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		Option oup;
+		/*Option oup;
 		
 		if(isGrid){
 			oup = env.getOption("oright");
@@ -105,7 +108,26 @@ public class InfTheoryLearning extends Agent{
 			return actions3;
 		}
 		
-		return actions1;
+		return actions1;*/
+		
+		ArrayList<String> acts = new ArrayList<String>();
+		acts.add("up");
+		acts.add("down");
+		acts.add("left");
+		acts.add("right");
+		
+		Enumeration<Option> options = env.getOptions();
+		
+		Option o;
+		while(options.hasMoreElements()){
+			o = options.nextElement();
+			
+			if(o.isExecutable(s)){
+				acts.add(o.getName());
+			}
+		}
+		
+		return acts.toArray(new String[]{});
 	}
 	
 	//select an action using the probabilities specified in pi
@@ -113,6 +135,10 @@ public class InfTheoryLearning extends Agent{
 		
 		//reduces the number of possible actions for the state
 		String[] actions = getOptions(s);
+		
+		/*if(actions.length > 4){
+			System.out.println(actions.length);
+		}*/
 		
 		double[] helper = new double[actions.length-1]; //length 3
 		
@@ -208,14 +234,15 @@ public class InfTheoryLearning extends Agent{
 		}
 		
 		if(lambda > 0.1){
-			lambda = lambda/2;
+			lambda = 1/(Math.log(counter+10));
 		}
+		counter++;
 	}*/
 	
 	@Override
 	public void learn(int steps) {
 
-		lambda = 1000.0;
+		//lambda = 1000.0;
 		
 		double[] pj = new double[sPolicy.length];
 		
@@ -229,9 +256,9 @@ public class InfTheoryLearning extends Agent{
 			
 			stateCount[state]++;
 			
-			if(state == goalState){
+			/*if(state == goalState){
 				return;
-			}
+			}*/
 			
 			//a)
 				//calculate the new probability of visiting each state
@@ -241,12 +268,12 @@ public class InfTheoryLearning extends Agent{
 			
 			//add 1 to the current state estimate (seems too simple though)
 			//maybe use the policy or the probability distribution, or both
-			ps[i][state] += 1;
+			/*ps[i][state] += 1;
 			
-			/*for(int x = 0; x < q.length; x++){
+			for(int x = 0; x < q.length; x++){
 				ps[i][x] = ps[i][x]/2;
 			}*/
-			/*if(i > 0){
+			if(i > 0){
 				for(int j = 0; j < pj.length; j++){
 					double sum = 0;
 					for(int x = 0; x < pj.length; x++){
@@ -256,7 +283,7 @@ public class InfTheoryLearning extends Agent{
 					}
 					ps[i][j] = sum;
 				}
-			}*/
+			}
 			
 			//b)
 			
@@ -291,11 +318,11 @@ public class InfTheoryLearning extends Agent{
 					/*if(distDiff < bestDistDiff){
 						bestDistDiff = distDiff;
 						bestPol = copyArray(q);
-					}*/
+					}
 					
 					//try starting with a different q
-					//randomPolicy(q);
-					//count++;
+					randomPolicy(q);
+					count++;*/
 					break;
 				}
 				
@@ -371,7 +398,7 @@ public class InfTheoryLearning extends Agent{
 					
 					//set Z
 					double temp;
-					double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+					double log0 = /*Math.log(pa[0]) +*/ ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
 					double logZ = 1;
 					for(int k = 1; k < actions.length; k++){
 						
@@ -382,7 +409,7 @@ public class InfTheoryLearning extends Agent{
 						}
 						
 						temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
-						logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
+						logZ += Math.exp((/*Math.log(pa[k]) +*/ temp) - log0);
 					}
 					logZ = Math.log(logZ);
 					logZ += log0;
@@ -434,7 +461,7 @@ public class InfTheoryLearning extends Agent{
 						
 							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
-							q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+							q[x][a] = (/*Math.log(pa[a]) +*/ exp) - Z[x];
 							q[x][a] = Math.exp(q[x][a]);
 						}
 						
@@ -460,7 +487,7 @@ public class InfTheoryLearning extends Agent{
 				//lambda = lambda/2;
 				
 				//trying a slower decrease for lambda
-				lambda = 1/(Math.log(i+10));
+				//lambda = 1/(Math.log(i+10));
 				
 			
 				//lambda = Math.sqrt(lambda);
@@ -530,10 +557,10 @@ public class InfTheoryLearning extends Agent{
 					qValues[state][index] += p[state][index][x]*(0 + 0.9*getMaxQ(x));
 				}
 			}*/
-			
-			//printPolicyToFile(2);
 		}
-		System.out.println("trial");
+		System.out.println("trial " + counter);
+		lambda = 1/(Math.log(counter+10));
+		counter++;
 	}
 	
 	public void printSum(double[] a){

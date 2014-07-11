@@ -1,6 +1,7 @@
 package crossenv;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -37,7 +38,7 @@ public class Environment implements IEnvironment{
 			pol[i] = "down";
 		}
 		
-		options.put("oup", new Option("oup", n, ini, pol));
+	//	options.put("oup", new Option("oup", n, ini, pol));
 		
 		ini = new int[n/2];
 		pol = new String[n/2];
@@ -47,7 +48,51 @@ public class Environment implements IEnvironment{
 			pol[i-(n/2+1)] = "up";
 		}
 		
-		options.put("odown", new Option("odown", n, ini, pol));
+	//	options.put("odown", new Option("odown", n, ini, pol));
+		
+		Option o = createRandomOption(n);
+
+		options.put(o.getName(), o);
+		
+		o = createRandomOption(n);
+		options.put(o.getName(), o);
+		
+		o = createRandomOption(n);
+		options.put(o.getName(), o);
+	}
+	
+	public Option createRandomOption(int n){
+		
+		Random rand = new Random();
+		
+		//assuming we won't be deleting any options after they have
+		//been created
+		String name = "o" + (options.size()+1);
+		
+		//want at least 3 states in the option and at most 5
+		int[] iniSet = new int[rand.nextInt(3) + 3];
+		
+		//pick a random state to start the option
+		State first = chooseStart();
+		iniSet[0] = first.getName();
+		
+		//pick actions uniformly at random to move around the state space
+		//and retrieve new states for the option
+		for(int i = 1; i < iniSet.length; i++){
+			performOption(actions[rand.nextInt(4)]);
+			iniSet[i] = currState.getName();
+		}
+		
+		//one more time to get the goal state
+		performOption(actions[rand.nextInt(4)]);
+		
+		//String[] pol = new String[iniSet.length];
+		
+		Option opt = new Option(name, n, iniSet);
+		
+		learnOption(opt, currState.getName());
+		
+		return opt;
 	}
 	
 	//initialize the state space
@@ -238,15 +283,24 @@ public class Environment implements IEnvironment{
 	//NOT IMPORTANT FOR NOW
 	//need to learn the policies for the options
 	//have to give manual subgoals to learn from and then set the policy
-	//based on what was learned (only deterministic policies for now)
+	//based on what was learned 
+	//n is the goal state
 	public void learnOption(Option o, int n){
 
 		Random rand = new Random();
 
 		//this becomes very annoying and inefficient for finding the max Q-value
-		ArrayList<Hashtable<Integer, Double>> q = new ArrayList<Hashtable<Integer, Double>>();
+		/*ArrayList<Hashtable<Integer, Double>> q = new ArrayList<Hashtable<Integer, Double>>();
 		for(int i = 0; i < actions.length; i++){
 			q.add(new Hashtable<Integer, Double>());
+		}*/
+		
+		int[] ini = o.getIni();
+		Hashtable<Integer, Integer> stateToState = new Hashtable<Integer, Integer>();
+		Hashtable<Integer, Integer> reverse = new Hashtable<Integer, Integer>();
+		for(int i = 0; i < o.sizeI(); i++){
+			stateToState.put(ini[i], i);
+			reverse.put(i, ini[i]);
 		}
 		
 		double[][] qVals = new double[o.sizeI()][actions.length];
@@ -254,11 +308,11 @@ public class Environment implements IEnvironment{
 		//figure out how to give subgoals
 		//maybe increase the reward at the subgoal states (for now only the center state)
 		//and remove the reward at the actual goal (or just don't set an actual goal)
-		states.get(n/2).setReward(1);
+		states.get(n).setReward(1);
 		
 		//use the modified Q-learning algorithm and above method to
 		//learn from the environment
-		Hashtable<Integer, Double> temp;
+		//Hashtable<Integer, Double> temp;
 		int s;
 		String action;
 		Info result;
@@ -280,16 +334,16 @@ public class Environment implements IEnvironment{
 				index = getActionIndex(action);
 				nextState = result.getState().getName();
 				
+				int st = stateToState.get(s);
 				if(o.isExecutable(nextState)){
-					qVals[s][index] = qVals[s][index] + 0.1*(result.getReward()
-							+ 0.9*getMaxQ(nextState, qVals)
-							- qVals[s][index]); 
+					qVals[st][index] = qVals[st][index] + 0.1*(result.getReward()
+							+ 0.9*getMaxQ(stateToState.get(nextState), qVals)
+							- qVals[st][index]); 
 				}
 				else{
-					//wait can't index s like this
-					qVals[s][index] = qVals[s][index] + 0.1*(result.getReward()
+					qVals[st][index] = qVals[st][index] + 0.1*(result.getReward()
 							+ 0.9*result.getReward()
-							- qVals[s][index]); 
+							- qVals[st][index]); 
 				}
 			}
 		}
@@ -299,20 +353,20 @@ public class Environment implements IEnvironment{
 		
 		for(int i = 0; i < qVals.length; i++){
 			int act = -1;
-			double val = 0;
+			double val = -1;
 			for(int j = 0; j < actions.length; j++){
 				if(qVals[i][j] > val){
 					val = qVals[i][j];
 					act = j;
 				}
 			}
-			policy.put(i, actions[act]);
+			policy.put(reverse.get(i), actions[act]);
 		}
 		//set the policy for the option
 		o.setPolicy(policy);
 		
 		//set the reward for the subgoal states back to 0
-		states.get(n/2).setReward(0);
+		states.get(n).setReward(0);
 	}
 	
 	//helpers for above method
@@ -342,6 +396,14 @@ public class Environment implements IEnvironment{
 	
 	public Option getOption(String o){
 		return options.get(o);
+	}
+	
+	public Enumeration<Option> getOptions(){
+		return options.elements();
+	}
+	
+	public int howManyOptions(){
+		return options.size();
 	}
 	
 	public void gotoState(int s){

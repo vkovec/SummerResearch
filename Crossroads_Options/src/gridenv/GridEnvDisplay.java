@@ -47,8 +47,11 @@ public class GridEnvDisplay extends JFrame{
 		gridEnv = new GridEnvironment(10);
 		
 		//set the start and the goal states
-		start = 0;
-		goal = 99;	
+		//start = 0;
+		//goal = 99;	
+		
+		start = 4;
+		goal = 94;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -108,17 +111,19 @@ public class GridEnvDisplay extends JFrame{
 			}
 		}
 		//the interesting area
-		for(int i = 53; i < 57; i++){
+		/*for(int i = 53; i < 57; i++){
 			labels.get(i).setBackground(Color.gray);
 		}
 		labels.get(65).setBackground(Color.gray);
-		labels.get(66).setBackground(Color.gray);
+		labels.get(66).setBackground(Color.gray);*/
 		
 		//for the start and goal states
-		labels.get(0).setText("Start");
-		labels.get(0).setBackground(Color.blue);
-		labels.get(labels.size()-1).setText("Goal");
-		labels.get(labels.size()-1).setBackground(Color.green);
+		labels.get(4).setText("Start");
+		labels.get(4).setBackground(Color.blue);
+		//labels.get(labels.size()-1).setText("Goal");
+		//labels.get(labels.size()-1).setBackground(Color.green);
+		labels.get(94).setText("Goal");
+		labels.get(94).setBackground(Color.green);
 	}
 	
 	private void createDisplay() {
@@ -150,7 +155,7 @@ public class GridEnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				agent.setEnv(gridEnv, start, goal);
-				agent.learnTrial(10000);
+				agent.learnTrial(1000);
 						
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -168,6 +173,7 @@ public class GridEnvDisplay extends JFrame{
 				
 				int[] stateCount = agent.getStateCount();
 				for(int i = 0; i < stateCount.length; i++){
+					stateCount[i] = stateCount[i]/2;
 					if(stateCount[i] > 255){
 						stateCount[i] = 255;
 					}

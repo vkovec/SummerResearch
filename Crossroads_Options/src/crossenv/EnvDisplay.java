@@ -119,8 +119,10 @@ public class EnvDisplay extends JFrame{
 					agent.setEnv(env, start, goal);
 					agent.learnTrial(1);
 				}*/
-				start = 2;
-				env.gotoState(2);
+				
+				//start = 2;
+				//env.gotoState(2);
+				start = env.chooseStart().getName();
 				
 				goal = env.chooseGoal().getName();
 				agent.setEnv(env, start, goal);
@@ -160,7 +162,6 @@ public class EnvDisplay extends JFrame{
 					qAlpha.close();
 					
 				} catch (FileNotFoundException | UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}*/
 				
@@ -169,7 +170,7 @@ public class EnvDisplay extends JFrame{
 					if(i != goal){
 						double val = 0;
 						//average the values for each action
-						for(int j = 0; j < 6; j++){
+						for(int j = 0; j < (4 + env.howManyOptions()); j++){
 							if(qVals[i][j] > val){
 								val = qVals[i][j];
 							}

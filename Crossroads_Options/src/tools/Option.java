@@ -10,6 +10,12 @@ public class Option{
 	
 	private double[] beta;
 	
+	/**
+	 * @param name name of the option (has to begin with o)
+	 * @param n number of states in the environment
+	 * @param ini the initiation set for the option
+	 * @param pol the policy for the initiation set
+	 */
 	public Option(String name, int n, int[] ini, String[] pol){
 		this.name = name;
 		
@@ -21,6 +27,26 @@ public class Option{
 		for(int i = 0; i < initiationSet.length; i++){
 			policy.put(initiationSet[i], pol[i]);
 		}
+		
+		beta = new double[2*n-1];
+		for(int i = 0; i < beta.length; i++){
+			if(isExecutable(i)){
+				//for now we want to continue execution until
+				//we leave the initiation set
+				beta[i] = 0;
+			}
+			else{
+				beta[i] = 1;
+			}
+		}
+	}
+	
+	public Option(String name, int n, int[] ini){
+		this.name = name;
+		
+		initiationSet = ini;
+		
+		policy = new Hashtable<Integer, String>();
 		
 		beta = new double[2*n-1];
 		for(int i = 0; i < beta.length; i++){
@@ -70,6 +96,13 @@ public class Option{
 	//change the policy to a new policy
 	public void setPolicy(Hashtable<Integer, String> p){
 		policy = p;
+	}
+	
+	/**
+	 * @return the initiation set
+	 */
+	public int[] getIni(){
+		return initiationSet;
 	}
 	
 	public int sizeI(){

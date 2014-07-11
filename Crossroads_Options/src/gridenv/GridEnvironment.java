@@ -1,6 +1,7 @@
 package gridenv;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -42,10 +43,11 @@ public class GridEnvironment implements IEnvironment{
 		//states[5][8].setReward(-1);
 		//states[5][9].setReward(-1);
 		
-		currentState = states[0][0];
+		currentState = states[0][4];
 		
 		//set the reward at the goal
-		states[gridSize-1][gridSize-1].setReward(1);
+		//states[gridSize-1][gridSize-1].setReward(1);
+		states[9][4].setReward(1);
 		
 		setObstacles();
 		initializeOptions();
@@ -121,9 +123,11 @@ public class GridEnvironment implements IEnvironment{
 	public void setObstacles(){
 		
 		//going row by row
-		for(int j = 3; j < 8; j++){
+	/*	for(int j = 3; j < 8; j++){
 			states[2][j].setAsObstacle(true);
-		}
+		}*/
+		
+		/*createObstacle(3,8,2,3);
 		
 		states[3][1].setAsObstacle(true);
 		states[3][2].setAsObstacle(true);
@@ -142,7 +146,36 @@ public class GridEnvironment implements IEnvironment{
 		states[6][7].setAsObstacle(true);
 		
 		states[7][6].setAsObstacle(true);
-		states[7][7].setAsObstacle(true);
+		states[7][7].setAsObstacle(true);*/
+		
+		//I environment
+		
+		//left side
+		createObstacle(0, 2, 2, 8);
+		//center top
+		createObstacle(3, 6, 2, 3);
+		//| part
+		createObstacle(4, 5, 3, 8);
+		//center bottom
+		createObstacle(3, 6, 7, 8);
+		//right side
+		createObstacle(7, 10, 2, 8);
+	}
+	
+	
+	/**
+	 * Creates rectangular obstacles.
+	 * @param wS width start -> j
+	 * @param wE width end
+	 * @param hS height start -> i
+	 * @param hE height end
+	 */
+	public void createObstacle(int wS, int wE, int hS, int hE){
+		for(int i = hS; i < hE; i++){
+			for(int j = wS; j < wE; j++){
+				states[i][j].setAsObstacle(true);
+			}
+		}
 	}
 	
 	public int getGridSize(){
@@ -253,10 +286,10 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		//interesting area
-		int s = currentState.getName();
+		/*int s = currentState.getName();
 		if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 			return new Info(new State[]{currentState}, new Double[]{random.nextGaussian()}, 1);
-		}
+		}*/
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}
 	
@@ -336,5 +369,15 @@ public class GridEnvironment implements IEnvironment{
 	
 	public State[][] getStates(){
 		return states;
+	}
+
+	@Override
+	public Enumeration<Option> getOptions() {
+		return options.elements();
+	}
+
+	@Override
+	public int howManyOptions() {
+		return options.size();
 	}
 }

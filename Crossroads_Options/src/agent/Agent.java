@@ -2,9 +2,11 @@ package agent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 import java.util.Random;
 
 import tools.IEnvironment;
+import tools.Option;
 
 /**
  * @author vkovec
@@ -13,9 +15,9 @@ import tools.IEnvironment;
 public abstract class Agent{
 	//temporary
 	protected double[][] ps;
-	public double alpha = 20.0;
+	public double alpha = 0.5;
 	
-	protected boolean isGrid = true;
+	protected boolean isGrid = false;
 	protected boolean average = false;
 	
 	private double[][][] avgPol;
@@ -41,12 +43,14 @@ public abstract class Agent{
 	protected int timeSteps = 1000;
 	
 	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
+	protected String[] actions = new String[7];
+	
+	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
 	//just trying something to avoid performing options in states not in the initiation set
-	protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oright"};
-	protected String[] actions3 = {"up", "down", "left", "right", "odown"};
+	/*protected String[] actions1 = {"up", "down", "left", "right"};
+	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
+	protected String[] actions3 = {"up", "down", "left", "right", "odown"};*/
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -68,9 +72,24 @@ public abstract class Agent{
 		env = e;
 		startState = start;
 		goalState = goal;
+		
+		actions = new String[4 + env.howManyOptions()];
+		
+		actions[0] = "up";
+		actions[1] = "down";
+		actions[2] = "left";
+		actions[3] = "right";
+		
+		Enumeration<Option> opts = env.getOptions();
+		int i = 4;
+		while(opts.hasMoreElements()){
+			actions[i] = opts.nextElement().getName();
+			i++;
+		}
 	}
 	
 	public Agent(int n){
+		
 		try {
 			if(isGrid){
 				writer = new PrintWriter("gc2.txt", "UTF-8");
@@ -169,12 +188,28 @@ public abstract class Agent{
 				case 3:
 					policy[x] = ">";
 					break;
-				case 4:
+				default:
+					String act = actions[action];
+					if(act.equals("oup")){
+						policy[x] = "vv";
+					}
+					else if(act.equals("odown")){
+						policy[x] = "^^";
+					}
+					else if(act.equals("oright")){
+						policy[x] = ">>";
+					}
+					else{
+						policy[x] = "op";
+					}
+					break;
+				
+				/*case 4:
 					policy[x] = "^^";
 					break;
 				case 5:
 					policy[x] = "vv";
-					break;
+					break;*/
 			}
 		}
 		
@@ -188,7 +223,7 @@ public abstract class Agent{
 		randomizePolicy(sPolicy);
 		qValues =  new double[qValues.length][actions.length];
 		
-		//Random rand = new Random();
+		Random rand = new Random();
 		
 		int state;
 		if(!isGrid){
@@ -213,7 +248,7 @@ public abstract class Agent{
 				addArray(avgQ[i], qValues);
 			}
 			//always change starting state after each trial
-			//startState = rand.nextInt(21);
+			startState = rand.nextInt(21);
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){

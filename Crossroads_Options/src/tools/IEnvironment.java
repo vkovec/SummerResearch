@@ -1,5 +1,7 @@
 package tools;
 
+import java.util.Enumeration;
+
 public interface IEnvironment{
 	
 	/**
@@ -29,4 +31,14 @@ public interface IEnvironment{
 	 * @return the option
 	 */
 	public Option getOption(String o);
+	
+	/**
+	 * @return all the options
+	 */
+	public Enumeration<Option> getOptions();
+	
+	/**
+	 * @return the number of options there are
+	 */
+	public int howManyOptions();
 }
