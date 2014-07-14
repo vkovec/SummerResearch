@@ -27,6 +27,8 @@ public class Environment implements IEnvironment{
 	//goal state
 	private State goalState = null;
 	
+	private Random rand;
+	
 	public void initializeOptions(int n){
 		options = new Hashtable<String, Option>();
 		
@@ -38,7 +40,7 @@ public class Environment implements IEnvironment{
 			pol[i] = "down";
 		}
 		
-	//	options.put("oup", new Option("oup", n, ini, pol));
+		options.put("oup", new Option("oup", n, ini, pol));
 		
 		ini = new int[n/2];
 		pol = new String[n/2];
@@ -48,22 +50,34 @@ public class Environment implements IEnvironment{
 			pol[i-(n/2+1)] = "up";
 		}
 		
-	//	options.put("odown", new Option("odown", n, ini, pol));
+		//options.put("odown", new Option("odown", n, ini, pol));
 		
 		Option o = createRandomOption(n);
 
 		options.put(o.getName(), o);
 		
-		o = createRandomOption(n);
-		options.put(o.getName(), o);
+	//	o = createRandomOption(n);
+	//	options.put(o.getName(), o);
 		
-		o = createRandomOption(n);
-		options.put(o.getName(), o);
+	//	o = createRandomOption(n);
+	//	options.put(o.getName(), o);
+	}
+	
+	//helper for below
+	private boolean contains(int[] a, int c){
+		
+		for(int i = 0; i < a.length; i++){
+			if(a[i] == c){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public Option createRandomOption(int n){
 		
-		Random rand = new Random();
+	//	Random rand = new Random();
 		
 		//assuming we won't be deleting any options after they have
 		//been created
@@ -75,16 +89,33 @@ public class Environment implements IEnvironment{
 		//pick a random state to start the option
 		State first = chooseStart();
 		iniSet[0] = first.getName();
+		System.out.println(iniSet[0]);
 		
 		//pick actions uniformly at random to move around the state space
 		//and retrieve new states for the option
+		//int prev = currState.getName();
 		for(int i = 1; i < iniSet.length; i++){
 			performOption(actions[rand.nextInt(4)]);
+			
+			/*while(prev == currState.getName()){
+				performOption(actions[rand.nextInt(4)]);
+			}
+			prev = currState.getName();*/
+			
+			//to avoid having the same state more than once in the initiation set
+			while(contains(iniSet, currState.getName())){
+				performOption(actions[rand.nextInt(4)]);
+			}
+			
 			iniSet[i] = currState.getName();
+			System.out.println(iniSet[i]);
 		}
 		
 		//one more time to get the goal state
-		performOption(actions[rand.nextInt(4)]);
+		while(contains(iniSet, currState.getName())){
+			performOption(actions[rand.nextInt(4)]);
+		}
+		System.out.println("goal: " + currState.getName());
 		
 		//String[] pol = new String[iniSet.length];
 		
@@ -99,6 +130,9 @@ public class Environment implements IEnvironment{
 	//n represents the length of the crossroads, and must be odd
 	//previously initializeStates()
 	public Environment(int n){
+		
+		rand = new Random();
+		
 		states = new ArrayList<State>();
 		
 		//generate the states:
@@ -170,7 +204,7 @@ public class Environment implements IEnvironment{
 			goalState.setReward(0);
 		}
 		
-		Random rand = new Random();
+		//Random rand = new Random();
 		int n = (states.size()+1)/2;
 		/*ArrayList<State> corners = new ArrayList<State>();
 		corners.add(states.get(0));
@@ -188,7 +222,7 @@ public class Environment implements IEnvironment{
 	
 	//chooses a random starting location
 	public State chooseStart(){
-		Random rand = new Random();
+		//Random rand = new Random();
 		State s = states.get(rand.nextInt(states.size()));
 		currState = s;
 		return s;
@@ -287,14 +321,8 @@ public class Environment implements IEnvironment{
 	//n is the goal state
 	public void learnOption(Option o, int n){
 
-		Random rand = new Random();
+		//Random rand = new Random();
 
-		//this becomes very annoying and inefficient for finding the max Q-value
-		/*ArrayList<Hashtable<Integer, Double>> q = new ArrayList<Hashtable<Integer, Double>>();
-		for(int i = 0; i < actions.length; i++){
-			q.add(new Hashtable<Integer, Double>());
-		}*/
-		
 		int[] ini = o.getIni();
 		Hashtable<Integer, Integer> stateToState = new Hashtable<Integer, Integer>();
 		Hashtable<Integer, Integer> reverse = new Hashtable<Integer, Integer>();
@@ -318,11 +346,12 @@ public class Environment implements IEnvironment{
 		Info result;
 		int index;
 		int nextState;
-		for(int i = 0; i < 100; i++){ //100 trials
+		for(int i = 0; i < 1000; i++){ //100 trials
 			//set a start state
 			s = o.getRandomState();
 			currState = states.get(s);
 			for(int j = 0; j < 100; j++){ //100 steps
+				
 				//if we are in a state where the option ends then do not continue
 				if(o.terminate(currState.getName())){
 					break;
@@ -355,11 +384,12 @@ public class Environment implements IEnvironment{
 			int act = -1;
 			double val = -1;
 			for(int j = 0; j < actions.length; j++){
-				if(qVals[i][j] > val){
+				if(qVals[i][j] >= val){
 					val = qVals[i][j];
 					act = j;
 				}
 			}
+			System.out.println(reverse.get(i) + ": " + actions[act] + ", val: " + val);
 			policy.put(reverse.get(i), actions[act]);
 		}
 		//set the policy for the option

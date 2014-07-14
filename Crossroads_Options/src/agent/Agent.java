@@ -15,7 +15,7 @@ import tools.Option;
 public abstract class Agent{
 	//temporary
 	protected double[][] ps;
-	public double alpha = 0.5;
+	public double alpha = 0.2;
 	
 	protected boolean isGrid = false;
 	protected boolean average = false;
@@ -43,7 +43,7 @@ public abstract class Agent{
 	protected int timeSteps = 1000;
 	
 	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	protected String[] actions = new String[7];
+	protected String[] actions = new String[6];
 	
 	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
 	
