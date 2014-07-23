@@ -15,9 +15,11 @@ import tools.Option;
 public abstract class Agent{
 	//temporary
 	protected double[][] ps;
-	public double alpha = 0.2;
+	public double alpha = 10.0;
 	
 	protected boolean isGrid = false;
+	protected boolean withPa = true;
+	
 	protected boolean average = false;
 	
 	private double[][][] avgPol;
@@ -85,6 +87,10 @@ public abstract class Agent{
 		while(opts.hasMoreElements()){
 			actions[i] = opts.nextElement().getName();
 			i++;
+		}
+		
+		for(int j = 0; j < actions.length; j++){
+			System.out.println(actions[j]);
 		}
 	}
 	
@@ -199,6 +205,9 @@ public abstract class Agent{
 					else if(act.equals("oright")){
 						policy[x] = ">>";
 					}
+					else if(act.equals("oleft")){
+						policy[x] = "<<";
+					}
 					else{
 						policy[x] = "op";
 					}
@@ -230,7 +239,7 @@ public abstract class Agent{
 			state = 2;
 		}
 		else{
-			state = 0;
+			state = 4;
 		}
 		
 		for(int i = 0; i < eps; i++){
@@ -248,7 +257,9 @@ public abstract class Agent{
 				addArray(avgQ[i], qValues);
 			}
 			//always change starting state after each trial
-			startState = rand.nextInt(21);
+			if(!isGrid){
+				startState = rand.nextInt(21);
+			}
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){

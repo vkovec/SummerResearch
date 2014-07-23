@@ -25,6 +25,8 @@ import agent.TDLearning;
 @SuppressWarnings("serial")
 public class GridEnvDisplay extends JFrame{
 	
+	private boolean isI = true;
+	
 	private GridEnvironment gridEnv;
 	private int start;
 	private int goal;
@@ -44,14 +46,17 @@ public class GridEnvDisplay extends JFrame{
 		
 		this.setTitle("Grid Environment");
 		
-		gridEnv = new GridEnvironment(10);
+		gridEnv = new GridEnvironment(10, isI);
 		
-		//set the start and the goal states
-		//start = 0;
-		//goal = 99;	
-		
-		start = 4;
-		goal = 94;
+		if(!isI){
+			//set the start and the goal states
+			start = 0;
+			goal = 99;	
+		}
+		else{
+			start = 4;
+			goal = 94;
+		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -110,20 +115,27 @@ public class GridEnvDisplay extends JFrame{
 				x++;
 			}
 		}
-		//the interesting area
-		/*for(int i = 53; i < 57; i++){
-			labels.get(i).setBackground(Color.gray);
+		
+		if(!isI){
+			//the interesting area
+			for(int i = 53; i < 57; i++){
+				labels.get(i).setBackground(Color.gray);
+			}
+			labels.get(65).setBackground(Color.gray);
+			labels.get(66).setBackground(Color.gray);
 		}
-		labels.get(65).setBackground(Color.gray);
-		labels.get(66).setBackground(Color.gray);*/
+		else{
+			labels.get(42).setBackground(Color.gray);
+			labels.get(43).setBackground(Color.gray);
+			labels.get(52).setBackground(Color.gray);
+			labels.get(53).setBackground(Color.gray);
+		}
 		
 		//for the start and goal states
-		labels.get(4).setText("Start");
-		labels.get(4).setBackground(Color.blue);
-		//labels.get(labels.size()-1).setText("Goal");
-		//labels.get(labels.size()-1).setBackground(Color.green);
-		labels.get(94).setText("Goal");
-		labels.get(94).setBackground(Color.green);
+		labels.get(start).setText("Start");
+		labels.get(start).setBackground(Color.blue);
+		labels.get(goal).setText("Goal");
+		labels.get(goal).setBackground(Color.green);
 	}
 	
 	private void createDisplay() {

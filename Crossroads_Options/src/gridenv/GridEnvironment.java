@@ -15,11 +15,16 @@ import tools.State;
  *	A 10 x 10 grid world with one start, one goal, and several obstacles (which may be arbitrarily placed)
  */
 public class GridEnvironment implements IEnvironment{
+	
+	private boolean isI;
+	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
 	private int gridSize;
 	
-	private Random random = new Random();
+	private Random rand = new Random();
+
+	private String[] actions = {"up", "down", "left", "right"};
 	
 	//list of options
 	private Hashtable<String, Option> options;
@@ -27,7 +32,9 @@ public class GridEnvironment implements IEnvironment{
 	private State currentState = null;
 	
 	//n is the grid size
-	public GridEnvironment(int n){
+	public GridEnvironment(int n, boolean isI){
+		this.isI = isI;
+		
 		gridSize = n;
 		states = new State[n][n];
 		
@@ -43,11 +50,15 @@ public class GridEnvironment implements IEnvironment{
 		//states[5][8].setReward(-1);
 		//states[5][9].setReward(-1);
 		
-		currentState = states[0][4];
-		
-		//set the reward at the goal
-		//states[gridSize-1][gridSize-1].setReward(1);
-		states[9][4].setReward(1);
+		if(isI){
+			currentState = states[0][4];
+			states[9][4].setReward(1);
+		}
+		else{
+			currentState = states[0][0];
+			//set the reward at the goal
+			states[gridSize-1][gridSize-1].setReward(1);
+		}
 		
 		setObstacles();
 		initializeOptions();
@@ -77,46 +88,255 @@ public class GridEnvironment implements IEnvironment{
 		
 		*/
 		
-		//two different options, one for getting to the entrance of each corridor
-		int[] ini = new int[9];
-		String[] pol = new String[9];
+		int size = (gridSize*gridSize)/2 + 1;
 		
-		ini[0] = 0;
-		ini[1] = 1;
-		ini[2] = 2;
-		ini[3] = 10;
-		ini[4] = 11;
-		ini[5] = 12;
-		ini[6] = 20;
-		ini[7] = 21;
-		ini[8] = 22;
+		if(!isI){
+			//two different options, one for getting to the entrance of each corridor
+			int[] ini = new int[9];
+			String[] pol = new String[9];
 		
-		for(int i = 0; i < ini.length; i++){
-			if(i%3 == 0){
-				pol[i] = "down";
+			ini[0] = 0;
+			ini[1] = 1;
+			ini[2] = 2;
+			ini[3] = 10;
+			ini[4] = 11;
+			ini[5] = 12;
+			ini[6] = 20;
+			ini[7] = 21;
+			ini[8] = 22;
+		
+			for(int i = 0; i < ini.length; i++){
+				if(i%3 == 0){
+					pol[i] = "down";
+				}
+				else{
+					pol[i] = "left";
+				}
 			}
-			else{
-				pol[i] = "left";
-			}
-		}
 		
-		int size = (gridSize*gridSize - 1)/2;
-		
-		options.put("odown", new Option("odown", size, ini, pol));
+			options.put("odown", new Option("odown", size, ini, pol));
 	
-		pol = new String[9];
-		
-		for(int i = 0; i < ini.length; i++){
-			if(i < 6){
-				pol[i] = "right";
+			pol = new String[9];
+			
+			for(int i = 0; i < ini.length; i++){
+				if(i < 6){
+					pol[i] = "right";
+				}
+				else{
+					pol[i] = "up";
+				}
 			}
-			else{
-				pol[i] = "up";
+		
+			options.put("oright", new Option("oright", size, ini, pol));
+		}
+		
+		else{
+			//for the I environment
+			int[] ini = new int[6];
+			String[] pol = new String[6];
+		
+			ini[0] = 3;
+			ini[1] = 4;
+			ini[2] = 5;
+			ini[3] = 13;
+			ini[4] = 14;
+			ini[5] = 15;
+		
+			for(int i = 0; i < ini.length; i++){
+				if(i < 3){
+					pol[i] = "down";
+				}
+				else{
+					pol[i] = "left";
+				}
+			}
+			options.put("oleft", new Option("oleft", size, ini, pol));
+		
+			for(int i = 0; i < ini.length; i++){
+				if(i < 3){
+					pol[i] = "down";
+				}
+				else{
+					pol[i] = "right";
+				}
+			}
+			options.put("oright", new Option("oright", size, ini, pol));
+		}
+		
+		Option o = createRandomOption(size);
+
+		//options.put(o.getName(), o);
+	}
+	
+	//helper for below
+	private boolean contains(int[] a, int c){
+			
+		for(int i = 0; i < a.length; i++){
+			if(a[i] == c){
+				return true;
+			}
+		}
+			
+		return false;
+	}
+		
+	public Option createRandomOption(int n){
+		
+		//assuming we won't be deleting any options after they have
+		//been created
+		String name = "o" + (options.size()+1);
+			
+		//want at least 3 states in the option and at most 5
+		int[] iniSet = new int[rand.nextInt(3) + 3];
+			
+		//pick a random state to start the option
+		State first = states[rand.nextInt(gridSize)][rand.nextInt(gridSize)];
+		while(first.isObstacle()){
+			first = states[rand.nextInt(gridSize)][rand.nextInt(gridSize)];
+		}
+		currentState = first;
+		iniSet[0] = first.getName();
+		System.out.println(iniSet[0]);
+			
+		//pick actions uniformly at random to move around the state space
+		//and retrieve new states for the option
+		//int prev = currState.getName();
+		for(int i = 1; i < iniSet.length; i++){
+			performOption(actions[rand.nextInt(4)]);
+			
+			/*while(prev == currState.getName()){
+				performOption(actions[rand.nextInt(4)]);
+			}
+			prev = currState.getName();*/
+			
+			//to avoid having the same state more than once in the initiation set
+			while(contains(iniSet, currentState.getName())){
+				performOption(actions[rand.nextInt(4)]);
+			}
+				
+			iniSet[i] = currentState.getName();
+			System.out.println(iniSet[i]);
+		}
+			
+		//one more time to get the goal state
+		while(contains(iniSet, currentState.getName())){
+			performOption(actions[rand.nextInt(4)]);
+		}
+		System.out.println("goal: " + currentState.getName());
+			
+		Option opt = new Option(name, n, iniSet);
+			
+		learnOption(opt, currentState.getName());
+			
+		return opt;
+	}
+	
+	/**
+	 * Learn the policy for option o
+	 * @param o option
+	 * @param n goal state
+	 */
+	public void learnOption(Option o, int n){
+		
+		int[] ini = o.getIni();
+		Hashtable<Integer, Integer> stateToState = new Hashtable<Integer, Integer>();
+		Hashtable<Integer, Integer> reverse = new Hashtable<Integer, Integer>();
+		for(int i = 0; i < o.sizeI(); i++){
+			stateToState.put(ini[i], i);
+			reverse.put(i, ini[i]);
+		}
+		
+		double[][] qVals = new double[o.sizeI()][actions.length];
+		
+		//figure out how to give subgoals
+		//maybe increase the reward at the subgoal states (for now only the center state)
+		//and remove the reward at the actual goal (or just don't set an actual goal)
+		getState(n).setReward(1);
+		
+		//use the modified Q-learning algorithm and above method to
+		//learn from the environment
+		int s;
+		String action;
+		Info result;
+		int index;
+		int nextState;
+		for(int i = 0; i < 1000; i++){ //100 trials
+			//set a start state
+			s = o.getRandomState();
+			currentState = getState(s);
+			for(int j = 0; j < 100; j++){ //100 steps
+				
+				//if we are in a state where the option ends then do not continue
+				if(o.terminate(currentState.getName())){
+					break;
+				}
+				//pick an action randomly (for now)
+				action = actions[rand.nextInt(actions.length)];
+				result = performOption(action);
+				
+				index = getActionIndex(action);
+				nextState = result.getState().getName();
+				
+				int st = stateToState.get(s);
+				if(o.isExecutable(nextState)){
+					qVals[st][index] = qVals[st][index] + 0.1*(result.getReward()
+							+ 0.9*getMaxQ(stateToState.get(nextState), qVals)
+							- qVals[st][index]); 
+				}
+				else{
+					qVals[st][index] = qVals[st][index] + 0.1*(result.getReward()
+							+ 0.9*result.getReward()
+							- qVals[st][index]); 
+				}
 			}
 		}
 		
-		options.put("oright", new Option("oright", size, ini, pol));
+		//find a policy using the highest Q-values
+		Hashtable<Integer, String> policy = new Hashtable<Integer, String>();
+		
+		for(int i = 0; i < qVals.length; i++){
+			int act = -1;
+			double val = -1;
+			for(int j = 0; j < actions.length; j++){
+				if(qVals[i][j] >= val){
+					val = qVals[i][j];
+					act = j;
+				}
+			}
+			System.out.println(reverse.get(i) + ": " + actions[act] + ", val: " + val);
+			policy.put(reverse.get(i), actions[act]);
+		}
+		//set the policy for the option
+		o.setPolicy(policy);
+		
+		//set the reward for the subgoal states back to 0
+		getState(n).setReward(0);
 	}
+	
+	//helpers for above method
+	private int getActionIndex(String action){
+		for(int i = 0; i < actions.length; i++){
+			if(actions[i].equals(action)){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private double getMaxQ(int state, double[][] qVals){
+		double currBest = Integer.MIN_VALUE;
+		
+		double currVal;
+		for(int i = 0; i < actions.length; i++){
+			currVal = qVals[state][i];
+			
+			if(currVal > currBest){
+				currBest = currVal;
+			}
+		}
+		return currBest;
+	}
+	//
 	
 	//initializes the obstacles in the environment
 	//change this to change how the environment looks
@@ -127,39 +347,42 @@ public class GridEnvironment implements IEnvironment{
 			states[2][j].setAsObstacle(true);
 		}*/
 		
-		/*createObstacle(3,8,2,3);
+		if(!isI){
+			createObstacle(3,8,2,3);
 		
-		states[3][1].setAsObstacle(true);
-		states[3][2].setAsObstacle(true);
-		states[3][7].setAsObstacle(true);
+			states[3][1].setAsObstacle(true);
+			states[3][2].setAsObstacle(true);
+			states[3][7].setAsObstacle(true);
 		
-		for(int j = 1; j < 5; j++){
-			states[4][j].setAsObstacle(true);
+			for(int j = 1; j < 5; j++){
+				states[4][j].setAsObstacle(true);
+			}
+			states[4][7].setAsObstacle(true);
+		
+			states[5][7].setAsObstacle(true);
+		
+			for(int j = 0; j < 5; j++){
+				states[6][j].setAsObstacle(true);
+			}
+			states[6][7].setAsObstacle(true);
+		
+			states[7][6].setAsObstacle(true);
+			states[7][7].setAsObstacle(true);
 		}
-		states[4][7].setAsObstacle(true);
+		else{
+			//I environment
 		
-		states[5][7].setAsObstacle(true);
-		
-		for(int j = 0; j < 5; j++){
-			states[6][j].setAsObstacle(true);
+			//left side
+			createObstacle(0, 2, 2, 8);
+			//center top
+			createObstacle(3, 6, 2, 3);
+			//| part
+			createObstacle(4, 5, 3, 8);
+			//center bottom
+			createObstacle(3, 6, 7, 8);
+			//right side
+			createObstacle(7, 10, 2, 8);
 		}
-		states[6][7].setAsObstacle(true);
-		
-		states[7][6].setAsObstacle(true);
-		states[7][7].setAsObstacle(true);*/
-		
-		//I environment
-		
-		//left side
-		createObstacle(0, 2, 2, 8);
-		//center top
-		createObstacle(3, 6, 2, 3);
-		//| part
-		createObstacle(4, 5, 3, 8);
-		//center bottom
-		createObstacle(3, 6, 7, 8);
-		//right side
-		createObstacle(7, 10, 2, 8);
 	}
 	
 	
@@ -285,11 +508,18 @@ public class GridEnvironment implements IEnvironment{
 			}
 		}
 		
-		//interesting area
-		/*int s = currentState.getName();
-		if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
-			return new Info(new State[]{currentState}, new Double[]{random.nextGaussian()}, 1);
-		}*/
+		if(!isI){
+			//interesting area
+			int s = currentState.getName();
+			if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
+			}
+		}
+		else{
+			/*if(s == 42 || s == 43 || s == 52 || s == 53){
+				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
+			}*/
+		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}
 	
@@ -343,6 +573,22 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		return s;
+	}
+	
+	public State getState(int s){
+		//find which state this is in the array
+		
+		if(s > gridSize*gridSize){
+			return null;
+		}
+				
+		//i is the first number
+		int i = s/gridSize;
+
+		//remainder when dividing by gridSize will give j
+		int j = s%gridSize;
+
+		return states[i][j];
 	}
 	
 	@Override

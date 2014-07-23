@@ -50,11 +50,11 @@ public class Environment implements IEnvironment{
 			pol[i-(n/2+1)] = "up";
 		}
 		
-		//options.put("odown", new Option("odown", n, ini, pol));
+		options.put("odown", new Option("odown", n, ini, pol));
 		
 		Option o = createRandomOption(n);
 
-		options.put(o.getName(), o);
+		//options.put(o.getName(), o);
 		
 	//	o = createRandomOption(n);
 	//	options.put(o.getName(), o);
@@ -340,7 +340,6 @@ public class Environment implements IEnvironment{
 		
 		//use the modified Q-learning algorithm and above method to
 		//learn from the environment
-		//Hashtable<Integer, Double> temp;
 		int s;
 		String action;
 		Info result;

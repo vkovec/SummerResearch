@@ -323,6 +323,8 @@ public class InfTheoryLearning extends Agent{
 					//try starting with a different q
 					randomPolicy(q);
 					count++;*/
+					
+					
 					break;
 				}
 				
@@ -398,7 +400,13 @@ public class InfTheoryLearning extends Agent{
 					
 					//set Z
 					double temp;
-					double log0 = /*Math.log(pa[0]) +*/ ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+					double log0;
+					if(withPa){
+						log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+					}
+					else{
+						log0 = ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
+					}
 					double logZ = 1;
 					for(int k = 1; k < actions.length; k++){
 						
@@ -409,7 +417,12 @@ public class InfTheoryLearning extends Agent{
 						}
 						
 						temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
-						logZ += Math.exp((/*Math.log(pa[k]) +*/ temp) - log0);
+						if(withPa){
+							logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
+						}
+						else{
+							logZ += Math.exp((temp) - log0);
+						}
 					}
 					logZ = Math.log(logZ);
 					logZ += log0;
@@ -461,7 +474,12 @@ public class InfTheoryLearning extends Agent{
 						
 							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
-							q[x][a] = (/*Math.log(pa[a]) +*/ exp) - Z[x];
+							if(withPa){
+								q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+							}
+							else{
+								q[x][a] = (exp) - Z[x];
+							}
 							q[x][a] = Math.exp(q[x][a]);
 						}
 						
