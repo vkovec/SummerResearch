@@ -1,0 +1,4 @@
+alpha = 20
+no pa
+stop at goal
+with interesting area

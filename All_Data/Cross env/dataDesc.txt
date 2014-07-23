@@ -1,0 +1,4 @@
+-pj is calculated using sPolicy, similar to how pj is calculated
+-D is normalized
+-lambda is decreased logarithmically
+-alpha is 20

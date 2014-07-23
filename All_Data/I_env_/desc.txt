@@ -1,0 +1,4 @@
+alpha = 10
+pa is on
+interesting area on left side of I
+one random option and two options to get to either side of the I

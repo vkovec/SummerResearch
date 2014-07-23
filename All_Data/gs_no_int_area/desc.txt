@@ -1,0 +1,4 @@
+no interesting area
+with pa
+alpha = 10
+D normalized

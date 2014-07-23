@@ -1,0 +1,5 @@
+alpha = 20
+lambda decreased logarithmically
+ptx calculated same as pjx
+D normalized
+not stopping at goal
