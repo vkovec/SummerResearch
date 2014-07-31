@@ -13,11 +13,14 @@ import tools.Option;
  *
  */
 public abstract class Agent{
+	
+	private boolean isI = false;
+	
 	//temporary
 	protected double[][] ps;
-	public double alpha = 10.0;
+	public double alpha = 12.0;
 	
-	protected boolean isGrid = false;
+	protected boolean isGrid = true;
 	protected boolean withPa = true;
 	
 	protected boolean average = false;
@@ -44,15 +47,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	//protected String[] actions = {"up", "down", "left", "right", "odown", "oup"};
-	protected String[] actions = new String[6];
-	
-	//protected String[] actions = {"up",  "down", "left", "right", "odown", "oright"};
-	
-	//just trying something to avoid performing options in states not in the initiation set
-	/*protected String[] actions1 = {"up", "down", "left", "right"};
-	protected String[] actions2 = {"up", "down", "left", "right", "oup"};
-	protected String[] actions3 = {"up", "down", "left", "right", "odown"};*/
+	protected String[] actions = new String[8];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -208,17 +203,16 @@ public abstract class Agent{
 					else if(act.equals("oleft")){
 						policy[x] = "<<";
 					}
+					else if(act.equals("old")){
+						policy[x] = "v<";
+					}
+					else if(act.equals("ord")){
+						policy[x] = ">v";
+					}
 					else{
-						policy[x] = "op";
+						policy[x] = actions[action];
 					}
 					break;
-				
-				/*case 4:
-					policy[x] = "^^";
-					break;
-				case 5:
-					policy[x] = "vv";
-					break;*/
 			}
 		}
 		
@@ -239,7 +233,14 @@ public abstract class Agent{
 			state = 2;
 		}
 		else{
-			state = 4;
+			if(isI){
+				//state = 14;
+				state = 52;
+			}
+			else{
+				state = 55;
+				//state = 11;
+			}
 		}
 		
 		for(int i = 0; i < eps; i++){

@@ -438,4 +438,9 @@ public class Environment implements IEnvironment{
 	public void gotoState(int s){
 		currState = states.get(s);
 	}
+
+	@Override
+	public boolean isObstacle(int s) {
+		return false;
+	}
 }

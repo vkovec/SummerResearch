@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import tools.Option;
 import tools.State;
 
 import agent.Agent;
@@ -25,7 +27,7 @@ import agent.TDLearning;
 @SuppressWarnings("serial")
 public class GridEnvDisplay extends JFrame{
 	
-	private boolean isI = true;
+	private boolean isI = false;
 	
 	private GridEnvironment gridEnv;
 	private int start;
@@ -118,11 +120,11 @@ public class GridEnvDisplay extends JFrame{
 		
 		if(!isI){
 			//the interesting area
-			for(int i = 53; i < 57; i++){
+			/*for(int i = 53; i < 57; i++){
 				labels.get(i).setBackground(Color.gray);
 			}
 			labels.get(65).setBackground(Color.gray);
-			labels.get(66).setBackground(Color.gray);
+			labels.get(66).setBackground(Color.gray);*/
 		}
 		else{
 			labels.get(42).setBackground(Color.gray);
@@ -136,6 +138,24 @@ public class GridEnvDisplay extends JFrame{
 		labels.get(start).setBackground(Color.blue);
 		labels.get(goal).setText("Goal");
 		labels.get(goal).setBackground(Color.green);
+		
+		//displaying the random options
+		Enumeration<Option> ops = gridEnv.getOptions();
+		Option o;
+		int[] ini;
+		while(ops.hasMoreElements()){
+			o = ops.nextElement();
+			
+			//only want to show the random ones
+			if((!o.getName().equals("oright") && !isI) || (!o.getName().equals("old"))){
+				ini = o.getIni();
+				for(int i = 0; i < ini.length; i++){
+					labels.get(ini[i]).setBackground(Color.lightGray);
+					labels.get(ini[i]).setText(o.getName() + ": " + o.getAction(ini[i]));
+				}
+			}
+		}
+		
 	}
 	
 	private void createDisplay() {

@@ -10,6 +10,8 @@ import tools.State;
 
 public class InfTheoryLearning extends Agent{
 
+	private boolean withObs = false;
+	
 	//the probability distribution for states and actions
 	private double[][][] p = null;
 	private double[][] q;
@@ -43,11 +45,25 @@ public class InfTheoryLearning extends Agent{
 				ps[i][startState]++;
 			}*/
 			
-			for(int i = 0; i < timeSteps; i++){
+			
+			if(isGrid){
+				for(int j = 0; j < sPolicy.length; j++){
+					ps[0][j] = 0;
+				}
+				ps[0][startState]++;
+			}
+			else{
+				//not modified for obstacles
+				//because the crossroads environment doesn't have obstacles anyway
+				for(int j = 0; j < sPolicy.length; j++){
+					ps[0][j] = 1.0/sPolicy.length;
+				}
+			}
+			/*for(int i = 0; i < timeSteps; i++){
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[i][j] = 1.0/sPolicy.length;
 				}
-			}
+			}*/
 		}
 	}
 	
@@ -239,6 +255,7 @@ public class InfTheoryLearning extends Agent{
 		counter++;
 	}*/
 	
+	//TRYING TO IGNORE OBSTACLES
 	@Override
 	public void learn(int steps) {
 
@@ -257,7 +274,7 @@ public class InfTheoryLearning extends Agent{
 			stateCount[state]++;
 			
 			/*if(state == goalState){
-				return;
+				break;
 			}*/
 			
 			//a)
@@ -275,8 +292,18 @@ public class InfTheoryLearning extends Agent{
 			}*/
 			if(i > 0){
 				for(int j = 0; j < pj.length; j++){
+					if(!withObs && env.isObstacle(j)){
+						continue;
+					}
+					
 					double sum = 0;
 					for(int x = 0; x < pj.length; x++){
+						//don't want to include obstacles in the calculation
+						//as it is as if they are not states
+						if(!withObs && env.isObstacle(x)){
+							continue;
+						}
+						
 						for(int a = 0; a < actions.length; a++){
 							sum += p[x][a][j]*sPolicy[x][a]*ps[i-1][x];
 						}
@@ -306,9 +333,8 @@ public class InfTheoryLearning extends Agent{
 			double bestDistDiff = distDiff;
 			double[][] bestPol = q;
 			
-			//also stop if the difference between the two distributions starts increasing\
+			//also stop if the difference between the two distributions starts increasing
 			//or stays the same (infinite loop otherwise)
-			//AT SOME POINT ALL THE Qs BECOME 0 => probably because Z[x] becomes infinite
 			while(distDiff > 0.5){ 
 				/*if(count > 1){
 					break;
@@ -323,7 +349,6 @@ public class InfTheoryLearning extends Agent{
 					//try starting with a different q
 					randomPolicy(q);
 					count++;*/
-					
 					
 					break;
 				}
@@ -347,8 +372,18 @@ public class InfTheoryLearning extends Agent{
 				//update pj
 				pjWriter.println("");
 				for(int j = 0; j < pj.length; j++){
+					
+					if(!withObs && env.isObstacle(j)){
+						continue;
+					}
+					
 					double sum = 0;
 					for(int x = 0; x < pj.length; x++){
+						
+						if(!withObs && env.isObstacle(x)){
+							continue;
+						}
+						
 						for(int a = 0; a < actions.length; a++){
 							sum += p[x][a][j]*q[x][a]*ps[i][x];
 						}
@@ -368,12 +403,22 @@ public class InfTheoryLearning extends Agent{
 				DWriter.println("");
 				
 				for(int x = 0; x < q.length; x++){
+					
+					if(!withObs && env.isObstacle(x)){
+						continue;
+					}
+					
 					double norm = 0;
 					for(int a = 0; a < actions.length; a++){
 						
 						//set D
 						double sum = 0;
 						for(int k = 0; k < D.length; k++){
+							
+							if(!withObs && env.isObstacle(k)){
+								continue;
+							}
+							
 							if(p[x][a][k] != 0 && pj[k] != 0){
 								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
 							}
@@ -396,7 +441,11 @@ public class InfTheoryLearning extends Agent{
 				
 				for(int x = 0; x < q.length; x++){
 					
-					String[] acts = getOptions(x);
+					if(!withObs && env.isObstacle(x)){
+						continue;
+					}
+					
+					//String[] acts = getOptions(x);
 					
 					//set Z
 					double temp;
@@ -411,12 +460,12 @@ public class InfTheoryLearning extends Agent{
 					for(int k = 1; k < actions.length; k++){
 						
 						//if the current action is an option that is not in the list
-						if(acts.length < actions.length && actions[k].charAt(0) == 'o'
-								&& !acts[acts.length-1].equals(actions[k])){
+						/*if(actions[k].charAt(0) == 'o' && !contains(acts, actions[k])){
 							continue;
-						}
+						}*/
 						
 						temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
+						
 						if(withPa){
 							logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
 						}
@@ -466,11 +515,12 @@ public class InfTheoryLearning extends Agent{
 						
 						
 						//if the current action is an option that is not in the list
-						if(acts.length < actions.length && actions[a].charAt(0) == 'o'
-								&& !acts[acts.length-1].equals(actions[a])){
+						//if(acts.length < actions.length && actions[a].charAt(0) == 'o'
+						//		&& !acts[acts.length-1].equals(actions[a])){
+						/*if(actions[a].charAt(0) == 'o' && !contains(acts, actions[a])){
 							q[x][a] = 0;
 						}
-						else{
+						else{*/
 						
 							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
@@ -481,7 +531,7 @@ public class InfTheoryLearning extends Agent{
 								q[x][a] = (exp) - Z[x];
 							}
 							q[x][a] = Math.exp(q[x][a]);
-						}
+						//}
 						
 						if(Double.isNaN(q[x][a])){
 							return;
@@ -501,20 +551,20 @@ public class InfTheoryLearning extends Agent{
 				sPolicy = copyArray(q);
 			}
 			
-			//if(lambda > 0.1){
-				//lambda = lambda/2;
-				
-				//trying a slower decrease for lambda
-				//lambda = 1/(Math.log(i+10));
-				
-			
-				//lambda = Math.sqrt(lambda);
-			//}
+			//trying a slower decrease for lambda
+			//lambda = 1/(Math.log(i+10));
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
 			
 			result = env.performOption(action); 
+			
+			//if the action is an option we want to increase the state visitation for all
+			//states visited within the option as well
+			if(action.charAt(0) == 'o'){
+				visitOption(result);
+			}
+			
 			
 			//compute new estimate for probability distribution
 			int s = result.getState().getName();
@@ -577,8 +627,34 @@ public class InfTheoryLearning extends Agent{
 			}*/
 		}
 		System.out.println("trial " + counter);
-		lambda = 1/(Math.log(counter+10));
+		//lambda = 1/(Math.log(counter+10));
+		lambda = 1/(Math.log(counter+2));
 		counter++;
+	}
+	
+	private void visitOption(Info r) {
+		
+		//update each state that was visited except for the last one
+		State[] s = r.getStates();
+		
+		for(int i = 0; i < s.length-1; i++){
+			stateCount[s[i].getName()]++;
+		}
+	}
+
+	/**
+	 * Check whether array a contains string s
+	 * @param a
+	 * @param s
+	 * @return
+	 */
+	public boolean contains(String[] a, String s){
+		for(int i = 0; i < a.length; i++){
+			if(a[i].equals(s)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void printSum(double[] a){

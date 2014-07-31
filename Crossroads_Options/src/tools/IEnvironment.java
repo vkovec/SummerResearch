@@ -41,4 +41,11 @@ public interface IEnvironment{
 	 * @return the number of options there are
 	 */
 	public int howManyOptions();
+	
+	
+	/**
+	 * @param s the state we want to check
+	 * @return if s is an obstacle
+	 */
+	public boolean isObstacle(int s);
 }
