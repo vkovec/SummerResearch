@@ -47,7 +47,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[8];
+	protected String[] actions = new String[7];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -238,8 +238,8 @@ public abstract class Agent{
 				state = 52;
 			}
 			else{
-				state = 55;
-				//state = 11;
+				//state = 55;
+				state = 11;
 			}
 		}
 		

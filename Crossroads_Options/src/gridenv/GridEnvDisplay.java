@@ -32,7 +32,6 @@ public class GridEnvDisplay extends JFrame{
 	private GridEnvironment gridEnv;
 	private int start;
 	private int goal;
-	//private int prev = -1;
 	
 	private Agent agent;
 	
@@ -120,11 +119,11 @@ public class GridEnvDisplay extends JFrame{
 		
 		if(!isI){
 			//the interesting area
-			/*for(int i = 53; i < 57; i++){
+			for(int i = 53; i < 57; i++){
 				labels.get(i).setBackground(Color.gray);
 			}
 			labels.get(65).setBackground(Color.gray);
-			labels.get(66).setBackground(Color.gray);*/
+			labels.get(66).setBackground(Color.gray);
 		}
 		else{
 			labels.get(42).setBackground(Color.gray);
@@ -147,7 +146,8 @@ public class GridEnvDisplay extends JFrame{
 			o = ops.nextElement();
 			
 			//only want to show the random ones
-			if((!o.getName().equals("oright") && !isI) || (!o.getName().equals("old"))){
+			if(((!o.getName().equals("oright") && !o.getName().equals("odown")) && !isI) ||
+					(!o.getName().equals("old"))){
 				ini = o.getIni();
 				for(int i = 0; i < ini.length; i++){
 					labels.get(ini[i]).setBackground(Color.lightGray);

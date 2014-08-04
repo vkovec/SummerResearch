@@ -356,7 +356,7 @@ public class InfTheoryLearning extends Agent{
 				qPrev = copyArray(q);
 
 				//update pa (this is ok)
-				paWriter.println("");
+				//paWriter.println("");
 				
 				for(int j = 0; j < actions.length; j++){
 					double sum = 0;

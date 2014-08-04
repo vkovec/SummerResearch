@@ -109,7 +109,7 @@ public class GridEnvironment implements IEnvironment{
 		
 		if(!isI){
 			//two different options, one for getting to the entrance of each corridor
-			/*int[] ini = new int[9];
+			int[] ini = new int[9];
 			String[] pol = new String[9];
 		
 			ini[0] = 0;
@@ -144,7 +144,7 @@ public class GridEnvironment implements IEnvironment{
 				}
 			}
 		
-			options.put("oright", new Option("oright", size, ini, pol));*/
+			options.put("oright", new Option("oright", size, ini, pol));
 		}
 		
 		else{
@@ -152,7 +152,7 @@ public class GridEnvironment implements IEnvironment{
 			int[] ini = new int[6];
 			String[] pol = new String[6];
 		
-			/*ini[0] = 3;
+			ini[0] = 3;
 			ini[1] = 4;
 			ini[2] = 5;
 			ini[3] = 13;
@@ -177,7 +177,7 @@ public class GridEnvironment implements IEnvironment{
 					pol[i] = "right";
 				}
 			}
-			options.put("oright", new Option("oright", size, ini, pol));*/
+			options.put("oright", new Option("oright", size, ini, pol));
 			
 			//one going down left column
 			ini = new int[10];
@@ -194,7 +194,7 @@ public class GridEnvironment implements IEnvironment{
 			options.put("old", new Option("old", size, ini, pol));
 			
 			//one going down right column
-			/*ini = new int[10];
+			ini = new int[10];
 			pol = new String[10];
 			
 			for(int i = 0; i < 6; i++){
@@ -205,21 +205,21 @@ public class GridEnvironment implements IEnvironment{
 				ini[i] = 10*(i - 3) + 5;
 				pol[i] = "right";
 			}
-			options.put("ord", new Option("ord", size, ini, pol));*/
+			options.put("ord", new Option("ord", size, ini, pol));
 		}
 		
 		Option o = createRandomOption(size);
 
 		options.put(o.getName(), o);
 		
-		o = createRandomOption(size);
+		/*o = createRandomOption(size);
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
-		options.put(o.getName(), o);
+		options.put(o.getName(), o);*/
 		
 		//done creating options
 		oWriter.close();
@@ -246,7 +246,9 @@ public class GridEnvironment implements IEnvironment{
 		oWriter.println(name);
 			
 		//want at least 3 states in the option and at most 5
-		int[] iniSet = new int[rand.nextInt(3) + 3];
+		//int[] iniSet = new int[rand.nextInt(3) + 3];
+		
+		int[] iniSet = new int[10];
 			
 		//pick a random state to start the option
 		State first = states[rand.nextInt(gridSize)][rand.nextInt(gridSize)];
@@ -425,7 +427,7 @@ public class GridEnvironment implements IEnvironment{
 		}*/
 		
 		if(!isI){
-			/*createObstacle(3,8,2,3);
+			createObstacle(3,8,2,3);
 		
 			states[3][1].setAsObstacle(true);
 			states[3][2].setAsObstacle(true);
@@ -444,7 +446,7 @@ public class GridEnvironment implements IEnvironment{
 			states[6][7].setAsObstacle(true);
 		
 			states[7][6].setAsObstacle(true);
-			states[7][7].setAsObstacle(true);*/
+			states[7][7].setAsObstacle(true);
 		}
 		else{
 			//I environment
@@ -592,14 +594,14 @@ public class GridEnvironment implements IEnvironment{
 		//interesting area
 		int s = currentState.getName();
 		if(!isI){
-			/*if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		else{
-			/*if(s == 42 || s == 43 || s == 52 || s == 53){
+			if(s == 42 || s == 43 || s == 52 || s == 53){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}
