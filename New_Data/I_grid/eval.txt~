@@ -1,0 +1,4 @@
+about equal for left and right
+slight preference for right side (can be seen in both the policy and the state gradient), though it does not seem significant
+when looking at the majority of the runs observed
+A few of the policies end up choosing the down action for every state (probably due to the p(a) value)

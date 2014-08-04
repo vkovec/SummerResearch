@@ -1,0 +1,4 @@
+explores both ways about equally
+goes right or down about equally as well
+
+interesting area therefore seems to attract the agent in this environment

@@ -1,0 +1,2 @@
+same as new_grid but with an interesting area
+also a (hopefully) better state gradient calculation

@@ -1,0 +1,5 @@
+clear preference for going right.
+Perhaps because when going on downwards route the agent gets stuck and has a more difficult time reaching the goal
+
+Does not take either of the two options available. Perhaps it would take them with higher alpha, though higher alpha
+also means that several states will have a policy of 0 due to Z going to infinity

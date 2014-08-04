@@ -1,0 +1,8 @@
+old and three random options (old, o4, o3, o2)
+
+alpha = 12
+with interesting area
+all option calculations done
+obstacle calculations skipped
+
+state = 52 (in the interesting area)

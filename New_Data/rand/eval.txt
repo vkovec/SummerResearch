@@ -1,0 +1,2 @@
+Doesn't choose any options and becomes biased to take the right action in every state (even where it is suboptimal).
+Most likely due to either the options not being large enough, alpha being too low (not high enough to find an optimal policy), or there not being enough trials

@@ -1,0 +1,3 @@
+Only takes a random option in the last run observed.
+However, it takes the oLD option very often (perhaps because this option is not only useful but occupies a larger area)
+Policy biased towards the left (probably due to oLD option)

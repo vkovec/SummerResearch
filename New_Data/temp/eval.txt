@@ -1,0 +1,1 @@
+seems to have an easier time choosing large options, as other experiments show that the smaller options (size 3-5) are rarely chosen

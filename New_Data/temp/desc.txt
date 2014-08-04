@@ -1,0 +1,6 @@
+with interesting area
+alpha = 12
+
+state = 11
+
+3 options (o3, oright, odown)

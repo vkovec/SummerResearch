@@ -1,0 +1,5 @@
+alpha = 12
+
+4 random options
+
+state = 55

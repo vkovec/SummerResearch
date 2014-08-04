@@ -1,0 +1,7 @@
+oright and 3 random options (o4, o3, oright, o2)
+
+alpha = 12
+with interesting area
+everything else same as rand_I_env
+
+state = 11
