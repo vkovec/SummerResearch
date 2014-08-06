@@ -85,8 +85,17 @@ public class Test{
 		
 		//test();
 		
-		test2();
+		//test2();
 		
-		System.out.println(getIndex("o6"));
+		//System.out.println(getIndex("o6"));
+		
+		double[][] D = new double[4][4];
+		
+		System.out.println(D);
+		
+		D = new double[4][4];
+		
+		System.out.println(D);
+		
 	}
 }

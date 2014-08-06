@@ -39,6 +39,8 @@ public class InfTheoryLearning extends Agent{
 			//the q(a|x) policy
 			q = new double[sPolicy.length][actions.length];
 			
+			D = new double[q.length][actions.length];
+			
 			ps = new double[timeSteps][sPolicy.length];
 			
 			/*for(int i = 0; i < timeSteps; i++){
@@ -261,7 +263,7 @@ public class InfTheoryLearning extends Agent{
 
 		//lambda = 1000.0;
 		
-		double[][] D = new double[q.length][actions.length];
+		//double[][] D = new double[q.length][actions.length];
 		
 		double[] pj = new double[sPolicy.length];
 		
@@ -399,7 +401,6 @@ public class InfTheoryLearning extends Agent{
  				}
 				
 				//update q
-				D = new double[q.length][actions.length];
 				double[] Z = new double[q.length];
 				
 				//DWriter.println("");
@@ -431,14 +432,14 @@ public class InfTheoryLearning extends Agent{
 						D[x][a] = sum;
 						norm += sum;
 					}
-					for(int a = 0; a < actions.length; a++){
+					/*for(int a = 0; a < actions.length; a++){
 						D[x][a] = D[x][a]/norm;
 						
 						//only want to look for state 2
 						//if(x == 2){
 							//DWriter.print(D[x][a] + ", ");
 						//}
-					}
+					}*/
 				}
 				
 				for(int x = 0; x < q.length; x++){

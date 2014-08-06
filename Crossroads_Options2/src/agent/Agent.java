@@ -18,6 +18,7 @@ public abstract class Agent{
 	
 	//temporary
 	protected double[][] ps;
+	protected double[][] D;
 	public double alpha = 12.0;
 	
 	protected boolean isGrid = true;
@@ -73,7 +74,7 @@ public abstract class Agent{
 		startState = start;
 		goalState = goal;
 		
-		env.getQVals(qValues, sPolicy);
+		env.getQVals(qValues, sPolicy, D);
 
 		actions = new String[4 + env.howManyOptions()];
 		
@@ -244,7 +245,7 @@ public abstract class Agent{
 			}
 			else{
 				//stat = 55;
-				stat = 48;
+				stat = 53;
 			}
 		}
 		

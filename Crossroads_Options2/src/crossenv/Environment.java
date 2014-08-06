@@ -503,7 +503,7 @@ public class Environment implements IEnvironment{
 	}
 
 	@Override
-	public void getQVals(double[][] qVals, double[][] pol) {
+	public void getQVals(double[][] qVals, double[][] pol, double[][] D) {
 		this.qValues = qVals;
 		this.sPolicy = pol;
 	}

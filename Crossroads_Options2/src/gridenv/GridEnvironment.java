@@ -42,6 +42,9 @@ public class GridEnvironment implements IEnvironment{
 	
 	private double[][] qValues = null;
 	private double[][] sPolicy = null;
+	private double[][] D = null;
+	
+	private boolean withD = true;
 	
 	//n is the grid size
 	public GridEnvironment(int n, boolean isI){
@@ -585,9 +588,17 @@ public class GridEnvironment implements IEnvironment{
 				
 				//see if we want to continue or interrupt the option
 				//switch if V is higher than Q(s,o)
-				if(qValues[currentState.getName()][getOptionIndex(o)] 
-						< getV(currentState.getName())){
-					break;
+				int s = currentState.getName();
+				int oi = getOptionIndex(o);
+				if(withD){
+					if((qValues[s][oi] + D[s][oi]) < getV(s)){
+						break;
+					}
+				}
+				else{
+					if(qValues[s][oi] < getV(s)){
+						break;
+					}
 				}
 				//
 			}
@@ -650,14 +661,14 @@ public class GridEnvironment implements IEnvironment{
 		//interesting area
 		int s = currentState.getName();
 		if(!isI){
-			/*if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		else{
-			/*if(s == 42 || s == 43 || s == 52 || s == 53){
+			if(s == 42 || s == 43 || s == 52 || s == 53){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}
@@ -671,8 +682,15 @@ public class GridEnvironment implements IEnvironment{
 		
 		double V = 0;
 		
-		for(int a = 0; a < sPolicy[0].length; a++){
-			V += sPolicy[s][a]*qValues[s][a];
+		if(withD){
+			for(int a = 0; a < sPolicy[0].length; a++){
+				V += sPolicy[s][a]*(qValues[s][a] + D[s][a]);
+			}
+		}
+		else{
+			for(int a = 0; a < sPolicy[0].length; a++){
+				V += sPolicy[s][a]*qValues[s][a];
+			}
 		}
 		
 		return V;
@@ -800,8 +818,9 @@ public class GridEnvironment implements IEnvironment{
 	}
 
 	@Override
-	public void getQVals(double[][] qVals, double[][] pol) {
+	public void getQVals(double[][] qVals, double[][] pol, double[][] D) {
 		this.qValues = qVals;
 		this.sPolicy = pol;
+		this.D = D;
 	}
 }

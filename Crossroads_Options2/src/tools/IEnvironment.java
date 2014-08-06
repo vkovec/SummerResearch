@@ -54,5 +54,5 @@ public interface IEnvironment{
 	 * to be able to access and change them when executing options.
 	 * @param qVals
 	 */
-	public void getQVals(double[][] qVals, double[][] pol);
+	public void getQVals(double[][] qVals, double[][] pol, double[][] D);
 }
