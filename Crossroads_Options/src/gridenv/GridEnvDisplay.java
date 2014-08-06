@@ -194,7 +194,7 @@ public class GridEnvDisplay extends JFrame{
 					if(i != goal){
 						double val = 0;
 						//average the values for each action
-						for(int j = 0; j < 6; j++){
+						for(int j = 0; j < (4 + gridEnv.howManyOptions()); j++){
 							if(qVals[i][j] > val){
 								val = qVals[i][j];
 							}

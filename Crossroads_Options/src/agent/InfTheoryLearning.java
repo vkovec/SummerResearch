@@ -261,6 +261,8 @@ public class InfTheoryLearning extends Agent{
 
 		//lambda = 1000.0;
 		
+		double[][] D = new double[q.length][actions.length];
+		
 		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[actions.length];
@@ -356,7 +358,7 @@ public class InfTheoryLearning extends Agent{
 				qPrev = copyArray(q);
 
 				//update pa (this is ok)
-				//paWriter.println("");
+				paWriter.println("");
 				
 				for(int j = 0; j < actions.length; j++){
 					double sum = 0;
@@ -397,10 +399,10 @@ public class InfTheoryLearning extends Agent{
  				}
 				
 				//update q
-				double[][] D = new double[q.length][actions.length];
+				D = new double[q.length][actions.length];
 				double[] Z = new double[q.length];
 				
-				DWriter.println("");
+				//DWriter.println("");
 				
 				for(int x = 0; x < q.length; x++){
 					
@@ -429,14 +431,14 @@ public class InfTheoryLearning extends Agent{
 						D[x][a] = sum;
 						norm += sum;
 					}
-					for(int a = 0; a < actions.length; a++){
+					/*for(int a = 0; a < actions.length; a++){
 						D[x][a] = D[x][a]/norm;
 						
 						//only want to look for state 2
-						if(x == 2){
+						//if(x == 2){
 							//DWriter.print(D[x][a] + ", ");
-						}
-					}
+						//}
+					}*/
 				}
 				
 				for(int x = 0; x < q.length; x++){
@@ -590,6 +592,13 @@ public class InfTheoryLearning extends Agent{
 			//e)
 			
 			int index = getActionIndex(action);
+			
+			//want to count how many times each action gets taken in the state
+			if(state == stat){
+				actionDist[index]++;
+			}
+			//
+			
 			int timeSteps = result.getTimeSteps();
 			if(timeSteps > 1){
 				//do additional updates on the previous states
@@ -626,6 +635,14 @@ public class InfTheoryLearning extends Agent{
 				}
 			}*/
 		}
+		
+		//print D values to a file
+		DWriter.println("");
+		for(int a = 0; a < actions.length; a++){
+			//D[x][a]
+			DWriter.print(D[stat][a] + ", ");
+		}
+		
 		System.out.println("trial " + counter);
 		//lambda = 1/(Math.log(counter+10));
 		lambda = 1/(Math.log(counter+2));

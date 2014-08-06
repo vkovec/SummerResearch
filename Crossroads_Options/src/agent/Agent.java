@@ -30,7 +30,10 @@ public abstract class Agent{
 	
 	protected int[] stateCount;
 	
-	protected int[] actionDist = new int[6];
+	//the state we want to examine more closely
+	protected int stat;
+	
+	protected int[] actionDist = new int[7];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -228,18 +231,18 @@ public abstract class Agent{
 		
 		Random rand = new Random();
 		
-		int state;
+		//int stat;
 		if(!isGrid){
-			state = 2;
+			stat = 2;
 		}
 		else{
 			if(isI){
 				//state = 14;
-				state = 52;
+				stat = 52;
 			}
 			else{
-				//state = 55;
-				state = 11;
+				//stat = 55;
+				stat = 53;
 			}
 		}
 		
@@ -250,7 +253,7 @@ public abstract class Agent{
 			learn(timeSteps);
 	
 			if(!average){
-				printPolicyToFile(state);
+				printPolicyToFile(stat);
 			}
 			else{
 				//average the policy and qValues for each trial
@@ -272,10 +275,16 @@ public abstract class Agent{
 			}
 		}
 
+		//print out the action distribution for state 48
+		System.out.println("");
+		for(int a = 0; a < actions.length; a++){
+			System.out.print(actionDist[a] + ", ");
+		}
+		
 		//print ps for state to a file (timestep vs. probability)
 		for(int i = 0; i < timeSteps; i++){
 			psWriter.println("");
-			psWriter.print(ps[i][state]);
+			psWriter.print(ps[i][stat]);
 		}
 		
 		writer.close();
