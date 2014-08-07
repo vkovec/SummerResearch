@@ -168,6 +168,7 @@ public class GridEnvDisplay extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 						
 				agent.setEnv(gridEnv, start, goal);
+				//agent.preLearn(100000);
 				agent.learnTrial(1000);
 						
 				double[] vals = agent.getValues();

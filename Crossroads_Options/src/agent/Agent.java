@@ -18,10 +18,10 @@ public abstract class Agent{
 	
 	//temporary
 	protected double[][] ps;
-	public double alpha = 12.0;
+	public double alpha = 10.0;
 	
 	protected boolean isGrid = true;
-	protected boolean withPa = true;
+	protected boolean withPa = false;
 	
 	protected boolean average = false;
 	
@@ -221,6 +221,13 @@ public abstract class Agent{
 		
 		return policy;
 	}
+	
+	/**
+	 * For learning the model without any Q values.
+	 * Random exploration around the environment.
+	 * @param steps
+	 */
+	public abstract void preLearn(int steps);
 	
 	public abstract void learn(int steps);
 	

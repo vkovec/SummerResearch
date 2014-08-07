@@ -108,4 +108,10 @@ public class QLearning extends Agent{
 		}
 	}
 
+	@Override
+	public void preLearn(int steps) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

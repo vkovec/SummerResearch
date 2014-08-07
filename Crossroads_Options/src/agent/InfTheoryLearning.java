@@ -255,6 +255,43 @@ public class InfTheoryLearning extends Agent{
 		counter++;
 	}*/
 	
+	@Override
+	public void  preLearn(int steps){
+		Random rand = new Random();
+		
+		int state;
+		String action;
+		Info result;
+		for(int t = 0; t < steps; t++){
+			state = env.getCurrentState();
+			
+			action = actions[rand.nextInt(actions.length)];
+		
+			result = env.performOption(action); 
+		
+			//compute new estimate for probability distribution
+			int s = result.getState().getName();
+			for(int x = 0; x < p.length; x++){
+				int a = getActionIndex(action);
+				//the state the action actually led to
+				if(x == s){
+					p[state][a][x] += 0.3*(1 - p[state][a][x]);
+					if(p[state][a][x] > 1){
+						p[state][a][x] = 1;
+					}
+				}
+				//the states the action didn't lead to
+				else{
+					p[state][a][x] += 0.3*(0 - p[state][a][x]);
+				
+					if(p[state][a][x] < 0){
+						p[state][a][x] = 0;
+					}
+				}
+			}
+		}
+	}
+	
 	//TRYING TO IGNORE OBSTACLES
 	@Override
 	public void learn(int steps) {
@@ -431,14 +468,14 @@ public class InfTheoryLearning extends Agent{
 						D[x][a] = sum;
 						norm += sum;
 					}
-					/*for(int a = 0; a < actions.length; a++){
+					for(int a = 0; a < actions.length; a++){
 						D[x][a] = D[x][a]/norm;
 						
 						//only want to look for state 2
 						//if(x == 2){
 							//DWriter.print(D[x][a] + ", ");
 						//}
-					}*/
+					}
 				}
 				
 				for(int x = 0; x < q.length; x++){

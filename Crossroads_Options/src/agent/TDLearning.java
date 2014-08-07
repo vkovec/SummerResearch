@@ -39,4 +39,10 @@ public class TDLearning extends Agent{
 			//System.out.println("State: " + state + " Value: " + values[state]);
 		}
 	}
+
+	@Override
+	public void preLearn(int steps) {
+		// TODO Auto-generated method stub
+		
+	}
 }
