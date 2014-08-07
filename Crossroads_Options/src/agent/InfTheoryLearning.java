@@ -526,8 +526,7 @@ public class InfTheoryLearning extends Agent{
 						Z[x] = sum;
 						
 						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]) + Math.log(pa[a]));
-						
-						//maybe this is the wrong way to handle this
+
 						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
 						//	System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", D: " + D[x][a]
 						//			+ ", lambda: " + lambda);
@@ -536,7 +535,6 @@ public class InfTheoryLearning extends Agent{
 						else{
 							q[x][a] = (exp)/Z[x];
 						}*/
-						
 						
 						//attempt to avoid inf/inf problem using logs
 						//doesn't completely solve the problem..numbers still become too large
@@ -684,6 +682,51 @@ public class InfTheoryLearning extends Agent{
 		//lambda = 1/(Math.log(counter+10));
 		lambda = 1/(Math.log(counter+2));
 		counter++;
+	}
+	
+	
+	//need to also account for options
+	/**
+	 * Finds the true model of the environment.
+	 */
+	private void trueModel(){
+		p = new double[sPolicy.length][actions.length][sPolicy.length];
+		
+		//prevent actions from failing
+		env.toggleActionFail();
+		
+		String[] acts = {"up", "down", "left", "right"};
+		
+		//go through every state
+		for(int x = 0; x < 100; x++){
+			if(env.isObstacle(x)){
+				for(int s = 0; s < 100; s++){
+					for(int a = 0; a < acts.length; a++){
+						p[x][a][s] = 0;
+						p[s][a][x] = 0;
+					}
+				}
+			}
+			
+			else{
+				Info result;
+				int s;
+				for(int a = 0; a < acts.length; a++){
+					env.gotoState(x);
+					result = env.performOption(acts[a]);
+					s = result.getState().getName();
+					p[x][a][s] = 0.7;
+					for(int ac = 0; ac < acts.length; ac++){
+						if(ac != a){
+							p[x][ac][s] = 0.1;
+						}
+					}
+				}
+			}
+		}
+		
+		//allow actions to fail again
+		env.toggleActionFail();
 	}
 	
 	private void visitOption(Info r) {

@@ -443,4 +443,10 @@ public class Environment implements IEnvironment{
 	public boolean isObstacle(int s) {
 		return false;
 	}
+
+	@Override
+	public void toggleActionFail() {
+		// TODO Auto-generated method stub
+		
+	}
 }

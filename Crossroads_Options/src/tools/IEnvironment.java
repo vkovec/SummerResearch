@@ -42,10 +42,14 @@ public interface IEnvironment{
 	 */
 	public int howManyOptions();
 	
-	
 	/**
 	 * @param s the state we want to check
 	 * @return if s is an obstacle
 	 */
 	public boolean isObstacle(int s);
+	
+	/**
+	 * Toggles whether actions will sometimes fail or always succeed.
+	 */
+	public void toggleActionFail();
 }
