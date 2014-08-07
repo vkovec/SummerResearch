@@ -1,0 +1,2 @@
+unclear whether D value has any influence. Probably more of an influence than before, but can't really tell
+because when a certain action it's taken both the D and Q value are higher than for the other action

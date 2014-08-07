@@ -1,0 +1,1 @@
+same as D_vs_Q but this time we count how many times each action is taken at state 48

@@ -1,0 +1,8 @@
+alpha = 12
+with option interruption (both Q and D added together)
+D is normalized
+no interesting area
+
+state = 48
+
+3 random options

@@ -1,0 +1,4 @@
+alpha = 12
+1 option
+state = 55
+D is normalized

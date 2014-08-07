@@ -1,0 +1,1 @@
+D value seems to be completely overshadowed by Q value (action with higher Q value taken even when other action has higher D value)
