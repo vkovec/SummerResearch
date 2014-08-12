@@ -1,0 +1,4 @@
+include options by using the goal state of the option
+if an option is started it will reach the goal state with probability 1
+
+0 probability of choosing an option if another action is chosen
