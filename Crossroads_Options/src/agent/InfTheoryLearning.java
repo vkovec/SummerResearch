@@ -24,14 +24,14 @@ public class InfTheoryLearning extends Agent{
 	public InfTheoryLearning(int n){
 		super(n);
 		if(p == null){
-			p = new double[sPolicy.length][actions.length][sPolicy.length];
+			/*p = new double[sPolicy.length][actions.length][sPolicy.length];
 			for(int x = 0; x < p.length; x ++){
 				for(int a = 0; a < actions.length; a++){
 					for(int s = 0; s < p.length; s++){
 						p[x][a][s] = 1.0/p.length;
 					}
 				}
-			}
+			}*/
 			
 			//initialize the policy to a uniformly random policy
 			randomizePolicy(sPolicy);
@@ -40,12 +40,7 @@ public class InfTheoryLearning extends Agent{
 			q = new double[sPolicy.length][actions.length];
 			
 			ps = new double[timeSteps][sPolicy.length];
-			
-			/*for(int i = 0; i < timeSteps; i++){
-				ps[i][startState]++;
-			}*/
-			
-			
+
 			if(isGrid){
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[0][j] = 0;
@@ -297,13 +292,16 @@ public class InfTheoryLearning extends Agent{
 	public void learn(int steps) {
 
 		//lambda = 1000.0;
+		if(p == null){
+			trueModel();
+		}
 		
 		double[][] D = new double[q.length][actions.length];
 		
 		double[] pj = new double[sPolicy.length];
 		
 		double[] pa = new double[actions.length];
-
+		
 		int state;
 		String action;
 		Info result;
@@ -461,8 +459,12 @@ public class InfTheoryLearning extends Agent{
 							if(p[x][a][k] != 0 && pj[k] != 0){
 								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
 							}
+							else if(p[x][a][k] == 0 && pj[k] == 0){
+								continue;
+							}
 							else if(pj[k] == 0){
-								sum = Double.POSITIVE_INFINITY;
+								//sum = Double.POSITIVE_INFINITY;
+								sum = 100;
 							}
 						}
 						D[x][a] = sum;
@@ -604,7 +606,7 @@ public class InfTheoryLearning extends Agent{
 			
 			
 			//compute new estimate for probability distribution
-			int s = result.getState().getName();
+		/*	int s = result.getState().getName();
 			for(int x = 0; x < p.length; x++){
 				int a = getActionIndex(action);
 				//the state the action actually led to
@@ -623,7 +625,7 @@ public class InfTheoryLearning extends Agent{
 					}
 				}
 			}
-			
+		*/
 			//e)
 			
 			int index = getActionIndex(action);
@@ -718,7 +720,7 @@ public class InfTheoryLearning extends Agent{
 					p[x][a][s] = 0.7;
 					for(int ac = 0; ac < acts.length; ac++){
 						if(ac != a){
-							p[x][ac][s] = 0.1;
+							p[x][ac][s] += 0.1;
 						}
 					}
 				}

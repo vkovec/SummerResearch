@@ -205,7 +205,7 @@ public class GridEnvironment implements IEnvironment{
 			options.put("ord", new Option("ord", size, ini, pol));
 		}
 		
-		Option o = createRandomOption(size);
+		/*Option o = createRandomOption(size);
 
 		options.put(o.getName(), o);
 		
@@ -213,9 +213,6 @@ public class GridEnvironment implements IEnvironment{
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
-		options.put(o.getName(), o);
-		
-		/*o = createRandomOption(size);
 		options.put(o.getName(), o);*/
 		
 		//done creating options
@@ -606,14 +603,14 @@ public class GridEnvironment implements IEnvironment{
 		//interesting area
 		int s = currentState.getName();
 		if(!isI){
-			/*if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		else{
-			/*if(s == 42 || s == 43 || s == 52 || s == 53){
+			if(s == 42 || s == 43 || s == 52 || s == 53){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}*/
+			}
 		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}

@@ -21,7 +21,7 @@ public abstract class Agent{
 	public double alpha = 10.0;
 	
 	protected boolean isGrid = true;
-	protected boolean withPa = false;
+	protected boolean withPa = true;
 	
 	protected boolean average = false;
 	
@@ -50,7 +50,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[7];
+	protected String[] actions = new String[4];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -249,7 +249,7 @@ public abstract class Agent{
 			}
 			else{
 				//stat = 55;
-				stat = 53;
+				stat = 48;
 			}
 		}
 		
