@@ -1,0 +1,1 @@
+same as in Lambda, except for uses Boltzmann exploration and lambda is back to 1000

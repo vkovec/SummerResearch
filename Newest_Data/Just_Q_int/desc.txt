@@ -1,0 +1,1 @@
+same as Lambda_int except for lambda = 1000 and we don't use the D values in any calculations

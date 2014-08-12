@@ -1,0 +1,8 @@
+alpha = 10
+D is normalized
+no interesting area
+3 random options
+
+lambda = 100000
+
+state = 48

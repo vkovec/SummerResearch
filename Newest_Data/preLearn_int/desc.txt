@@ -1,0 +1,1 @@
+same as Lambda_int but with 100000 steps of preLearning the model and lambda = 1000

@@ -1,0 +1,2 @@
+same as lambda except for lambda = 1000 and there is 100000 steps where the agent simply learns a model for the
+transition function

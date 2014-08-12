@@ -1,0 +1,1 @@
+same as Lambda except lambda = 1000 and D is ignored in all calculations
