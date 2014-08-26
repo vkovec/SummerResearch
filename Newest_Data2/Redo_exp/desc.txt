@@ -1,0 +1,2 @@
+same as other redos except for there is only exploration (i.e. lambda never gets decreased)
+and all the states are updated at each timestep

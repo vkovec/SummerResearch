@@ -1,0 +1,12 @@
+only x_t is updated at each timestep
+option updates are not done if an option can't be executed
+
+alpha = 10
+no interesting area
+lambda = 5000 (5000 trials)
+
+state = 78
+
+3 random options
+
+(not adding any randomization to policy between timesteps)

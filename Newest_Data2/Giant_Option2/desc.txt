@@ -1,0 +1,11 @@
+alpha = 10
+state = 55
+
+no interesting area
+no obstacles
+
+one giant option
+
+one state being updated at each timestep
+
+5000 trials

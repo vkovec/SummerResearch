@@ -1,0 +1,2 @@
+5000 trials only updating one state at a time
+problem seems to have been that there was a slight randomization of the policy at each iteration

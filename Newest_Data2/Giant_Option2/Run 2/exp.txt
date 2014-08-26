@@ -1,0 +1,1 @@
+This one finished prematurely (at around 100 trials). Probably because of a NaN in the policy (?)
