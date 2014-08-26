@@ -18,7 +18,7 @@ public class InfTheoryLearning extends Agent{
 	//private double[][] ps;
 	private int counter = 0;
 
-	private double lambda = 1000.0;
+	private double lambda = 5000.0;
 	//private double alpha = 0.5;
 	
 	public InfTheoryLearning(int n){
@@ -34,7 +34,7 @@ public class InfTheoryLearning extends Agent{
 			}*/
 			
 			//initialize the policy to a uniformly random policy
-			randomizePolicy(sPolicy);
+			//randomizePolicy(sPolicy);
 			
 			//the q(a|x) policy
 			q = new double[sPolicy.length][actions.length];
@@ -59,6 +59,26 @@ public class InfTheoryLearning extends Agent{
 					ps[i][j] = 1.0/sPolicy.length;
 				}
 			}*/
+		}
+	}
+	
+	private void setP(){
+		p = new double[sPolicy.length][actions.length][sPolicy.length];
+		
+		int count = 0;
+		for(int i = 0; i < p.length; i++){
+			if(!env.isObstacle(i)){
+				count++;
+			}
+		}
+		for(int x = 0; x < p.length; x ++){
+			for(int a = 0; a < actions.length; a++){
+				for(int s = 0; s < p.length; s++){
+					if(!env.isObstacle(x) && !env.isObstacle(s)){
+						p[x][a][s] = 1.0/count;
+					}
+				}
+			}
 		}
 	}
 	
@@ -293,7 +313,10 @@ public class InfTheoryLearning extends Agent{
 
 		//lambda = 1000.0;
 		if(p == null){
-			trueModel();
+			//trueModel();
+			setP();
+			//initialize the policy to a uniformly random policy
+			randomizePolicy(sPolicy);
 		}
 		
 		double[][] D = new double[q.length][actions.length];
@@ -354,9 +377,9 @@ public class InfTheoryLearning extends Agent{
 			//just set q to some random policy
 			//(1-b)*sPolicy + b*random (b = 0.3)
 			
-			randomizePolicy(q);
-			q = combinePolicy(sPolicy, q, 0.1);
-			//q = copyArray(sPolicy);
+			//randomizePolicy(q);
+			//q = combinePolicy(sPolicy, q, 0.1);
+			q = copyArray(sPolicy);
 			
 			//c)
 				//what does it mean for the difference between q(j) and q(j+1) to be small? 0.1
@@ -434,12 +457,13 @@ public class InfTheoryLearning extends Agent{
  				}
 				
 				//update q
-				D = new double[q.length][actions.length];
+				//D = new double[q.length][actions.length];
 				double[] Z = new double[q.length];
 				
 				//DWriter.println("");
 				
-				for(int x = 0; x < q.length; x++){
+				int x = state;
+				//for(int x = 0; x < q.length; x++){
 					
 					if(!withObs && env.isObstacle(x)){
 						continue;
@@ -460,33 +484,41 @@ public class InfTheoryLearning extends Agent{
 								sum += p[x][a][k]*(Math.log(p[x][a][k]/pj[k])/Math.log(2));
 							}
 							else if(p[x][a][k] == 0 && pj[k] == 0){
-								continue;
+								sum += 0;
+								//continue;
 							}
 							else if(pj[k] == 0){
-								//sum = Double.POSITIVE_INFINITY;
-								sum = 100;
+								sum = Double.POSITIVE_INFINITY;
 							}
 						}
 						D[x][a] = sum;
 						norm += sum;
 					}
 					for(int a = 0; a < actions.length; a++){
+						if(norm == 0){
+							break;
+						}
 						D[x][a] = D[x][a]/norm;
+						
+						//infinity
+						if(Double.isNaN(D[x][a])){
+							System.out.println(norm);
+						}
 						
 						//only want to look for state 2
 						//if(x == 2){
 							//DWriter.print(D[x][a] + ", ");
 						//}
 					}
-				}
+				//}
 				
-				for(int x = 0; x < q.length; x++){
+				//for(int x = 0; x < q.length; x++){
 					
 					if(!withObs && env.isObstacle(x)){
 						continue;
 					}
 					
-					//String[] acts = getOptions(x);
+					String[] acts = getOptions(x);
 					
 					//set Z
 					double temp;
@@ -501,9 +533,9 @@ public class InfTheoryLearning extends Agent{
 					for(int k = 1; k < actions.length; k++){
 						
 						//if the current action is an option that is not in the list
-						/*if(actions[k].charAt(0) == 'o' && !contains(acts, actions[k])){
+						if(actions[k].charAt(0) == 'o' && !contains(acts, actions[k])){
 							continue;
-						}*/
+						}
 						
 						temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
 						
@@ -554,12 +586,10 @@ public class InfTheoryLearning extends Agent{
 						
 						
 						//if the current action is an option that is not in the list
-						//if(acts.length < actions.length && actions[a].charAt(0) == 'o'
-						//		&& !acts[acts.length-1].equals(actions[a])){
-						/*if(actions[a].charAt(0) == 'o' && !contains(acts, actions[a])){
+						if(actions[a].charAt(0) == 'o' && !contains(acts, actions[a])){
 							q[x][a] = 0;
 						}
-						else{*/
+						else{
 						
 							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
@@ -570,14 +600,15 @@ public class InfTheoryLearning extends Agent{
 								q[x][a] = (exp) - Z[x];
 							}
 							q[x][a] = Math.exp(q[x][a]);
-						//}
+						}
 						
 						if(Double.isNaN(q[x][a])){
+							System.out.println("D: " + D[x][a]);
 							return;
 						}
 						
 					}
-				}
+				//}
 
 				prevDistDiff = distDiff;
 				distDiff = getDistrDiff(q,qPrev);
@@ -606,7 +637,7 @@ public class InfTheoryLearning extends Agent{
 			
 			
 			//compute new estimate for probability distribution
-		/*	int s = result.getState().getName();
+			int s = result.getState().getName();
 			for(int x = 0; x < p.length; x++){
 				int a = getActionIndex(action);
 				//the state the action actually led to
@@ -625,7 +656,7 @@ public class InfTheoryLearning extends Agent{
 					}
 				}
 			}
-		*/
+			
 			//e)
 			
 			int index = getActionIndex(action);
@@ -650,10 +681,14 @@ public class InfTheoryLearning extends Agent{
 							- qValues[st][index]);
 				}
 			}
-			
-			qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
-				+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
-				- qValues[state][index]);
+			if(timeSteps > 0){
+				qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
+					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
+					- qValues[state][index]);
+			}
+			else{
+				System.out.println(action + ": " + state);
+			}
 			
 			//take from Q-learning (for now, eventually want to do a full Q value evaluation)
 			/*int index = getActionIndex(action);
@@ -681,7 +716,6 @@ public class InfTheoryLearning extends Agent{
 		}
 		
 		System.out.println("trial " + counter);
-		//lambda = 1/(Math.log(counter+10));
 		lambda = 1/(Math.log(counter+2));
 		counter++;
 	}

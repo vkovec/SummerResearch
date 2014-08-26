@@ -50,7 +50,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[4];
+	protected String[] actions = new String[7];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -248,8 +248,8 @@ public abstract class Agent{
 				stat = 52;
 			}
 			else{
-				//stat = 55;
-				stat = 48;
+				stat = 55;
+				//stat = 48;
 			}
 		}
 		
@@ -318,11 +318,24 @@ public abstract class Agent{
 	
 	public void randomizePolicy(double[][] policy){
 		
+		Option o;
 		for(int i = 0; i < policy.length; i++){
 			double sum = 0;
 			for(int j = 0; j < actions.length; j++){
-				policy[i][j] = Math.random();
-				sum += policy[i][j];
+				if(j > 4){ //this is a option
+					o = env.getOption(actions[j]);
+					if(o.isExecutable(i)){
+						policy[i][j] = Math.random();
+						sum += policy[i][j];
+					}
+					else{
+						policy[i][j] = 0;
+					}
+				}
+				else{
+					policy[i][j] = Math.random();
+					sum += policy[i][j];
+				}
 			}
 			for(int j = 0; j < actions.length; j++){
 				policy[i][j] = policy[i][j]/sum;

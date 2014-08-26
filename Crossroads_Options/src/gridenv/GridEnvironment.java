@@ -142,6 +142,82 @@ public class GridEnvironment implements IEnvironment{
 			}
 		
 			options.put("oright", new Option("oright", size, ini, pol));*/
+		/*
+			//recreating experiment with 3 random options
+			int[] ini = new int[8];
+			String[] pol = new String[8];
+			
+			ini[0] = 28;
+			ini[1] = 18;
+			ini[2] = 19;
+			ini[3] = 29;
+			ini[4] = 39;
+			ini[5] = 8;
+			ini[6] = 7;
+			ini[7] = 17;
+
+			pol[0] = "up";
+			pol[1] = "up";
+			pol[2] = "left";
+			pol[3] = "left";
+			pol[4] = "up";
+			pol[5] = "left";
+			pol[6] = "left";
+			pol[7] = "up";
+			
+			options.put("o1", new Option("o1", size, ini, pol));
+			
+			ini = new int[9];
+			pol = new String[9];
+			
+			ini[0] = 65;
+			ini[1] = 66;
+			ini[2] = 56;
+			ini[3] = 55;
+			ini[4] = 54;
+			ini[5] = 53;
+			ini[6] = 52;
+			ini[7] = 51;
+			ini[8] = 50;
+
+			pol[0] = "up";
+			pol[1] = "up";
+			pol[2] = "left";
+			pol[3] = "left";
+			pol[4] = "left";
+			pol[5] = "left";
+			pol[6] = "left";
+			pol[7] = "left";
+			pol[8] = "up";
+			
+			options.put("o2", new Option("o2", size, ini, pol));
+			
+			ini = new int[9];
+			pol = new String[9];
+			
+			ini[0] = 58;
+			ini[1] = 68;
+			ini[2] = 69;
+			ini[3] = 78;
+			ini[4] = 48;
+			ini[5] = 59;
+			ini[6] = 79;
+			ini[7] = 49;
+			ini[8] = 39;
+
+			pol[0] = "up";
+			pol[1] = "up";
+			pol[2] = "left";
+			pol[3] = "up";
+			pol[4] = "up";
+			pol[5] = "up";
+			pol[6] = "up";
+			pol[7] = "left";
+			pol[8] = "left";
+			
+			options.put("o3", new Option("o3", size, ini, pol));
+			//
+			 */
 		}
 		
 		else{
@@ -205,11 +281,10 @@ public class GridEnvironment implements IEnvironment{
 			options.put("ord", new Option("ord", size, ini, pol));
 		}
 		
-		/*Option o = createRandomOption(size);
-
+		Option o = createRandomOption(size);
 		options.put(o.getName(), o);
 		
-		o = createRandomOption(size);
+		/*o = createRandomOption(size);
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
@@ -243,9 +318,9 @@ public class GridEnvironment implements IEnvironment{
 		//int[] iniSet = new int[rand.nextInt(3) + 3];
 		
 		//want at least 5 states in the option and at most 9
-		int[] iniSet = new int[rand.nextInt(5) + 5];
+		//int[] iniSet = new int[rand.nextInt(5) + 5];
 		
-		/*
+		
 		int[] iniSet = new int[99];
 		
 		int goal = rand.nextInt(100);
@@ -258,8 +333,8 @@ public class GridEnvironment implements IEnvironment{
 			}
 			k++;
 		}
-		*/	
 		
+	/*	
 		//pick a random state to start the option
 		State first = states[rand.nextInt(gridSize)][rand.nextInt(gridSize)];
 		while(first.isObstacle()){
@@ -295,10 +370,10 @@ public class GridEnvironment implements IEnvironment{
 		Option opt = new Option(name, n, iniSet);
 			
 		learnOption(opt, currentState.getName());
+	*/	
+		Option opt = new Option(name, n, iniSet);
 		
-		//Option opt = new Option(name, n, iniSet);
-		
-		//learnOption(opt, goal);
+		learnOption(opt, goal);
 		
 		return opt;
 	}
@@ -436,7 +511,7 @@ public class GridEnvironment implements IEnvironment{
 	public void setObstacles(){
 
 		if(!isI){
-			createObstacle(3,8,2,3);
+			/*createObstacle(3,8,2,3);
 		
 			states[3][1].setAsObstacle(true);
 			states[3][2].setAsObstacle(true);
@@ -455,7 +530,7 @@ public class GridEnvironment implements IEnvironment{
 			states[6][7].setAsObstacle(true);
 		
 			states[7][6].setAsObstacle(true);
-			states[7][7].setAsObstacle(true);
+			states[7][7].setAsObstacle(true);*/
 		}
 		else{
 			//I environment
@@ -549,7 +624,7 @@ public class GridEnvironment implements IEnvironment{
 			if(t == 0){
 				//maybe not the best way to do this
 				//we just stayed in the same state and didn't get any reward
-				return new Info(new State[]{currentState}, new Double[]{0.0}, 1);
+				return new Info(new State[]{currentState}, new Double[]{0.0}, 0);
 			}
 			
 			//the complete discounted rewards for each state except for the last one
@@ -575,8 +650,35 @@ public class GridEnvironment implements IEnvironment{
 			return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 		}
 		
+		//interesting area is now an area where the probability of action succeeding is different
+		/*int s = currentState.getName();
+		if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			if(getBernouilli(Math.random()) == 1){
+				currentState = getState(o);
+			}
+			else{
+				Random rand = new Random();
+				//choose from amongst the other actions with equal probability
+				if(o.equals("up")){
+					String[] acts = {"down", "left", "right"};
+					currentState = getState(acts[rand.nextInt(3)]);
+				}
+				else if(o.equals("down")){
+					String[] acts = {"up", "left", "right"};
+					currentState = getState(acts[rand.nextInt(3)]);
+				}
+				else if(o.equals("left")){
+					String[] acts = {"down", "up", "right"};
+					currentState = getState(acts[rand.nextInt(3)]);
+				}
+				else{
+					String[] acts = {"down", "left", "up"};
+					currentState = getState(acts[rand.nextInt(3)]);
+				}
+			}
+		}
 		//if the action succeeds
-		if(getBernouilli(0.7) == 1){
+		else*/ if(getBernouilli(0.7) == 1){
 			currentState = getState(o);
 		}
 		else{
@@ -601,16 +703,16 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		//interesting area
-		int s = currentState.getName();
+		//int s = currentState.getName();
 		if(!isI){
-			if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+			/*if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}
+			}*/
 		}
 		else{
-			if(s == 42 || s == 43 || s == 52 || s == 53){
+			/*if(s == 42 || s == 43 || s == 52 || s == 53){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);
-			}
+			}*/
 		}
 		return new Info(new State[]{currentState}, new Double[]{(double) currentState.getReward()}, 1);
 	}

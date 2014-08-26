@@ -188,7 +188,7 @@ public class GridEnvDisplay extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				agent.setEnv(gridEnv, start, goal);
-				agent.learnTrial(1000);
+				agent.learnTrial(5000);
 						
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
