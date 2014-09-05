@@ -1,0 +1,54 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: report.aux
+The style file: abbrv.bst
+Database file #1: references.bib
+Warning--I didn't find a database entry for "bowman:reasoning"
+Warning--I didn't find a database entry for "clark:pct"
+Warning--I didn't find a database entry for "braams:babel"
+Warning--I didn't find a database entry for "herlihy:methodology"
+Warning--I didn't find a database entry for "salas:calculus"
+Warning--I didn't find a database entry for "Lamport:LaTeX"
+Warning--empty year in solwayoptimal
+You've used 5 entries,
+            2118 wiz_defined-function locations,
+            538 strings with 4666 characters,
+and the built_in function-call counts, 1804 in all, are:
+= -- 174
+> -- 89
+< -- 2
++ -- 36
+- -- 30
+* -- 132
+:= -- 301
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 30
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 67
+empty$ -- 135
+format.name$ -- 30
+if$ -- 371
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 6
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 32
+preamble$ -- 1
+purify$ -- 25
+quote$ -- 0
+skip$ -- 49
+stack$ -- 0
+substring$ -- 108
+swap$ -- 16
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 18
+warning$ -- 1
+while$ -- 17
+width$ -- 6
+write$ -- 57
+(There were 7 warnings)

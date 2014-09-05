@@ -1,0 +1,32 @@
+\begin{thebibliography}{1}
+
+\bibitem{pickett2002policyblocks}
+M.~Pickett and A.~G. Barto.
+\newblock Policyblocks: An algorithm for creating useful macro-actions in
+  reinforcement learning.
+\newblock In {\em ICML}, volume~2, pages 506--513, 2002.
+
+\bibitem{Puterman}
+M.~L. Puterman.
+\newblock {\em Markov Decision Processes: Discrete Stochastic Dynamic
+  Programming}.
+\newblock John Wiley \& Sons, Inc., New York, NY, USA, 1st edition, 1994.
+
+\bibitem{solwayoptimal}
+A.~Solway, C.~Diuk, N.~Corova, D.~Yee, A.~Barto, Y.~Niv, and M.~Botvinick.
+\newblock Optimal behavioral hierarchy.
+\newblock {\em PLoS Computational Biology}.
+
+\bibitem{still}
+S.~Still and D.~Precup.
+\newblock An information-theoretic approach to curiosity-driven reinforcement
+  learning.
+\newblock {\em Theory in Biosciences}, 131(3):139--148, 2012.
+
+\bibitem{sutton1999between}
+R.~S. Sutton, D.~Precup, and S.~Singh.
+\newblock Between mdps and semi-mdps: A framework for temporal abstraction in
+  reinforcement learning.
+\newblock {\em Artificial intelligence}, 112(1):181--211, 1999.
+
+\end{thebibliography}
