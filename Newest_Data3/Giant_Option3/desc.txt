@@ -1,0 +1,6 @@
+alpha = 10
+state = 55
+
+one giant option
+one state updated each timestep
+3000 trials

@@ -1,0 +1,1 @@
+same as manyopts2 except for there are no options here. 
