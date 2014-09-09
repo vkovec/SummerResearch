@@ -33,7 +33,7 @@ public abstract class Agent{
 	//the state we want to examine more closely
 	protected int stat;
 	
-	protected int[] actionDist = new int[7];
+	protected int[] actionDist = new int[9];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -41,6 +41,7 @@ public abstract class Agent{
 	protected PrintWriter paWriter;
 	protected PrintWriter pjWriter;
 	protected PrintWriter DWriter;
+	protected PrintWriter polWriter;
 	
 	protected IEnvironment env;
 	
@@ -50,7 +51,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[7];
+	protected String[] actions = new String[9];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -98,6 +99,7 @@ public abstract class Agent{
 			if(isGrid){
 				writer = new PrintWriter("gc2.txt", "UTF-8");
 				qWriter = new PrintWriter("gc2q.txt", "UTF-8");
+				polWriter = new PrintWriter("gc2pol.txt", "UTF-8");
 				
 				psWriter = new PrintWriter("gc2ps.txt", "UTF-8");
 				paWriter = new PrintWriter("gc2pa.txt", "UTF-8");
@@ -248,8 +250,8 @@ public abstract class Agent{
 				stat = 52;
 			}
 			else{
-				stat = 55;
-				//stat = 48;
+				//stat = 55;
+				stat = 9;
 			}
 		}
 		
@@ -279,6 +281,7 @@ public abstract class Agent{
 					sPolicy[i][j] = 0;
 				}
 				System.out.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
+				polWriter.println("State: " + i + ", Action " + actions[j] + ": " + sPolicy[i][j]);
 			}
 		}
 
@@ -286,6 +289,16 @@ public abstract class Agent{
 		System.out.println("");
 		for(int a = 0; a < actions.length; a++){
 			System.out.print(actionDist[a] + ", ");
+		}
+		
+		//print out the Q-values for the 6 states we want to look at
+		System.out.println("Q-values");
+		int[] states = {8, 9, 18, 19, 28, 29};
+		for(int i = 0; i < states.length; i++){
+			for(int a = 0; a < actions.length; a++){
+				System.out.println("State: " + states[i] + ", Action: " + actions[a] 
+						+ ": " + qValues[states[i]][a]);
+			}
 		}
 		
 		//print ps for state to a file (timestep vs. probability)
@@ -300,6 +313,7 @@ public abstract class Agent{
 		paWriter.close();
 		pjWriter.close();
 		DWriter.close();
+		polWriter.close();
 	}
 	
 	public void printPolicyToFile(int s){

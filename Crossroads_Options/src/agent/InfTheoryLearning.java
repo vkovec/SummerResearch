@@ -18,7 +18,7 @@ public class InfTheoryLearning extends Agent{
 	//private double[][] ps;
 	private int counter = 0;
 
-	private double lambda = 5000.0;
+	private double lambda = 3000.0;
 	//private double alpha = 0.5;
 	
 	public InfTheoryLearning(int n){
@@ -272,6 +272,13 @@ public class InfTheoryLearning extends Agent{
 	
 	@Override
 	public void  preLearn(int steps){
+		
+		if(p == null){
+			setP();
+			//initialize the policy to a uniformly random policy
+			randomizePolicy(sPolicy);
+		}
+		
 		Random rand = new Random();
 		
 		int state;
@@ -345,12 +352,12 @@ public class InfTheoryLearning extends Agent{
 			
 			//add 1 to the current state estimate (seems too simple though)
 			//maybe use the policy or the probability distribution, or both
-			/*ps[i][state] += 1;
+			ps[i][state] += 1;
 			
 			for(int x = 0; x < q.length; x++){
 				ps[i][x] = ps[i][x]/2;
-			}*/
-			if(i > 0){
+			}
+			/*if(i > 0){
 				for(int j = 0; j < pj.length; j++){
 					if(!withObs && env.isObstacle(j)){
 						continue;
@@ -370,7 +377,7 @@ public class InfTheoryLearning extends Agent{
 					}
 					ps[i][j] = sum;
 				}
-			}
+			}*/
 			
 			//b)
 			
@@ -446,6 +453,7 @@ public class InfTheoryLearning extends Agent{
 						
 						for(int a = 0; a < actions.length; a++){
 							sum += p[x][a][j]*q[x][a]*ps[i][x];
+
 						}
 					}
 					pj[j] = sum;
@@ -485,7 +493,6 @@ public class InfTheoryLearning extends Agent{
 							}
 							else if(p[x][a][k] == 0 && pj[k] == 0){
 								sum += 0;
-								//continue;
 							}
 							else if(pj[k] == 0){
 								sum = Double.POSITIVE_INFINITY;
@@ -499,11 +506,6 @@ public class InfTheoryLearning extends Agent{
 							break;
 						}
 						D[x][a] = D[x][a]/norm;
-						
-						//infinity
-						if(Double.isNaN(D[x][a])){
-							System.out.println(norm);
-						}
 						
 						//only want to look for state 2
 						//if(x == 2){
@@ -590,20 +592,21 @@ public class InfTheoryLearning extends Agent{
 							q[x][a] = 0;
 						}
 						else{
+							if(!Double.isInfinite(Z[x])){
+								double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
 						
-							double exp = (1/lambda)*(D[x][a] + alpha*qValues[x][a]);
-						
-							if(withPa){
-								q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+								if(withPa){
+									q[x][a] = (Math.log(pa[a]) + exp) - Z[x];
+								}
+								else{
+									q[x][a] = (exp) - Z[x];
+								}	
+								q[x][a] = Math.exp(q[x][a]);
 							}
-							else{
-								q[x][a] = (exp) - Z[x];
-							}
-							q[x][a] = Math.exp(q[x][a]);
 						}
 						
 						if(Double.isNaN(q[x][a])){
-							System.out.println("D: " + D[x][a]);
+							System.out.println("D: " + D[x][a] + ", x: " + x);
 							return;
 						}
 						
@@ -660,6 +663,11 @@ public class InfTheoryLearning extends Agent{
 			//e)
 			
 			int index = getActionIndex(action);
+			
+			//to see how often options are taken in general
+			/*if(action.charAt(0) == 'o'){
+				System.out.println("state: " + state + ", o: " + action);
+			}*/
 			
 			//want to count how many times each action gets taken in the state
 			if(state == stat){
