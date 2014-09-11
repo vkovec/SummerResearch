@@ -449,4 +449,10 @@ public class Environment implements IEnvironment{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void getQVals(double[][] qVals) {
+		// TODO Auto-generated method stub
+		
+	}
 }

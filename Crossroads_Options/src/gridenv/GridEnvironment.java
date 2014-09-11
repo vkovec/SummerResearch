@@ -41,6 +41,8 @@ public class GridEnvironment implements IEnvironment{
 	
 	private State currentState = null;
 	
+	private double[][] qValues = null;
+	
 	//n is the grid size
 	public GridEnvironment(int n, boolean isI){
 		this.isI = isI;
@@ -510,7 +512,7 @@ public class GridEnvironment implements IEnvironment{
 		double currBest = Integer.MIN_VALUE;
 		
 		double currVal;
-		for(int i = 0; i < actions.length; i++){
+		for(int i = 0; i < qVals[0].length; i++){
 			currVal = qVals[state][i];
 			
 			if(currVal > currBest){
@@ -620,11 +622,26 @@ public class GridEnvironment implements IEnvironment{
 			ArrayList<Double> rewards = new ArrayList<Double>();
 			
 			String act;
+			int actInd;
+			int prevState;
 			//this may change if the policy is no longer deterministic (but prob not)
 			while(op.isExecutable(currentState.getName()) && !op.terminate(currentState.getName())){
+				prevState = currentState.getName();
+				
 				act = op.getAction(currentState.getName());
 
 				inf = performOption(act);
+				
+				//set the Q-value for the sub action
+				actInd = getActionIndex(act);
+				qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()
+						+ Math.pow(0.9, inf.getTimeSteps())
+						*getMaxQ(inf.getState().getName(), qValues)
+						- qValues[prevState][actInd]);
+				/*if(prevState >= 8 && prevState < 20){
+					System.out.println("state: " + prevState + ", a: " + act + ", q: " + qValues[prevState][actInd]);
+				}*/
+				//
 				
 				//store reward from t+1 onwards without discounting
 				rewards.add(inf.getReward());
@@ -861,5 +878,10 @@ public class GridEnvironment implements IEnvironment{
 		else{
 			opLearn = true;
 		}
+	}
+	
+	@Override
+	public void getQVals(double[][] qVals) {
+		this.qValues = qVals;
 	}
 }

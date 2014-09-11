@@ -52,4 +52,11 @@ public interface IEnvironment{
 	 * Toggles whether actions will sometimes fail or always succeed.
 	 */
 	public void toggleActionFail();
+	
+	/**
+	 * Keep a copy of the Q values in the environment
+	 * to be able to access and change them when executing options.
+	 * @param qVals
+	 */
+	public void getQVals(double[][] qVals);
 }

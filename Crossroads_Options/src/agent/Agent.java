@@ -88,6 +88,10 @@ public abstract class Agent{
 			i++;
 		}
 		
+		qValues =  new double[qValues.length][actions.length];
+		
+		env.getQVals(qValues);
+		
 		for(int j = 0; j < actions.length; j++){
 			System.out.println(actions[j]);
 		}
@@ -236,7 +240,7 @@ public abstract class Agent{
 	public void learnTrial(int eps){
 		
 		randomizePolicy(sPolicy);
-		qValues =  new double[qValues.length][actions.length];
+		//qValues =  new double[qValues.length][actions.length];
 		
 		Random rand = new Random();
 		
@@ -292,7 +296,7 @@ public abstract class Agent{
 		}
 		
 		//print out the Q-values for the 6 states we want to look at
-		System.out.println("Q-values");
+		System.out.println("\nQ-values");
 		int[] states = {8, 9, 18, 19, 28, 29};
 		for(int i = 0; i < states.length; i++){
 			for(int a = 0; a < actions.length; a++){
