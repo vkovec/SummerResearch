@@ -1,0 +1,1 @@
+same as ManyOps2_Redo except for Q-values get updated within options as well

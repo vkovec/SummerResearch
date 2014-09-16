@@ -1,0 +1,5 @@
+alpha = 10
+no interesting area
+state = 9
+simpler way of calculating ptx
+Q-values also upated within options
