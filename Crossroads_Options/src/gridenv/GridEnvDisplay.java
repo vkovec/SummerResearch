@@ -119,11 +119,17 @@ public class GridEnvDisplay extends JFrame{
 		
 		if(!isI){
 			//the interesting area
-			for(int i = 53; i < 57; i++){
+			/*for(int i = 53; i < 57; i++){
 				labels.get(i).setBackground(Color.gray);
 			}
 			labels.get(65).setBackground(Color.gray);
-			labels.get(66).setBackground(Color.gray);
+			labels.get(66).setBackground(Color.gray);*/
+			
+			//s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61
+			for(int i = 4; i < 7; i++){
+				labels.get(i*10).setBackground(Color.gray);
+				labels.get(i*10+1).setBackground(Color.gray);
+			}
 		}
 		else{
 			labels.get(42).setBackground(Color.gray);
@@ -150,7 +156,7 @@ public class GridEnvDisplay extends JFrame{
 					(!o.getName().equals("old"))){
 				ini = o.getIni();
 				for(int i = 0; i < ini.length; i++){
-					labels.get(ini[i]).setBackground(Color.lightGray);
+					//labels.get(ini[i]).setBackground(Color.lightGray);
 					labels.get(ini[i]).setText(o.getName() + ": " + o.getAction(ini[i]));
 				}
 			}

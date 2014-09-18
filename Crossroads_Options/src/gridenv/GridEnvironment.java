@@ -61,12 +61,12 @@ public class GridEnvironment implements IEnvironment{
 
 		setObstacles();
 		
-		try {
+		/*try {
 			oWriter = new PrintWriter("options.txt", "UTF-8");
 		} 
 		catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		initializeOptions();
 		
@@ -285,13 +285,13 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		//for reading in options from a file
-		/*OptionReader reader = new OptionReader();
+		OptionReader reader = new OptionReader();
 		ArrayList<Option> ops = reader.getOptions();
 		for(Option o : ops){
 			options.put(o.getName(), o);
-		}*/
+		}
 		
-		Option o = createRandomOption(size);
+		/*Option o = createRandomOption(size);
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
@@ -304,10 +304,10 @@ public class GridEnvironment implements IEnvironment{
 		options.put(o.getName(), o);
 		
 		o = createRandomOption(size);
-		options.put(o.getName(), o);
+		options.put(o.getName(), o);*/
 		
 		//done creating options
-		oWriter.close();
+		//oWriter.close();
 	}
 	
 	//helper for below
@@ -338,7 +338,7 @@ public class GridEnvironment implements IEnvironment{
 		
 		int[] iniSet = new int[rand.nextInt(16) + 15];
 		
-	/*	
+		/*
 		int[] iniSet = new int[99];
 		
 		int goal = rand.nextInt(100);
@@ -388,6 +388,7 @@ public class GridEnvironment implements IEnvironment{
 		Option opt = new Option(name, n, iniSet);
 			
 		learnOption(opt, currentState.getName());
+		
 		
 		//Option opt = new Option(name, n, iniSet);
 		
@@ -529,7 +530,7 @@ public class GridEnvironment implements IEnvironment{
 	public void setObstacles(){
 
 		if(!isI){
-			createObstacle(3,8,2,3);
+			/*createObstacle(3,8,2,3);
 		
 			states[3][1].setAsObstacle(true);
 			states[3][2].setAsObstacle(true);
@@ -548,7 +549,9 @@ public class GridEnvironment implements IEnvironment{
 			states[6][7].setAsObstacle(true);
 		
 			states[7][6].setAsObstacle(true);
-			states[7][7].setAsObstacle(true);
+			states[7][7].setAsObstacle(true);*/
+			
+			createObstacle(2, 8, 2, 8);
 		}
 		else{
 			//I environment
@@ -685,7 +688,7 @@ public class GridEnvironment implements IEnvironment{
 		
 		//interesting area is now an area where the probability of action succeeding is different
 		/*int s = currentState.getName();
-		if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
+		if(s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61){
 			if(getBernouilli(Math.random()) == 1){
 				currentState = getState(o);
 			}
@@ -736,7 +739,7 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		//interesting area
-		int s = currentState.getName();
+		//int s = currentState.getName();
 		if(!isI){
 			/*if(s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66){
 				return new Info(new State[]{currentState}, new Double[]{rand.nextGaussian()}, 1);

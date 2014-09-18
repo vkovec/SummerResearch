@@ -33,7 +33,7 @@ public abstract class Agent{
 	//the state we want to examine more closely
 	protected int stat;
 	
-	protected int[] actionDist = new int[9];
+	protected int[] actionDist = new int[6];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -51,7 +51,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[9];
+	protected String[] actions = new String[6];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
