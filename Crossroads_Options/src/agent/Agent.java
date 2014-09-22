@@ -255,7 +255,7 @@ public abstract class Agent{
 			}
 			else{
 				//stat = 55;
-				stat = 9;
+				stat = 90;
 			}
 		}
 		

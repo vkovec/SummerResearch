@@ -687,7 +687,7 @@ public class GridEnvironment implements IEnvironment{
 		}
 		
 		//interesting area is now an area where the probability of action succeeding is different
-		/*int s = currentState.getName();
+		int s = currentState.getName();
 		if(s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61){
 			if(getBernouilli(Math.random()) == 1){
 				currentState = getState(o);
@@ -714,7 +714,7 @@ public class GridEnvironment implements IEnvironment{
 			}
 		}
 		//if the action succeeds
-		else*/ if(getBernouilli(0.7) == 1){
+		else if(getBernouilli(0.7) == 1){
 			currentState = getState(o);
 		}
 		else{
