@@ -57,13 +57,8 @@ Doina Precup\\
 
 \maketitle
 \begin{abstract}
-The reinforcement learning framework involves an agent learning about an environment by interacting with it across discrete time steps. %To do this the agent moves around by taking different actions, and accumulating rewards as it goes.
 
-	By defining a fixed subpolicy for a group of states in an MDP before the agent begins exploration, one can achieve a faster convergence to an optimal policy. While options can easily be defined manually for some MDPs, this is not the case in general. For instance, in some environments it is unclear what a good option might be, while in others the state space may simply be too large. Therefore, it would be beneficial to be able to find good options automatically.
-	
-	Currently, the results look promising as random options that move the agent closer to a goal state are sometimes used, while options that move the agent further from the goal are never taken. For instance, in one experiment the algorithm is used on a grid world with a large random option, composed of every state except the subgoal where the option terminates. Here, the policy found only includes the option if the option moves the agent closer to the goal from most states, and leads to an improved performance when the option is included (see Figure 1, next page).
-	 This shows the ability of this technique to sift through options and potentially make it easier to find good options without making any assumptions about the environment. 
-	
+	Reinforcement learning allows autonomous agents to compute optimal ways of behaving by interacting with an environment. Temporally extended actions, or options, allow algorithms to achieve faster convergence to an optimal policy. While options can be defined manually for some MDPs, this is difficult in general because it may be unclear what options are good without prior knowledge of the environment. Therefore, it is beneficial to find good options automatically. We propose a novel approach which creates random options and then sifts through them using an information theoretic policy search algorithm. The algorithm combines a measure of predictive information and rewards to guide the agent. Our approach shows promising empirical results on small navigation problems and is computationally efficient. 
 	
 \end{abstract}
 
