@@ -33,7 +33,7 @@ public abstract class Agent{
 	//the state we want to examine more closely
 	protected int stat;
 	
-	protected int[] actionDist = new int[6];
+	protected int[] actionDist = new int[20];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -51,7 +51,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[6];
+	protected String[] actions = new String[20];
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -255,7 +255,7 @@ public abstract class Agent{
 			}
 			else{
 				//stat = 55;
-				stat = 90;
+				stat = 17;
 			}
 		}
 		
@@ -296,14 +296,14 @@ public abstract class Agent{
 		}
 		
 		//print out the Q-values for the 6 states we want to look at
-		System.out.println("\nQ-values");
+		/*System.out.println("\nQ-values");
 		int[] states = {8, 9, 18, 19, 28, 29};
 		for(int i = 0; i < states.length; i++){
 			for(int a = 0; a < actions.length; a++){
 				System.out.println("State: " + states[i] + ", Action: " + actions[a] 
 						+ ": " + qValues[states[i]][a]);
 			}
-		}
+		}*/
 		
 		//print ps for state to a file (timestep vs. probability)
 		for(int i = 0; i < timeSteps; i++){

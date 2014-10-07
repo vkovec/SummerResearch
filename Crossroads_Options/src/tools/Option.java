@@ -93,6 +93,14 @@ public class Option{
 		return name;
 	}
 	
+	/**
+	 * change the initiation set
+	 * @param i
+	 */
+	public void setIni(int[] i){
+		initiationSet = i;
+	}
+	
 	//change the policy to a new policy
 	public void setPolicy(Hashtable<Integer, String> p){
 		policy = p;

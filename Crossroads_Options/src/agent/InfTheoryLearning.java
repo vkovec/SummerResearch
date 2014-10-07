@@ -116,30 +116,6 @@ public class InfTheoryLearning extends Agent{
 	
 	//figure out which options are available in state s
 	private String[] getOptions(int s){
-		/*Option oup;
-		
-		if(isGrid){
-			oup = env.getOption("oright");
-		}
-		else{
-			oup = env.getOption("oup");
-		}
-		
-		Option odown = env.getOption("odown");
-		
-		if(oup.isExecutable(s)){
-			if(odown.isExecutable(s)){
-				return actions;
-			}
-			//oup but not odown
-			return actions2;
-		}
-		//odown but not oup
-		else if(odown.isExecutable(s)){
-			return actions3;
-		}
-		
-		return actions1;*/
 		
 		ArrayList<String> acts = new ArrayList<String>();
 		acts.add("up");
@@ -471,6 +447,9 @@ public class InfTheoryLearning extends Agent{
 				//DWriter.println("");
 				
 				int x = state;
+				
+				String[] acts = getOptions(x);
+				
 				//for(int x = 0; x < q.length; x++){
 					
 					if(!withObs && env.isObstacle(x)){
@@ -479,6 +458,11 @@ public class InfTheoryLearning extends Agent{
 					
 					double norm = 0;
 					for(int a = 0; a < actions.length; a++){
+						
+						//if the current action is an option that is not in the list
+						if(actions[a].charAt(0) == 'o' && !contains(acts, actions[a])){
+							continue;
+						}
 						
 						//set D
 						double sum = 0;
@@ -515,12 +499,6 @@ public class InfTheoryLearning extends Agent{
 				//}
 				
 				//for(int x = 0; x < q.length; x++){
-					
-					if(!withObs && env.isObstacle(x)){
-						continue;
-					}
-					
-					String[] acts = getOptions(x);
 					
 					//set Z
 					double temp;
@@ -714,6 +692,51 @@ public class InfTheoryLearning extends Agent{
 					qValues[state][index] += p[state][index][x]*(0 + 0.9*getMaxQ(x));
 				}
 			}*/
+			
+			//if probability of option being taken goes below 0.01 at every state where it can be taken
+			//we remove this option completely and renormalize all policies that can take it
+			for(int a = 0; a < actions.length; a++){
+				if(actions[a].charAt(0) == 'o'){
+					Option o = env.getOption(actions[a]);
+					
+					boolean isTaken = false;
+					
+					int[] ini = o.getIni();
+					for(int j = 0; j < ini.length; j++){
+						if(sPolicy[ini[j]][a] > 0.01){
+							isTaken = true;
+							break;
+						}
+					}
+					
+					//if the option gets taken somewhere by a probability greater than 0.01, then
+					//we leave it alone
+					if(isTaken || ini.length < 1){
+						break;
+					}
+					
+					//remove the option from all policies
+					double norm;
+					for(int j = 0; j < ini.length; j++){
+						sPolicy[ini[j]][a] = 0;
+						
+						norm = 0.0;
+						for(int k = 0; k < actions.length; k++){
+							norm += sPolicy[ini[j]][k];
+						}
+						
+						for(int k = 0; k < actions.length; k++){
+							sPolicy[ini[j]][k] = sPolicy[ini[j]][k]/norm;
+						}
+					}
+					
+					//remove the option completely so it cannot be taken again (just make its initiation set empty?)
+					o.setIni(new int[0]);
+					
+					//the option that was removed
+					System.out.println("Option removed: " + o.getName() + ", at trial: " + counter);
+				}
+			}
 		}
 		
 		//print D values to a file
