@@ -106,6 +106,10 @@ public class Option{
 		policy = p;
 	}
 	
+	public Hashtable<Integer, String> getPolicy(){
+		return policy;
+	}
+	
 	/**
 	 * @return the initiation set
 	 */

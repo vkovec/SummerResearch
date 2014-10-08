@@ -15,6 +15,7 @@ import tools.Option;
 public abstract class Agent{
 	
 	private boolean isI = false;
+	protected boolean isEmpty = false;
 	
 	//temporary
 	protected double[][] ps;
