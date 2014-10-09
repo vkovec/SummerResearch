@@ -694,90 +694,93 @@ public class InfTheoryLearning extends Agent{
 				}
 			}*/
 			
-			//if probability of option being taken goes below 0.01 at every state where it can be taken
-			//we remove this option completely and renormalize all policies that can take it
-			if (!isEmpty) {
-				for (int a = 0; a < actions.length; a++) {
-					if (actions[a].charAt(0) == 'o') {
-						Option o = env.getOption(actions[a]);
-						
-						boolean isTaken = false;
+		}
+		
+		//if probability of option being taken goes below 0.01 at every state where it can be taken
+		//we remove this option completely and renormalize all policies that can take it
+		if (!isEmpty) {
+			for (int a = 0; a < actions.length; a++) {
+				if (actions[a].charAt(0) == 'o') {
+					Option o = env.getOption(actions[a]);
+					
+					boolean isTaken = false;
 
-						int[] ini = o.getIni();
-						for (int j = 0; j < ini.length; j++) {
-							if (sPolicy[ini[j]][a] > 0.001) {
-								isTaken = true;
-								break;
-							}
-						}
-
-						//if the option gets taken somewhere by a probability greater than 0.01, then
-						//we leave it alone
-						if (isTaken || ini.length < 1) {
+					int[] ini = o.getIni();
+					for (int j = 0; j < ini.length; j++) {
+						if (sPolicy[ini[j]][a] > 0.001) {
+							isTaken = true;
 							break;
 						}
+					}
 
-						//remove the option from all policies
-						double norm;
-						for (int j = 0; j < ini.length; j++) {
-							sPolicy[ini[j]][a] = 0;
+					//if the option gets taken somewhere by a probability greater than 0.01, then
+					//we leave it alone
+					if (isTaken || ini.length < 1) {
+						break;
+					}
 
-							norm = 0.0;
-							for (int k = 0; k < actions.length; k++) {
-								norm += sPolicy[ini[j]][k];
-							}
+					//remove the option from all policies
+					double norm;
+					for (int j = 0; j < ini.length; j++) {
+						sPolicy[ini[j]][a] = 0;
 
-							for (int k = 0; k < actions.length; k++) {
-								sPolicy[ini[j]][k] = sPolicy[ini[j]][k] / norm;
-							}
+						norm = 0.0;
+						for (int k = 0; k < actions.length; k++) {
+							norm += sPolicy[ini[j]][k];
 						}
 
-						//remove the option completely so it cannot be taken again (just make its initiation set empty?)
-						o.setIni(new int[0]);
-
-						//the option that was removed
-						paWriter.println("Option removed: " + o.getName()
-								+ ", at trial: " + counter);
-						System.out.println("Option removed: " + o.getName() + ", at trial: " + counter);
+						for (int k = 0; k < actions.length; k++) {
+							sPolicy[ini[j]][k] = sPolicy[ini[j]][k] / norm;
+						}
 					}
+
+					//remove the option completely so it cannot be taken again (just make its initiation set empty?)
+					o.setIni(new int[0]);
+
+					//the option that was removed
+					paWriter.println("Option removed: " + o.getName()
+							+ ", at trial: " + counter);
+					System.out.println("Option removed: " + o.getName() + ", at trial: " + counter);
 				}
 			}
-			//if this is the empty environment then we want to remove states from the initiation set of the
-			//large random option
-			else{
-				for (int a = 0; a < actions.length; a++) {
-					if (actions[a].charAt(0) == 'o') {
-						
-						Option o = env.getOption(actions[a]);;
+		}
+		//if this is the empty environment then we want to remove states from the initiation set of the
+		//large random option
+		else{
+			for (int a = 0; a < actions.length; a++) {
+				if (actions[a].charAt(0) == 'o') {
+					
+					Option o = env.getOption(actions[a]);;
 
-						int[] ini = new int[o.getIni().length];
-						System.arraycopy(o.getIni(), 0, ini, 0, ini.length);
-						
-						for (int j = 0; j < ini.length; j++) {
-							if (sPolicy[ini[j]][a] < 0.0001) {
-								//remove this state from the initiation set and the policy
-								int[] oldIni = o.getIni();
-								int[] newIni = new int[oldIni.length-1];
-								
-								Hashtable<Integer, String> pol = o.getPolicy();
-								
-								for(int k = 0; k < newIni.length; k++){
-									if(oldIni[k] == ini[j]){
-										k--;
-									}
-									else{
-										newIni[k] = oldIni[k];
-									}
+					int[] ini = new int[o.getIni().length];
+					System.arraycopy(o.getIni(), 0, ini, 0, ini.length);
+					
+					for (int j = 0; j < ini.length; j++) {
+						if (sPolicy[ini[j]][a] < 0.0001) {
+							//remove this state from the initiation set and the policy
+							int[] oldIni = o.getIni();
+							int[] newIni = new int[oldIni.length-1];
+							
+							Hashtable<Integer, String> pol = o.getPolicy();
+							
+							int t = 0;
+							for(int k = 0; k < newIni.length; k++){
+								if(oldIni[t] == ini[j]){
+									k--;
 								}
-								
-								pol.remove(ini[j]);
-								
-								o.setIni(newIni);
-								o.setPolicy(pol);
-								
-								System.out.println("Removed state: " + ini[j]);
-								pjWriter.println("Removed state: " + ini[j]);
+								else{
+									newIni[k] = oldIni[t];
+								}
+								t++;
 							}
+							
+							pol.remove(ini[j]);
+							
+							o.setIni(newIni);
+							o.setPolicy(pol);
+							
+							System.out.println("Removed state: " + ini[j]);
+							pjWriter.println("Removed state: " + ini[j]);
 						}
 					}
 				}

@@ -27,7 +27,7 @@ public class GridEnvironment implements IEnvironment{
 	private boolean opLearn = false;
 	
 	private boolean isI;
-	private boolean isEmpty = false;
+	private boolean isEmpty = true;
 	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
@@ -701,7 +701,7 @@ public class GridEnvironment implements IEnvironment{
 		
 		//interesting area is now an area where the probability of action succeeding is different
 		int s = currentState.getName();
-		if(s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61){
+		if((s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61) && !isEmpty){
 			if(getBernouilli(Math.random()) == 1){
 				currentState = getState(o);
 			}

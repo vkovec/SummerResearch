@@ -28,6 +28,7 @@ import agent.TDLearning;
 public class GridEnvDisplay extends JFrame{
 	
 	private boolean isI = false;
+	private boolean isEmpty = true;
 	
 	private GridEnvironment gridEnv;
 	private int start;
@@ -117,7 +118,7 @@ public class GridEnvDisplay extends JFrame{
 			}
 		}
 		
-		if(!isI){
+		if(!isI && !isEmpty){
 			//the interesting area
 			/*for(int i = 53; i < 57; i++){
 				labels.get(i).setBackground(Color.gray);
@@ -131,7 +132,7 @@ public class GridEnvDisplay extends JFrame{
 				labels.get(i*10+1).setBackground(Color.gray);
 			}
 		}
-		else{
+		else if(!isEmpty){
 			labels.get(42).setBackground(Color.gray);
 			labels.get(43).setBackground(Color.gray);
 			labels.get(52).setBackground(Color.gray);
