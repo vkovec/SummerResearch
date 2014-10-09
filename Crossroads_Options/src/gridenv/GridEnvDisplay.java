@@ -28,7 +28,7 @@ import agent.TDLearning;
 public class GridEnvDisplay extends JFrame{
 	
 	private boolean isI = false;
-	private boolean isEmpty = true;
+	private boolean isEmpty = false;
 	
 	private GridEnvironment gridEnv;
 	private int start;
@@ -157,7 +157,9 @@ public class GridEnvDisplay extends JFrame{
 					(!o.getName().equals("old"))){
 				ini = o.getIni();
 				for(int i = 0; i < ini.length; i++){
-					//labels.get(ini[i]).setBackground(Color.lightGray);
+					if(isEmpty){
+						labels.get(ini[i]).setBackground(Color.lightGray);
+					}
 					labels.get(ini[i]).setText(o.getName() + ": " + o.getAction(ini[i]));
 				}
 			}
@@ -235,7 +237,13 @@ public class GridEnvDisplay extends JFrame{
 				
 				for(int i = 0; i < p.length; i++){
 					if(i != start && i != goal){
-						labels.get(i).setText(p[i]);
+						//if this is an option then we also want to see its policy
+						if(p[i].charAt(0) == 'o'){
+							labels.get(i).setText(p[i] + ": " + gridEnv.getOption(p[i]).getAction(i));
+						}
+						else{
+							labels.get(i).setText(p[i]);
+						}
 					}
 				}
 			}

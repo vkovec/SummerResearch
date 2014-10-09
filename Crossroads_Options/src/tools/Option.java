@@ -99,6 +99,17 @@ public class Option{
 	 */
 	public void setIni(int[] i){
 		initiationSet = i;
+		
+		for(int j = 0; j < beta.length; j++){
+			if(isExecutable(j)){
+				//for now we want to continue execution until
+				//we leave the initiation set
+				beta[j] = 0;
+			}
+			else{
+				beta[j] = 1;
+			}
+		}
 	}
 	
 	//change the policy to a new policy

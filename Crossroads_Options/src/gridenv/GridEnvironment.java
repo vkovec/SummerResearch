@@ -27,7 +27,7 @@ public class GridEnvironment implements IEnvironment{
 	private boolean opLearn = false;
 	
 	private boolean isI;
-	private boolean isEmpty = true;
+	private boolean isEmpty = false;
 	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
