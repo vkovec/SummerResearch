@@ -28,7 +28,7 @@ import agent.TDLearning;
 public class GridEnvDisplay extends JFrame{
 	
 	private boolean isI = false;
-	private boolean isEmpty = false;
+	private boolean isEmpty = true;
 	
 	private GridEnvironment gridEnv;
 	private int start;
@@ -236,7 +236,7 @@ public class GridEnvDisplay extends JFrame{
 				String[] p = agent.getPolicy();
 				
 				for(int i = 0; i < p.length; i++){
-					if(i != start && i != goal){
+					if(/*i != start &&*/ i != goal){
 						//if this is an option then we also want to see its policy
 						if(p[i].charAt(0) == 'o'){
 							labels.get(i).setText(p[i] + ": " + gridEnv.getOption(p[i]).getAction(i));

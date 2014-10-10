@@ -15,7 +15,7 @@ import tools.Option;
 public abstract class Agent{
 	
 	private boolean isI = false;
-	protected boolean isEmpty = false;
+	protected boolean isEmpty = true;
 	
 	//temporary
 	protected double[][] ps;
@@ -278,6 +278,8 @@ public abstract class Agent{
 			if(!isGrid){
 				startState = rand.nextInt(21);
 			}
+			//random state along the left side of the grid
+			startState = rand.nextInt(10)*10;
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){

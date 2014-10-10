@@ -666,12 +666,22 @@ public class InfTheoryLearning extends Agent{
 					qValues[st][index] = qValues[st][index] + 0.1*(rewards[x]
 							+ Math.pow(0.9, timeSteps-(x+1))*getMaxQ(result.getState().getName())
 							- qValues[st][index]);
+					
+					//adding a penalty on the Q values
+					if(isEmpty){
+						qValues[st][index] -= 0.2;
+					}
 				}
 			}
 			if(timeSteps > 0){
 				qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
 					- qValues[state][index]);
+				
+				//adding a penalty on the Q values
+				if(isEmpty){
+					qValues[state][index] -= 0.2;
+				}
 			}
 			else{
 				System.out.println(action + ": " + state);

@@ -27,7 +27,7 @@ public class GridEnvironment implements IEnvironment{
 	private boolean opLearn = false;
 	
 	private boolean isI;
-	private boolean isEmpty = false;
+	private boolean isEmpty = true;
 	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
@@ -655,6 +655,12 @@ public class GridEnvironment implements IEnvironment{
 						+ Math.pow(0.9, inf.getTimeSteps())
 						*getMaxQ(inf.getState().getName(), qValues)
 						- qValues[prevState][actInd]);
+				
+				//adding a penalty on the Q values
+				if(isEmpty){
+					qValues[prevState][actInd] -= 0.2;
+				}
+				
 				/*if(prevState >= 8 && prevState < 20){
 					System.out.println("state: " + prevState + ", a: " + act + ", q: " + qValues[prevState][actInd]);
 				}*/
