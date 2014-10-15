@@ -658,7 +658,7 @@ public class GridEnvironment implements IEnvironment{
 				
 				//adding a penalty on the Q values
 				if(isEmpty){
-					qValues[prevState][actInd] -= 0.2;
+					qValues[prevState][actInd] -= 0.05;
 				}
 				
 				/*if(prevState >= 8 && prevState < 20){

@@ -46,7 +46,15 @@ public class InfTheoryLearning extends Agent{
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[0][j] = 0;
 				}
-				ps[0][startState]++;
+				if(isEmpty){
+					ps[0][startState]++;
+				}
+				//as now the initiation set is the entire left column
+				else{
+					for(int j = 0; j < 10; j++){
+						ps[0][j*10]++;
+					}
+				}
 			}
 			else{
 				//not modified for obstacles
@@ -669,7 +677,7 @@ public class InfTheoryLearning extends Agent{
 					
 					//adding a penalty on the Q values
 					if(isEmpty){
-						qValues[st][index] -= 0.2;
+						qValues[st][index] -= 0.05;
 					}
 				}
 			}
@@ -680,7 +688,7 @@ public class InfTheoryLearning extends Agent{
 				
 				//adding a penalty on the Q values
 				if(isEmpty){
-					qValues[state][index] -= 0.2;
+					qValues[state][index] -= 0.05;
 				}
 			}
 			else{

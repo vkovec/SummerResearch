@@ -279,7 +279,9 @@ public abstract class Agent{
 				startState = rand.nextInt(21);
 			}
 			//random state along the left side of the grid
-			startState = rand.nextInt(10)*10;
+			if(!isEmpty){
+				startState = rand.nextInt(10)*10;
+			}
 			env.gotoState(startState);
 		}
 		for(int i = 0; i < sPolicy.length; i++){
