@@ -3,13 +3,13 @@ import java.util.ArrayList;
 
 public class State{
 	private int name;
-	private int reward;
+	private double reward;
 	private boolean isObstacle;
 	
 	//up, down, left, right
 	private ArrayList<State> neighbors;
 	
-	public State(int n, int r){
+	public State(int n, double r){
 		isObstacle = false;
 		name = n;
 		reward = r;
@@ -23,7 +23,7 @@ public class State{
 		neighbors.add(right);
 	}
 	
-	public int getReward(){
+	public double getReward(){
 		return reward;
 	}
 	
