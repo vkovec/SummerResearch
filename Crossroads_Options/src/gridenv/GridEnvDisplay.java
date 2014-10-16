@@ -28,7 +28,7 @@ import agent.TDLearning;
 public class GridEnvDisplay extends JFrame{
 	
 	private boolean isI = false;
-	private boolean isEmpty = false;
+	private boolean isEmpty = true;
 	
 	private GridEnvironment gridEnv;
 	private int start;

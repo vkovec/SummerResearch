@@ -15,7 +15,7 @@ import tools.Option;
 public abstract class Agent{
 	
 	private boolean isI = false;
-	protected boolean isEmpty = false;
+	protected boolean isEmpty = true;
 	
 	//temporary
 	protected double[][] ps;
@@ -345,7 +345,7 @@ public abstract class Agent{
 		for(int i = 0; i < policy.length; i++){
 			double sum = 0;
 			for(int j = 0; j < actions.length; j++){
-				if(j >= 4){ //this is a option
+				if(j >= 4){ //this is an option
 					o = env.getOption(actions[j]);
 					if(o.isExecutable(i)){
 						policy[i][j] = Math.random();

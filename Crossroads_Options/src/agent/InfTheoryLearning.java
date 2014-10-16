@@ -650,9 +650,9 @@ public class InfTheoryLearning extends Agent{
 			}*/
 			
 			//want to count how many times each action gets taken in the state
-			if(state == stat){
+			//if(state == stat){
 				actionDist[index]++;
-			}
+			//}
 			//
 			
 			int timeSteps = result.getTimeSteps();
@@ -670,18 +670,25 @@ public class InfTheoryLearning extends Agent{
 					
 					//adding a penalty on the Q values
 					if(isEmpty){
-						//qValues[st][index] -= 0.01;
+						//qValues[st][index] -= 0.005;
 					}
 				}
 			}
 			if(timeSteps > 0){
-				qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
+				//if this is a primitive action we want to penalize it
+				if(isEmpty && action.charAt(0) != 'o'){
+					qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()-0.1
+							+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
+							- qValues[state][index]);
+				}
+				else{
+					qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
 					- qValues[state][index]);
-				
+				}
 				//adding a penalty on the Q values
 				if(isEmpty){
-					//qValues[state][index] -= 0.01;
+					//qValues[state][index] -= 0.005;
 				}
 			}
 			else{
@@ -728,7 +735,7 @@ public class InfTheoryLearning extends Agent{
 						}
 						//print the probability of taking that action for every state
 						//to a file
-						pjWriter.print("( " + ini[j] + ", " + sPolicy[ini[j]][a] + "); ");
+						pjWriter.print("(" + ini[j] + ", " + sPolicy[ini[j]][a] + "); ");
 					}
 
 					//if the option gets taken somewhere by a probability greater than 0.01, then

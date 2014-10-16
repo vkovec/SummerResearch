@@ -27,7 +27,7 @@ public class GridEnvironment implements IEnvironment{
 	private boolean opLearn = false;
 	
 	private boolean isI;
-	private boolean isEmpty = false;
+	private boolean isEmpty = true;
 	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
@@ -651,14 +651,22 @@ public class GridEnvironment implements IEnvironment{
 				
 				//set the Q-value for the sub action
 				actInd = getActionIndex(act);
-				qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()
+				if(isEmpty){
+					//penalizing primitive actions
+					qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()-0.1
+							+ Math.pow(0.9, inf.getTimeSteps())
+							*getMaxQ(inf.getState().getName(), qValues)
+							- qValues[prevState][actInd]);
+				}
+				else{
+					qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()
 						+ Math.pow(0.9, inf.getTimeSteps())
 						*getMaxQ(inf.getState().getName(), qValues)
 						- qValues[prevState][actInd]);
-				
+				}
 				//adding a penalty on the Q values
 				if(isEmpty){
-					//qValues[prevState][actInd] -= 0.01;
+					//qValues[prevState][actInd] -= 0.005;
 				}
 				
 				/*if(prevState >= 8 && prevState < 20){
@@ -666,17 +674,17 @@ public class GridEnvironment implements IEnvironment{
 				}*/
 				//
 				
-				if(isEmpty){
+				/*if(isEmpty){
 					//adding a bonus of 0.1 to each reward
 					rewards.add(inf.getReward()+0.1);
 					reward += Math.pow(gamma, t)*(inf.getReward()+0.1);
 				}
-				else{
+				else{*/
 					//store reward from t+1 onwards without discounting
 					rewards.add(inf.getReward());
 				
 					reward += Math.pow(gamma, t)*inf.getReward();
-				}
+				//}
 				
 				//not including the first state
 				states.add(inf.getState());
