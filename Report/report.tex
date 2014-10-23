@@ -67,7 +67,9 @@ In our project, instead of trying to understand what makes a good option by firs
 
 \section{Background} %title?
 
-Very general overview of what we did and maybe a bit about the results though I'm not sure that is necessary. A bit like an outline of the paper (i.e. we will first discuss this and then show that).
+%Very general overview of what we did and maybe a bit about the results though I'm not sure that is necessary. A bit like an outline of the paper (i.e. we will first discuss this and then show that).
+
+To begin we give a brief overview of reinforcement learning, options, and information theory, as well as important terminology and notation.
 
 \subsection{Reinforcement Learning}
 
@@ -118,7 +120,9 @@ The algorithm used in our research was taken from previous work completed by Doi
 
 \subsection{Experiments}
 
-Explain the different experiments that were done as well as the environments that were used.
+%Explain the different experiments that were done as well as the environments that were used.
+
+Here we give an overview of the environments in which the algorithm was tested.
 
 \subsubsection{Grid Environments}
 
@@ -138,7 +142,9 @@ In order to test whether the information theoretic criteria had any influence in
 
 \subsection{Results}
 
-Give the results to the experiments and say whether they are good/bad and what they teach us. Include a few figures here and hopefully there will be graphs.
+%Give the results to the experiments and say whether they are good/bad and what they teach us. Include a few figures here and hopefully there will be graphs.
+
+Before attempting to remove useless options or chose good options from the environment, a series of experiments were conducted on the grid world environments, mentioned above, in order to determine how the algorithm would choose between both good and bad options and actions, and the nature of the policies that would be produced.
 
 %Giant option
 In Figure 1, the algorithm is used on a grid world with a large random option, composed of every state except the subgoal where the option terminates. The policy found only includes the option if it moves the agent closer to the goal from most states, and leads to improved performance when it is used. This shows the ability of this technique to sift through options and potentially make it easier to find good options without making any assumptions about the environment.
