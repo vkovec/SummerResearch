@@ -3,30 +3,7 @@
 \begin{document}
 
 \title{Using Information Theoretic Criteria to Discover Useful Options}
-%
-% You need the command \numberofauthors to handle the 'placement
-% and alignment' of the authors beneath the title.
-%
-% For aesthetic reasons, we recommend 'three authors at a time'
-% i.e. three 'name/affiliation blocks' be placed beneath the title.
-%
-% NOTE: You are NOT restricted in how many 'rows' of
-% "name/affiliations" may appear. We just ask that you restrict
-% the number of 'columns' to three.
-%
-% Because of the available 'opening page real-estate'
-% we ask you to refrain from putting more than six authors
-% (two rows with three columns) beneath the article title.
-% More than six makes the first-page appear very cluttered indeed.
-%
-% Use the \alignauthor commands to handle the names
-% and affiliations for an 'aesthetic maximum' of six authors.
-% Add names, affiliations, addresses for
-% the seventh etc. author(s) as the argument for the
-% \additionalauthors command.
-% These 'additional authors' will be output/set for you
-% without further effort on your part as the last section in
-% the body of your article BEFORE References or any Appendices.
+
 
 \numberofauthors{2} %  in this sample file, there are a *total*
 % of EIGHT authors. SIX appear on the 'first-page' (for formatting
@@ -134,29 +111,40 @@ In order to maximize the predictive information, as the information theoretic as
 
 \subsubsection{Algorithm} %title?
 
-Explain the algorithm, maybe include a figure.
+%Explain the algorithm, maybe include a figure.
+
+The algorithm used in our research was taken from previous work done by Doina Precup and Suzanne Still \cite{still}.
 
 \subsection{Experiments}
 
 Explain the different experiments that were done as well as the environments that were used.
 
-\subsubsection{Grid Environment}
+\subsubsection{Grid Environments}
 
 %add a figure of the grid environment
 
-For the majority of experiments, a 10 x 10 grid environment was used (see figure). It contained a start and goal state, as well as obstacles arranged to make two distinct paths between the start and the goal. Though both paths were of equal length, one of the paths (top) was straightforward and made it easy to reach the goal, whereas the other path was winding and less obvious. The agent would always start from the start state and try to move towards the goal which had a reward of +1. The reward everywhere else was 0. The action space contained four primitive actions which the agent could take, namely $up, down, left$, and $right$; and these actions simply moved the agent towards the corresponding adjacent square. For any primitive action taken, there was a 0.7 probability that the action would succeed, and in the event of failure a different action would be chosen randomly. 
+For the experiments, different variations of a simple 10 x 10 grid world were created. They all contained at a start and a goal state, and the dynamics of the environment remained constant across variations. The agent would always start from the start state and try to move towards the goal which had a reward of +1. The reward everywhere else was 0. The action space contained four primitive actions which the agent could take, namely $up, down, left$, and $right$; and these actions simply moved the agent towards the corresponding adjacent square. For any primitive action taken, there was a 0.7 probability that the action would succeed, and in the event of failure a different action would be chosen randomly. 
+
+%A few of the experiments were also conducted on a 10 x 10 grid world identical to the one previously described, except for this grid world did not contain any obstacles, and therefore had many possible paths from the start to the goal.
+
+%For the majority of experiments, a 10 x 10 grid environment was used (see figure). It contained a start and goal state, as well as obstacles arranged to make two distinct paths between the start and the goal. Though both paths were of equal length, one of the paths (top) was straightforward and made it easy to reach the goal, whereas the other path was winding and less obvious. The agent would always start from the start state and try to move towards the goal which had a reward of +1. The reward everywhere else was 0. The action space contained four primitive actions which the agent could take, namely $up, down, left$, and $right$; and these actions simply moved the agent towards the corresponding adjacent square. For any primitive action taken, there was a 0.7 probability that the action would succeed, and in the event of failure a different action would be chosen randomly. 
 
 \subsubsection{Interesting area}
 
-In order to test whether the information theoretic criteria had any influence in the agent's exploration, an area of interest was added to the grid environment (see figure). This area consisted of a set of states in which the reward would vary based on a Gaussian probability distribution. However, the average reward remained 0, and therefore going through this area to reach the goal ultimately made no difference in reward for the agent compared to other paths.
+In order to test whether the information theoretic criteria had any influence in the agent's exploration, an area of interest was added to some of the grid environments (see figure). This area consisted of a set of states in which either the reward or the probability of an action succeeding would vary based on a Gaussian or Uniform probability distribution, respectively. In the case that the reward was varied, the average reward remained 0, and therefore going through this area to reach the goal ultimately made no difference in reward for the agent compared to other paths.
 
-\subsubsection{Empty Grid World}
-
-A few of the experiments were also conducted on a 10 x 10 grid world identical to the one previously described, except for this grid world did not contain any obstacles, and therefore had many possible paths from the start to the goal.
+%\subsubsection{Empty Grid World}
 
 \subsection{Results}
 
 Give the results to the experiments and say whether they are good/bad and what they teach us. Include a few figures here and hopefully there will be graphs.
+
+%Giant option
+
+%Grid world with interesting area
+	%show how path with interesting area is preferred
+
+%Experiment with many runs averaged
 
 \section{Conclusions}
 
