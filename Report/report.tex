@@ -1,4 +1,5 @@
 \documentclass{acm_proc_article-sp}
+\usepackage{caption,subcaption}
 
 \begin{document}
 
@@ -62,7 +63,7 @@ Although options may be a very powerful tool once created, they are not always e
 
 Previous work on finding useful options has shown that for at least some environments it is beneficial to define the option in such a way that the goal state of the subpolicy is a bottleneck (e.g. a hallway between rooms) \cite{solwayoptimal}. However, this method fails if for instance the bottleneck happens to have a very negative reward. Another method for finding options is to look at solutions to several tasks in the same environment, and observe where the optimal actions overlap \cite{pickett2002policyblocks}. The states where the actions remain constant across tasks can then be used to make options.
 
-In our project, instead of trying to understand what makes a good option by first observing interesting parts of the environment and then creating options, we instead create several random options and observe how an information theoretic driven policy search algorithm \cite{still} chooses between options and actions. The policy is computed at each time step using the following equation: $$q_{opt}(A_t = a| X_t = x) = \frac{p^\pi_t(a)e^{\frac{1}{\lambda}*(D^\pi(x,a) + \alpha*Q^\pi(x,a))}}{Z(x)}$$ with the D(x,a) value (Kullback-Leibler divergence) representing the distance between the true model and an estimated steady state distribution (this represents the information theory aspect), and Q(x,a) representing the Q-values. Essentially, with this algorithm we would like to examine whether using predictive information (i.e. $I[(A_t,X_t); X_{t+1}]$) as well as the return in the environment could be useful in finding decent options for any given MDP.
+In our project, instead of trying to understand what makes a good option by first observing interesting parts of the environment and then creating options, we instead create several random options and observe how an information theoretic driven policy search algorithm \cite{still} chooses between options and actions. Essentially, we would like to examine whether using predictive information (i.e. $I[(A_t,X_t); X_{t+1}]$) as well as the return in the environment could be useful in finding decent options for any given MDP.
 
 \section{Background} %title?
 
@@ -113,7 +114,7 @@ In order to maximize the predictive information, as the information theoretic as
 
 %Explain the algorithm, maybe include a figure.
 
-The algorithm used in our research was taken from previous work done by Doina Precup and Suzanne Still \cite{still}.
+The algorithm used in our research was taken from previous work completed by Doina Precup and Suzanne Still \cite{still}. It is a policy search algorithm which takes into account both the predictive information in the environment (i.e. $I[(A_t,X_t); X_{t+1}]$), as well as the return in order to compute an optimal deterministic policy which may be tuned to encourage a certain amount of exploration in the environment. The policy is computed at each time step using the following equation: $$q_{opt}(A_t = a| X_t = x) = \frac{p_t(a)e^{\frac{1}{\lambda}*(D(x,a) + \alpha*Q(x,a))}}{Z(x)}$$ where $D(x,a)$ represents the Kullback-Leibler divergence between the true model and an estimated steady state distribution, or how well the estimated model predicts the true model; and $Q(x,a)$ represents the action values as in usual reinforcement learning.
 
 \subsection{Experiments}
 
@@ -140,11 +141,86 @@ In order to test whether the information theoretic criteria had any influence in
 Give the results to the experiments and say whether they are good/bad and what they teach us. Include a few figures here and hopefully there will be graphs.
 
 %Giant option
+In Figure 1, the algorithm is used on a grid world with a large random option, composed of every state except the subgoal where the option terminates. The policy found only includes the option if it moves the agent closer to the goal from most states, and leads to improved performance when it is used. This shows the ability of this technique to sift through options and potentially make it easier to find good options without making any assumptions about the environment.
+
+%Giant option
+\begin{figure*}[!htbp]
+  \begin{subfigure}[h]{.5\textwidth}
+  	\centering
+    \includegraphics[width=2.5in]{GiantOp1.png}
+    \caption{Option which leads most states away from the goal}
+  \end{subfigure}\hfill
+  \begin{subfigure}[h]{.5\textwidth}
+  \centering
+    \includegraphics[width=2.5in]{GiantOption1Pol.png}
+    \caption{Option (from (a)) is not selected in any of the states}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[h]{.5\textwidth}
+  \centering
+    \includegraphics[width=2.5in]{GiantOp2.png}
+    \caption{Option which leads most states towards the goal}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[h]{.5\textwidth}
+  \centering
+    \includegraphics[width=2.5in]{GiantOp2Pol.png}
+    \caption{Option (from (c)) is selected in several states}
+  \end{subfigure}
+  \caption{Results of testing the algorithm on an obstacle-free environment with one large random option. In (a) and (c) the blue tile represents the starting state, the green tile represents the goal, and the black tile is the subgoal for the option. In (b) and (d), a darker red represents states that were visited more frequently.}
+  \vspace{20pt}
+\end{figure*}
 
 %Grid world with interesting area
 	%show how path with interesting area is preferred
+	%maybe redo this experiment
 
 %Experiment with many runs averaged
+In another experiment, a similar grid world was used, with this one now containing a large square obstacle in the center. This left for two paths of equal length to the goal, each of which contained a hand-crafted option leading the agent down the path and towards the goal (see Figure 2). The sole difference between the two paths was that the left-most path contained a subset of states, called the "interesting area", in which the probability of an action succeeding varied from 0 to 1 uniformly randomly.
+	 The interest of the experiment was to see how the options would be selected along either path, and if the area where actions succeed randomly would affect the policy. The results showed that along both paths the options were initially preferred, and quickly increased the overall return. 
+	 However, in the states examined the algorithm traded the option for the optimal primitive action, which also happened to be the same action the option was executing in that state. The policy thus switched to consist mainly of primitive actions, though there was no significant change in the return. This shows that the useful options are incorporated into the policy, and only get traded for the optimal primitive action, which is expected as this leads to an improved and simpler policy in most cases.
+	  It can also be noted that the policy selected the optimal primitive action very early on, and this action remained dominant until the completion of the algorithm. The reason for this is most likely that the Q value for the chosen action quickly became higher than the Q values for all other actions, even surpassing the options, thus giving this action a significant advantage.
+	  The same results were found when observing states in the interesting area; however, in these states there were slightly greater fluctuations in the policy, most likely due to the high uncertainty of actions succeeding.
+	  
+%averaged many runs
+\begin{figure*}[!htbp]
+  \begin{subfigure}[h]{.4\textwidth}
+  	\centering
+    \includegraphics[width=2in]{ops.png}
+    \caption{Environment with square obstacle, and two large options leading towards the goal (oD and oR). Blue square: start, Green square: Goal, Grey squares: interesting area, Purple outline: State 18, Red outline: State 50}
+  \end{subfigure}\hfill
+  \begin{subfigure}[h]{.45\textwidth}
+  \centering
+    \includegraphics[width=3.5in]{return.jpeg}
+    \caption{Average return accumulated over time}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[h]{.45\textwidth}
+  \centering
+    \includegraphics[width=3.5in]{pol18.jpeg}
+    \caption{Policy over time at state 18. Green line: Probability of taking down action, Yellow line: Probability of taking option oR}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[h]{.45\textwidth}
+  \centering
+    \includegraphics[width=3.5in]{Q18.jpeg}
+    \caption{Q values over time at state 18. Green line: Q value for down action, Yellow line: Q value for option oR}
+  \end{subfigure}
+    \hfill
+  \begin{subfigure}[h]{.45\textwidth}
+  \centering
+    \includegraphics[width=3.5in]{pol50.jpeg}
+    \caption{Policy over time at state 50. Green line: Probability of taking down action, Purple line: Probability of taking option oD}
+  \end{subfigure}
+    \hfill
+  \begin{subfigure}[h]{.45\textwidth}
+  \centering
+    \includegraphics[width=3.5in]{Q50.jpeg}
+    \caption{Q values over time at state 50. Green line: Q value for down action, Purple line: Q value for option oD}
+  \end{subfigure}
+  \caption{Results of running the algorithm on an environment with one large obstacle and two hand-crafted options. The results are averaged over 20 full runs of the algorithm.}
+  \vspace{20pt}
+\end{figure*}
 
 \section{Conclusions}
 
