@@ -1,21 +1,12 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.9.9)  23 OCT 2014 12:32
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2014.8.20)  19 NOV 2014 16:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **report.tex
 (./report.tex
 LaTeX2e <2011/06/27>
-Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, et
-hiopic, farsi, arabic, pinyin, croatian, bulgarian, ukrainian, russian, slovak,
- czech, danish, dutch, usenglishmax, ukenglish, finnish, french, basque, ngerma
-n, german, swissgerman, ngerman-x-2012-05-30, german-x-2012-05-30, monogreek, g
-reek, ibycus, ancientgreek, hungarian, bengali, tamil, hindi, telugu, gujarati,
- sanskrit, malayalam, kannada, assamese, marathi, oriya, panjabi, italian, lati
-n, latvian, lithuanian, mongolian, mongolianlmc, nynorsk, bokmal, indonesian, e
-speranto, coptic, welsh, irish, interlingua, serbian, serbianc, slovenian, friu
-lan, romansh, estonian, romanian, armenian, uppersorbian, turkish, afrikaans, i
-celandic, kurmanji, polish, portuguese, galician, catalan, spanish, swedish, uk
-english, loaded.
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
+aded.
 (./acm_proc_article-sp.cls
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
@@ -225,33 +216,100 @@ Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
 \c@subfigure=\count110
 \c@subtable=\count111
 )
-(./report.aux)
+(./algorithm2e.sty
+Package: algorithm2e 2013/01/06 v5.00 algorithms environments
+\c@AlgoLine=\count112
+ (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2009/10/20 v1.13 Space after command names (DPC,MH)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2011/09/21 ver 4.0
+
+Examine \normalsize starts \@setfontsize size may be \@ixpt. 
+Examine \small starts \@setsize size may be 9pt. 
+Examine \footnotesize starts \@setsize size may be 9pt. 
+Examine \large starts \@setfontsize size may be \@xiipt. 
+Examine \Large starts \@setfontsize size may be \@xivpt. 
+Examine \LARGE starts \@setfontsize size may be \@xviipt. 
+Examine \scriptsize starts \@setfontsize size may be \@viipt. 
+Examine \tiny starts \@setfontsize size may be \@vpt. 
+Examine \huge starts \@setfontsize size may be \@xxpt. 
+Examine \Huge starts \@setfontsize size may be \@xxvpt. 
+
+Package relsize Warning: Failed to get list of defined font sizes.
+(relsize)                Size scaling will attempt arbitrary sizes..
+
+)
+********************************************************
+Package `algorithm2e' Release 5.0 -- january 06 2013 --
+- algorithm2e-announce@lirmm.fr mailing list for announcement about releases
+- algorithm2e-discussion@lirmm.fr mailing list for discussion about package
+subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
+- Author: Christophe Fiorio (cfiorio@um2.fr)
+********************************************************
+\skiptotal=\skip46
+\skiplinenumber=\skip47
+\skiprule=\skip48
+\skiphlne=\skip49
+\skiptext=\skip50
+\skiplength=\skip51
+\algomargin=\skip52
+\skipalgocfslide=\skip53
+\algowidth=\dimen129
+\inoutsize=\dimen130
+\inoutindent=\dimen131
+\interspacetitleruled=\dimen132
+\interspacealgoruled=\dimen133
+\interspacetitleboxruled=\dimen134
+\algocf@inoutbox=\box30
+\algocf@inputbox=\box31
+\AlCapSkip=\skip54
+\AlCapHSkip=\skip55
+\algoskipindent=\skip56
+\algocf@nlbox=\box32
+\algocf@hangingbox=\box33
+\algocf@untilbox=\box34
+\algocf@skipuntil=\skip57
+\algocf@capbox=\box35
+\algoheightruledefault=\skip58
+\algoheightrule=\skip59
+\algotitleheightruledefault=\skip60
+\algotitleheightrule=\skip61
+\c@algocfline=\count113
+\c@algocfproc=\count114
+\c@algocf=\count115
+\algocf@algoframe=\box36
+\algocf@algobox=\box37
+) (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count112
-\scratchdimen=\dimen129
-\scratchbox=\box30
-\nofMPsegments=\count113
-\nofMParguments=\count114
+\scratchcounter=\count116
+\scratchdimen=\dimen135
+\scratchbox=\box38
+\nofMPsegments=\count117
+\nofMParguments=\count118
 \everyMPshowfont=\toks36
-\MPscratchCnt=\count115
-\MPscratchDim=\dimen130
-\MPnumerator=\count116
-\makeMPintoPDFobject=\count117
+\MPscratchCnt=\count119
+\MPscratchDim=\dimen136
+\MPnumerator=\count120
+\makeMPintoPDFobject=\count121
 \everyMPtoPDFconversion=\toks37
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -303,28 +361,22 @@ e
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 36.
+LaTeX Font Info:    Try loading font information for U+msa on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 36.
+LaTeX Font Info:    Try loading font information for U+msb on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 36.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-Overfull \hbox (1.26794pt too wide) in paragraph at lines 46--47
-\T1/aer/m/n/9 H.4 [\T1/aer/bx/n/9 Information Sys-tems Ap-pli-ca-tions\T1/aer/m
-/n/9 ]: Mis-cel-la-neous;
- []
-
-
-Overfull \hbox (6.36156pt too wide) in paragraph at lines 78--81
+Overfull \hbox (6.36156pt too wide) in paragraph at lines 61--64
 \T1/aer/m/n/9 The re-in-force-ment learn-ing frame-work in-volves an agent lear
 n-
  []
@@ -332,135 +384,223 @@ n-
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
-] [2]
-<GiantOp1.png, id=24, 846.16125pt x 836.12375pt>
+]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[2] <GiantOp1.png, id=22, 846.16125pt x 836.12375pt>
 File: GiantOp1.png Graphic file (type png)
  <use GiantOp1.png>
-Package pdftex.def Info: GiantOp1.png used on input line 156.
-(pdftex.def)             Requested size: 180.67499pt x 178.52556pt.
+Package pdftex.def Info: GiantOp1.png used on input line 165.
+(pdftex.def)             Requested size: 144.54pt x 142.81534pt.
 
-<GiantOption1Pol.png, id=26, 845.1575pt x 838.13126pt>
+<GiantOption1Pol.png, id=24, 633.86812pt x 628.59843pt>
 File: GiantOption1Pol.png Graphic file (type png)
 
 <use GiantOption1Pol.png>
-Package pdftex.def Info: GiantOption1Pol.png used on input line 161.
-(pdftex.def)             Requested size: 180.67499pt x 179.1716pt.
- <GiantOp2.png, id=27, 847.165pt x 838.13126pt>
+Package pdftex.def Info: GiantOption1Pol.png used on input line 170.
+(pdftex.def)             Requested size: 144.54pt x 143.33727pt.
+ <GiantOp2.png, id=25, 847.165pt x 838.13126pt>
 File: GiantOp2.png Graphic file (type png)
 
 <use GiantOp2.png>
-Package pdftex.def Info: GiantOp2.png used on input line 167.
-(pdftex.def)             Requested size: 180.67499pt x 178.74956pt.
- <GiantOp2Pol.png, id=28, 845.1575pt x 836.12375pt>
+Package pdftex.def Info: GiantOp2.png used on input line 176.
+(pdftex.def)             Requested size: 144.54pt x 142.99197pt.
+ <GiantOp2Pol.png, id=26, 633.86812pt x 626.34pt>
 File: GiantOp2Pol.png Graphic file (type png)
 
 <use GiantOp2Pol.png>
-Package pdftex.def Info: GiantOp2Pol.png used on input line 173.
-(pdftex.def)             Requested size: 180.67499pt x 178.74245pt.
+Package pdftex.def Info: GiantOp2Pol.png used on input line 182.
+(pdftex.def)             Requested size: 144.54pt x 142.82228pt.
 
-Overfull \hbox (2.05199pt too wide) in paragraph at lines 154--176
+Overfull \hbox (2.05199pt too wide) in paragraph at lines 163--185
 []$  $[]$ 
  []
 
-<ops.png, id=29, 846.16125pt x 837.1275pt>
+<Grid.PNG, id=27, 274.02374pt x 275.52937pt>
+File: Grid.PNG Graphic file (type png)
+ <use Grid.PNG>
+Package pdftex.def Info: Grid.PNG used on input line 200.
+(pdftex.def)             Requested size: 144.54pt x 145.33617pt.
+
+Underfull \hbox (badness 1502) in paragraph at lines 201--201
+[]\T1/aer/m/n/8 (a) |Grid world with in-ter-est-ing area
+ []
+
+
+Underfull \hbox (badness 2707) in paragraph at lines 201--201
+\T1/aer/m/n/8 (Grey squares) and ob-sta-cles (Black
+ []
+
+<no_int_area.png, id=28, 632.3625pt x 625.58719pt>
+File: no_int_area.png Graphic file (type png)
+ <use no_int_area.png>
+Package pdftex.def Info: no_int_area.png used on input line 205.
+(pdftex.def)             Requested size: 144.54pt x 142.98473pt.
+
+<int_area.png, id=29, 632.3625pt x 625.58719pt>
+File: int_area.png Graphic file (type png)
+ <use int_area.png>
+Package pdftex.def Info: int_area.png used on input line 211.
+(pdftex.def)             Requested size: 144.54pt x 142.98473pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3]
+[4 <./GiantOp1.png> <./GiantOption1Pol.png> <./GiantOp2.png> <./GiantOp2Pol.png
+> <./Grid.PNG> <./no_int_area.png> <./int_area.png>]
+<ops.png, id=46, 846.16125pt x 837.1275pt>
 File: ops.png Graphic file (type png)
  <use ops.png>
-Package pdftex.def Info: ops.png used on input line 195.
+Package pdftex.def Info: ops.png used on input line 229.
 (pdftex.def)             Requested size: 144.54pt x 142.98679pt.
 
-<return.jpeg, id=30, 1204.5pt x 903.375pt>
+<return.jpeg, id=47, 1204.5pt x 903.375pt>
 File: return.jpeg Graphic file (type jpg)
  <use return.jpeg>
-Package pdftex.def Info: return.jpeg used on input line 200.
+Package pdftex.def Info: return.jpeg used on input line 234.
 (pdftex.def)             Requested size: 252.94499pt x 189.70056pt.
 
-Overfull \hbox (26.14653pt too wide) in paragraph at lines 200--201
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 234--235
  [][] 
  []
 
-<pol18.jpeg, id=31, 1204.5pt x 903.375pt>
+<pol18.jpeg, id=48, 1204.5pt x 903.375pt>
 File: pol18.jpeg Graphic file (type jpg)
  <use pol18.jpeg>
-Package pdftex.def Info: pol18.jpeg used on input line 206.
+Package pdftex.def Info: pol18.jpeg used on input line 240.
 (pdftex.def)             Requested size: 252.94499pt x 189.70056pt.
 
-Overfull \hbox (26.14653pt too wide) in paragraph at lines 206--207
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 240--241
  [][] 
  []
 
-<Q18.jpeg, id=32, 1204.5pt x 903.375pt>
+<Q18.jpeg, id=49, 1204.5pt x 903.375pt>
 File: Q18.jpeg Graphic file (type jpg)
  <use Q18.jpeg>
-Package pdftex.def Info: Q18.jpeg used on input line 212.
+Package pdftex.def Info: Q18.jpeg used on input line 246.
 (pdftex.def)             Requested size: 252.94499pt x 189.70056pt.
 
-Overfull \hbox (26.14653pt too wide) in paragraph at lines 212--213
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 246--247
  [][] 
  []
 
-<pol50.jpeg, id=33, 1204.5pt x 903.375pt>
+<pol50.jpeg, id=50, 1204.5pt x 903.375pt>
 File: pol50.jpeg Graphic file (type jpg)
  <use pol50.jpeg>
-Package pdftex.def Info: pol50.jpeg used on input line 218.
+Package pdftex.def Info: pol50.jpeg used on input line 252.
 (pdftex.def)             Requested size: 252.94499pt x 189.70056pt.
 
-Overfull \hbox (26.14653pt too wide) in paragraph at lines 218--219
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 252--253
  [][] 
  []
 
-<Q50.jpeg, id=34, 1204.5pt x 903.375pt>
+<Q50.jpeg, id=51, 1204.5pt x 903.375pt>
 File: Q50.jpeg Graphic file (type jpg)
  <use Q50.jpeg>
-Package pdftex.def Info: Q50.jpeg used on input line 224.
+Package pdftex.def Info: Q50.jpeg used on input line 258.
 (pdftex.def)             Requested size: 252.94499pt x 189.70056pt.
 
-Overfull \hbox (26.14653pt too wide) in paragraph at lines 224--225
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 258--259
  [][] 
  []
 
 
-LaTeX Warning: Float too large for page by 37.10167pt on input line 229.
+LaTeX Warning: Float too large for page by 46.10167pt on input line 263.
 
-(./report.bbl) [3] [4 <./GiantOp1.png> <./GiantOption1Pol.png> <./GiantOp2.png>
- <./GiantOp2Pol.png>] [5 <./ops.png> <./return.jpeg> <./pol18.jpeg> <./Q18.jpeg
-> <./pol50.jpeg> <./Q50.jpeg>]
-LaTeX Font Info:    Try loading font information for T1+aett on input line 293.
+<BlockEnv.png, id=52, 2068.72874pt x 1897.0875pt>
+File: BlockEnv.png Graphic file (type png)
+ <use BlockEnv.png>
+Package pdftex.def Info: BlockEnv.png used on input line 275.
+(pdftex.def)             Requested size: 505.89pt x 463.90762pt.
+
+Overfull \hbox (102.68846pt too wide) in paragraph at lines 275--276
+ [][] 
+ []
+
+<good.png, id=53, 578.16pt x 433.62pt>
+File: good.png Graphic file (type png)
+ <use good.png>
+Package pdftex.def Info: good.png used on input line 280.
+(pdftex.def)             Requested size: 252.94499pt x 189.70828pt.
+
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 280--281
+ [][] 
+ []
+
+<bad.png, id=54, 578.16pt x 433.62pt>
+File: bad.png Graphic file (type png)
+ <use bad.png>
+Package pdftex.def Info: bad.png used on input line 286.
+(pdftex.def)             Requested size: 252.94499pt x 189.70828pt.
+
+Overfull \hbox (26.14653pt too wide) in paragraph at lines 286--287
+ [][] 
+ []
 
 
-(/usr/share/texlive/texmf-dist/tex/latex/ae/t1aett.fd
-File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
-) [6
+Underfull \hbox (badness 10000) in paragraph at lines 273--289
+[]$[]$
+ []
 
-] (./report.aux) ) 
+
+LaTeX Warning: Float too large for page by 87.61589pt on input line 291.
+
+<GiantSiftt3.png, id=55, 634.62094pt x 627.09282pt>
+File: GiantSiftt3.png Graphic file (type png)
+ <use GiantSiftt3.png>
+Package pdftex.def Info: GiantSiftt3.png used on input line 300.
+(pdftex.def)             Requested size: 216.81pt x 214.23257pt.
+
+Overfull \hbox (15.21307pt too wide) in paragraph at lines 300--301
+ [][] 
+ []
+
+<GiantSift3.png, id=56, 632.3625pt x 625.58719pt>
+File: GiantSift3.png Graphic file (type png)
+ <use GiantSift3.png>
+Package pdftex.def Info: GiantSift3.png used on input line 305.
+(pdftex.def)             Requested size: 216.81pt x 214.48187pt.
+
+Overfull \hbox (15.21307pt too wide) in paragraph at lines 305--306
+ [][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+(./report.bbl) [5] [6 <./ops.png> <./return.jpeg> <./pol18.jpeg> <./Q18.jpeg> <
+./pol50.jpeg> <./Q50.jpeg>] [7 <./BlockEnv.png> <./good.png> <./bad.png>]
+[8 <./GiantSiftt3.png> <./GiantSift3.png>] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 3926 strings out of 493481
- 55218 string characters out of 3143394
- 121547 words of memory out of 3000000
- 7132 multiletter control sequences out of 15000+200000
- 54154 words of font info for 76 fonts, out of 3000000 for 9000
- 965 hyphenation exceptions out of 8191
- 41i,10n,38p,1027b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-sy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf
--dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times
-/utmri8a.pfb>
-Output written on report.pdf (6 pages, 825335 bytes).
+ 5339 strings out of 495059
+ 75003 string characters out of 3182030
+ 164656 words of memory out of 3000000
+ 8408 multiletter control sequences out of 15000+200000
+ 51513 words of font info for 71 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 41i,20n,38p,1027b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texlive/
+texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
+rw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/
+uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on report.pdf (8 pages, 1216374 bytes).
 PDF statistics:
- 106 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
+ 128 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 91 words of extra memory for PDF output out of 10000 (max. 10000000)
 
