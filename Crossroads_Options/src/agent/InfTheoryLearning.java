@@ -46,15 +46,15 @@ public class InfTheoryLearning extends Agent{
 				for(int j = 0; j < sPolicy.length; j++){
 					ps[0][j] = 0;
 				}
-				if(isEmpty){
+				//if(isEmpty){
 					ps[0][startState]++;
-				}
+				/*}
 				//as now the initiation set is the entire left column
 				else{
 					for(int j = 0; j < 10; j++){
 						ps[0][j*10]++;
 					}
-				}
+				}*/
 			}
 			else{
 				//not modified for obstacles
@@ -438,11 +438,6 @@ public class InfTheoryLearning extends Agent{
 						}
 					}
 					pj[j] = sum;
-					
-					//probability that we transition to state 2
-					if(j == 2){
-						//pjWriter.print(pj[j] + ", ");
-					}
  				}
 				
 				//update q
@@ -495,11 +490,6 @@ public class InfTheoryLearning extends Agent{
 							break;
 						}
 						D[x][a] = D[x][a]/norm;
-						
-						//only want to look for state 2
-						//if(x == 2){
-							//DWriter.print(D[x][a] + ", ");
-						//}
 					}
 				//}
 				
@@ -600,12 +590,12 @@ public class InfTheoryLearning extends Agent{
 				distDiff = getDistrDiff(q,qPrev);
 			}
 			
-			if(bestDistDiff > distDiff){
+			/*if(bestDistDiff > distDiff){
 				sPolicy = copyArray(bestPol);
 			}
-			else{
+			else{*/
 				sPolicy = copyArray(q);
-			}
+			//}
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
@@ -667,32 +657,21 @@ public class InfTheoryLearning extends Agent{
 					qValues[st][index] = qValues[st][index] + 0.1*(rewards[x]
 							+ Math.pow(0.9, timeSteps-(x+1))*getMaxQ(result.getState().getName())
 							- qValues[st][index]);
-					
-					//adding a penalty on the Q values
-					if(isEmpty){
-						//qValues[st][index] -= 0.005;
-					}
 				}
 			}
 			if(timeSteps > 0){
 				//if this is a primitive action we want to penalize it
 				if(isEmpty && action.charAt(0) != 'o'){
-					qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()-0.1
+					qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 							+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
 							- qValues[state][index]);
+					qValues[state][index] = qValues[state][index]/1.1;
 				}
 				else{
 					qValues[state][index] = qValues[state][index] + 0.1*(result.getReward()
 					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName())
 					- qValues[state][index]);
 				}
-				//adding a penalty on the Q values
-				if(isEmpty){
-					//qValues[state][index] -= 0.005;
-				}
-			}
-			else{
-				System.out.println(action + ": " + state);
 			}
 			
 			//take from Q-learning (for now, eventually want to do a full Q value evaluation)
@@ -715,23 +694,22 @@ public class InfTheoryLearning extends Agent{
 			//if probability of option being taken goes below 0.01 at every state where it can be taken
 			//we remove this option completely and renormalize all policies that can take it
 			if (!isEmpty) {
-				pjWriter.println("");
+				//pjWriter.println("");
 				for (int a = 0; a < actions.length; a++) {
 					if (actions[a].charAt(0) == 'o') {
 						Option o = env.getOption(actions[a]);
 						
 						boolean isTaken = false;
 
-						pjWriter.println("\n" + actions[a] + " - ");
+						//pjWriter.println("\n" + actions[a] + " - ");
 						int[] ini = o.getIni();
 						for (int j = 0; j < ini.length; j++) {
 							if (sPolicy[ini[j]][a] > 0.001) {
 								isTaken = true;
-								//break;
 							}
 							//print the probability of taking that action for every state
 							//to a file
-							pjWriter.print("(" + ini[j] + ", " + sPolicy[ini[j]][a] + "); ");
+							//pjWriter.print("(" + ini[j] + ", " + sPolicy[ini[j]][a] + "); ");
 						}
 
 						//if the option gets taken somewhere by a probability greater than 0.01, then
@@ -801,16 +779,33 @@ public class InfTheoryLearning extends Agent{
 								o.setPolicy(pol);
 								
 								System.out.println("Removed state: " + ini[j]);
-								pjWriter.println("Removed state: " + ini[j] + ", at trial " + counter);
+								paWriter.println("Removed state: " + ini[j] + ", at trial " + counter);
 							}
 						}
 					}
 				}
 			}	
-		
-			
 		}
 		
+		//print for each option the number of states that are still taking that option
+		pjWriter.println("");
+		for (int a = 0; a < actions.length; a++) {
+			if (actions[a].charAt(0) == 'o') {
+				Option o = env.getOption(actions[a]);
+
+				int count = 0;
+				
+				//pjWriter.println("\n" + actions[a] + " - ");
+				int[] ini = o.getIni();
+				for (int j = 0; j < ini.length; j++) {
+					if (sPolicy[ini[j]][a] > 0.001) {
+						//this option is taken in this state
+						count++;
+					}
+				}
+				pjWriter.print(count + ",");
+			}
+		}
 		
 		//print D values to a file
 		DWriter.println("");
@@ -821,6 +816,7 @@ public class InfTheoryLearning extends Agent{
 		
 		System.out.println("trial " + counter);
 		lambda = 1/(Math.log(counter+1.001));
+		//lambda = 1/(Math.log(counter+2));
 		counter++;
 	}
 	

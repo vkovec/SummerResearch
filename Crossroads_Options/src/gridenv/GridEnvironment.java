@@ -27,7 +27,7 @@ public class GridEnvironment implements IEnvironment{
 	private boolean opLearn = false;
 	
 	private boolean isI;
-	private boolean isEmpty = true;
+	private boolean isEmpty = false;
 	
 	//the grid could be a 2D array of states (simpler to manage)
 	private State[][] states;
@@ -295,6 +295,13 @@ public class GridEnvironment implements IEnvironment{
 				options.put(o.getName(), o);
 			}
 		}
+		else{
+			Option o = createRandomOption(size);
+			options.put(o.getName(), o);
+	
+			//done creating options
+			oWriter.close();
+		}
 		
 		/*Option o = createRandomOption(size);
 		options.put(o.getName(), o);
@@ -307,14 +314,6 @@ public class GridEnvironment implements IEnvironment{
 		
 		o = createRandomOption(size);
 		options.put(o.getName(), o);*/
-		
-		else{
-			Option o = createRandomOption(size);
-			options.put(o.getName(), o);
-		
-			//done creating options
-			oWriter.close();
-		}
 	}
 	
 	//helper for below
@@ -653,20 +652,17 @@ public class GridEnvironment implements IEnvironment{
 				actInd = getActionIndex(act);
 				if(isEmpty){
 					//penalizing primitive actions
-					qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()-0.1
+					qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()
 							+ Math.pow(0.9, inf.getTimeSteps())
 							*getMaxQ(inf.getState().getName(), qValues)
 							- qValues[prevState][actInd]);
+					qValues[prevState][actInd] = qValues[prevState][actInd]/1.1;
 				}
 				else{
 					qValues[prevState][actInd] = qValues[prevState][actInd] + 0.1*(inf.getReward()
 						+ Math.pow(0.9, inf.getTimeSteps())
 						*getMaxQ(inf.getState().getName(), qValues)
 						- qValues[prevState][actInd]);
-				}
-				//adding a penalty on the Q values
-				if(isEmpty){
-					//qValues[prevState][actInd] -= 0.005;
 				}
 				
 				/*if(prevState >= 8 && prevState < 20){
@@ -724,6 +720,7 @@ public class GridEnvironment implements IEnvironment{
 		//interesting area is now an area where the probability of action succeeding is different
 		int s = currentState.getName();
 		if((s == 40 || s == 41 || s == 50 || s == 51 || s == 60 || s == 61) && !isEmpty){
+		//if((s == 53 || s == 54 || s == 55 || s == 56 || s == 65 || s == 66) && !isEmpty){
 			if(getBernouilli(Math.random()) == 1){
 				currentState = getState(o);
 			}

@@ -2,6 +2,7 @@ package gridenv;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +19,6 @@ import javax.swing.border.Border;
 
 import tools.Option;
 import tools.State;
-
 import agent.Agent;
 import agent.InfTheoryLearning;
 import agent.QLearning;
@@ -28,7 +28,7 @@ import agent.TDLearning;
 public class GridEnvDisplay extends JFrame{
 	
 	private boolean isI = false;
-	private boolean isEmpty = true;
+	private boolean isEmpty = false;
 	
 	private GridEnvironment gridEnv;
 	private int start;
@@ -198,7 +198,12 @@ public class GridEnvDisplay extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				agent.setEnv(gridEnv, start, goal);
 				agent.preLearn(1000);
-				agent.learnTrial(3000);
+				if(isEmpty){
+					agent.learnTrial(6000);
+				}
+				else{
+					agent.learnTrial(3000);
+				}
 						
 				double[][] qVals = agent.getQValues();
 				for(int i = 0; i < qVals.length; i++){
@@ -243,6 +248,7 @@ public class GridEnvDisplay extends JFrame{
 						}
 						else{
 							labels.get(i).setText(p[i]);
+							labels.get(i).setFont(new Font("Arial", Font.PLAIN, 50));
 						}
 					}
 				}

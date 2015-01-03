@@ -15,7 +15,7 @@ import tools.Option;
 public abstract class Agent{
 	
 	private boolean isI = false;
-	protected boolean isEmpty = true;
+	protected boolean isEmpty = false;
 	
 	//temporary
 	protected double[][] ps;
@@ -256,7 +256,7 @@ public abstract class Agent{
 			}
 			else{
 				//stat = 55;
-				stat = 17;
+				stat = 30;
 			}
 		}
 		
@@ -279,11 +279,12 @@ public abstract class Agent{
 				startState = rand.nextInt(21);
 			}
 			//random state along the left side of the grid
-			if(!isEmpty){
+			/*if(!isEmpty){
 				startState = rand.nextInt(10)*10;
-			}
+			}*/
 			env.gotoState(startState);
 		}
+		
 		for(int i = 0; i < sPolicy.length; i++){
 			for(int j = 0; j < actions.length; j++){
 				if(sPolicy[i][j] < (Math.pow(10,-5))){
