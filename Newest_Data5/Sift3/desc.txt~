@@ -1,0 +1,17 @@
+Run 1 -> same as Sift2 except for now we randomize the policy for the first 1000 timesteps, and don't let any options be removed until after trial 500
+
+Run 2 -> lambda not reduced for first 1000 timesteps, and don't let any options be removed until after trial 500 (all of them just ended up getting removed at the same time)
+
+Run 3 -> lambda not reduced at all
+
+Run 4 -> policy is kept random for first 1000 trials, and lambda is decreased by one after each trial
+
+Run 5 -> bug preventing all actions from being taken fixed. lambda is decreased as follows: lambda = 1/(Math.log(counter+1.001));
+
+Run 10 -> same as Run 5 except for now we print how many states take each option after each trial (state 17)
+
+Run 14 -> same as Run 10 except for now we look at state 12
+
+Run 15 -> same as Run 10 except for state = 50
+
+Run 16 -> same as Run 10 except for state = 30

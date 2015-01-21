@@ -1,0 +1,6 @@
+same as the sift with 16 handcrafted options, except for now they 
+are 16 random option
+Each option has 12 states in its initiation set
+alpha = 10
+Options removed the same way as before
+lambda = 1/(Math.log(counter+1.001));

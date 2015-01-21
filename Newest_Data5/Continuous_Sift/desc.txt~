@@ -1,0 +1,6 @@
+alpha = 10
+lambda decreased with the 1.001
+primitive actions are not penalized
+options are ranked just by adding up how many states are taking that option each trial
+when an option is removed, it is replaced with a new one
+options are of size 10 - 14

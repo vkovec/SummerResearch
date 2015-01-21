@@ -1,0 +1,4 @@
+alpha = 10
+lambda decreased using 1.001
+16 handcrafted options
+options are ranked but not removed

@@ -1,0 +1,35 @@
+Option left: o6, with rank: 30.0
+Option left: o5, with rank: 56.0
+Option left: o4, with rank: 61.0
+Option left: o3, with rank: 923.0
+Option left: o2, with rank: 72.0
+Option left: o1, with rank: 20892.0
+Option left: o16, with rank: 180.0
+Option left: o15, with rank: 196.0
+Option left: o14, with rank: 192.0
+Option left: o13, with rank: 6377.0
+Option left: o12, with rank: 183.0
+Option left: o9, with rank: 7815.0
+Option left: o11, with rank: 566.0
+Option left: o8, with rank: 33.0
+Option left: o10, with rank: 118.0
+Option left: o7, with rank: 6545.0
+
+Ranking
+
+o1	good
+o9	good
+o7	good
+o13	good
+o3	good
+o11	good
+o15	good
+o14	bad
+o12	bad
+o16	bad
+o10	bad
+o2	bad
+o4	bad
+o5	good
+o8	bad
+o6	bad

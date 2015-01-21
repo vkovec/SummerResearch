@@ -1,0 +1,12 @@
+Option removed: o12, at trial: 1	bad
+Option removed: o9, at trial: 1		good
+Option removed: o10, at trial: 1	bad
+Option removed: o11, at trial: 1	good
+Option removed: o2, at trial: 33	bad
+Option removed: o6, at trial: 92	bad
+Option removed: o5, at trial: 92	good
+Option removed: o8, at trial: 92	bad
+Option removed: o7, at trial: 116	good
+Option removed: o16, at trial: 1240	bad
+Option removed: o14, at trial: 1240	bad
+Option removed: o13, at trial: 1240	good

@@ -1,0 +1,12 @@
+Removed state: 50, at trial 0
+Removed state: 89, at trial 2
+Removed state: 98, at trial 2
+Removed state: 99, at trial 2
+Removed state: 88, at trial 5
+Removed state: 79, at trial 7
+Removed state: 97, at trial 8
+Removed state: 78, at trial 10
+Removed state: 96, at trial 13
+Removed state: 87, at trial 23
+Removed state: 69, at trial 35
+Removed state: 9, at trial 66

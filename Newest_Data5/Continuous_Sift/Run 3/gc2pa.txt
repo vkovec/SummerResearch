@@ -1,0 +1,12 @@
+Option removed: o1, at trial: 2, with rank: 19.0
+Option removed: o0, at trial: 4, with rank: 29.0
+Option removed: o6, at trial: 89, with rank: 477.0
+Option removed: o7, at trial: 99, with rank: 19.0
+Option removed: o8, at trial: 106, with rank: 15.0
+Option removed: o9, at trial: 107, with rank: 5.0
+Option removed: o10, at trial: 108, with rank: 4.0
+Option removed: o11, at trial: 114, with rank: 6.0
+Option removed: o2, at trial: 155, with rank: 481.0
+Option removed: o13, at trial: 159, with rank: 16.0
+Option removed: o14, at trial: 162, with rank: 9.0
+Option removed: o5, at trial: 187, with rank: 1204.0

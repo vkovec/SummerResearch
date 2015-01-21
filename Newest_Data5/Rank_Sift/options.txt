@@ -1,0 +1,432 @@
+o1
+2
+3
+4
+5
+6
+7
+12
+13
+14
+15
+16
+17
+goal:
+2: right,
+3: right,
+4: right,
+5: right,
+6: right,
+7: right,
+12: right,
+13: right,
+14: right,
+15: right,
+16: right,
+17: up,
+
+o2
+2
+3
+4
+5
+6
+7
+12
+13
+14
+15
+16
+17
+goal:
+2: left,
+3: left,
+4: left,
+5: left,
+6: left,
+7: left,
+12: up,
+13: left,
+14: left,
+15: left,
+16: left,
+17: left,
+
+o3
+2
+3
+4
+5
+6
+7
+12
+13
+14
+15
+16
+17
+goal:
+2: down,
+3: down,
+4: down,
+5: down,
+6: down,
+7: down,
+12: right,
+13: right,
+14: right,
+15: right,
+16: right,
+17: right,
+
+o4
+2
+3
+4
+5
+6
+7
+12
+13
+14
+15
+16
+17
+goal:
+2: down,
+3: down,
+4: down,
+5: down,
+6: down,
+7: down,
+12: left,
+13: left,
+14: left,
+15: left,
+16: left,
+17: left,
+
+o5
+82
+83
+84
+85
+86
+87
+92
+93
+94
+95
+96
+97
+goal:
+82: right,
+83: right,
+84: right,
+85: right,
+86: right,
+87: right,
+92: right,
+93: right,
+94: right,
+95: right,
+96: right,
+97: up,
+
+o6
+82
+83
+84
+85
+86
+87
+92
+93
+94
+95
+96
+97
+goal:
+82: left,
+83: left,
+84: left,
+85: left,
+86: left,
+87: left,
+92: up,
+93: left,
+94: left,
+95: left,
+96: left,
+97: left,
+
+o7
+82
+83
+84
+85
+86
+87
+92
+93
+94
+95
+96
+97
+goal:
+82: down,
+83: down,
+84: down,
+85: down,
+86: down,
+87: down,
+92: right,
+93: right,
+94: right,
+95: right,
+96: right,
+97: right,
+
+o8
+82
+83
+84
+85
+86
+87
+92
+93
+94
+95
+96
+97
+goal:
+82: down,
+83: down,
+84: down,
+85: down,
+86: down,
+87: down,
+92: left,
+93: left,
+94: left,
+95: left,
+96: left,
+97: left,
+
+o9
+20
+21
+30
+31
+40
+41
+50
+51
+60
+61
+70
+71
+goal:
+20: down,
+21: down,
+30: down,
+31: down,
+40: down,
+41: down,
+50: down,
+51: down,
+60: down,
+61: down,
+70: right,
+71: down,
+
+o10
+20
+21
+30
+31
+40
+41
+50
+51
+60
+61
+70
+71
+goal:
+20: up,
+21: left,
+30: up,
+31: up,
+40: up,
+41: up,
+50: up,
+51: up,
+60: up,
+61: up,
+70: up,
+71: up,
+
+o11
+20
+21
+30
+31
+40
+41
+50
+51
+60
+61
+70
+71
+goal:
+20: down,
+21: left,
+30: down,
+31: left,
+40: down,
+41: left,
+50: down,
+51: left,
+60: down,
+61: left,
+70: down,
+71: left,
+
+o12
+20
+21
+30
+31
+40
+41
+50
+51
+60
+61
+70
+71
+goal:
+20: right,
+21: up,
+30: right,
+31: up,
+40: right,
+41: up,
+50: right,
+51: up,
+60: right,
+61: up,
+70: right,
+71: up,
+
+o13
+28
+29
+38
+39
+48
+49
+58
+59
+68
+69
+78
+79
+goal:
+28: down,
+29: down,
+38: down,
+39: down,
+48: down,
+49: down,
+58: down,
+59: down,
+68: down,
+69: down,
+78: right,
+79: down,
+
+o14
+28
+29
+38
+39
+48
+49
+58
+59
+68
+69
+78
+79
+goal:
+28: up,
+29: left,
+38: up,
+39: up,
+48: up,
+49: up,
+58: up,
+59: up,
+68: up,
+69: up,
+78: up,
+79: up,
+
+o15
+28
+29
+38
+39
+48
+49
+58
+59
+68
+69
+78
+79
+goal:
+28: down,
+29: left,
+38: down,
+39: left,
+48: down,
+49: left,
+58: down,
+59: left,
+68: down,
+69: left,
+78: down,
+79: left,
+
+o16
+28
+29
+38
+39
+48
+49
+58
+59
+68
+69
+78
+79
+goal:
+28: right,
+29: up,
+38: right,
+39: up,
+48: right,
+49: up,
+58: right,
+59: up,
+68: right,
+69: up,
+78: right,
+79: up,
+

@@ -1,0 +1,15 @@
+Option removed: o12, at trial: 7
+Option removed: o11, at trial: 7
+Option removed: o10, at trial: 7
+Option removed: o6, at trial: 49
+Option removed: o5, at trial: 49
+Option removed: o8, at trial: 49
+Option removed: o2, at trial: 56
+Option removed: o7, at trial: 175
+Option removed: o9, at trial: 224
+Option removed: o3, at trial: 1553
+Option removed: o16, at trial: 1564
+Option removed: o14, at trial: 1564
+Option removed: o15, at trial: 1564
+Option removed: o4, at trial: 1987
+Option removed: o1, at trial: 2425

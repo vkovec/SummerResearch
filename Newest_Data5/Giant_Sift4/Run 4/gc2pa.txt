@@ -1,0 +1,8 @@
+Removed state: 98, at trial 320
+Removed state: 89, at trial 325
+Removed state: 88, at trial 328
+Removed state: 97, at trial 339
+Removed state: 79, at trial 342
+Removed state: 96, at trial 392
+Removed state: 87, at trial 639
+Removed state: 78, at trial 642

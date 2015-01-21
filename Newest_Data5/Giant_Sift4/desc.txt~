@@ -1,0 +1,4 @@
+lambda decreased by 1/(Math.log(counter+1.001));
+reward (not Q values) for primitive actions divided by 2 (reward for options remains untouched)
+
+Run 4 -> instead the Q values for primitive actions are divided by 1.1

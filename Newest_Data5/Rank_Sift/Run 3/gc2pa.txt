@@ -1,0 +1,32 @@
+Option left: o6, with rank: 430.0
+Option left: o5, with rank: 420.0
+Option left: o4, with rank: 14.0
+Option left: o3, with rank: 79.0
+Option left: o2, with rank: 14.0
+Option left: o1, with rank: 15.0
+Option left: o16, with rank: 44.0
+Option left: o15, with rank: 48.0
+Option left: o14, with rank: 46.0
+Option left: o13, with rank: 14914.0
+Option left: o12, with rank: 26.0
+Option left: o9, with rank: 2113.0
+Option left: o11, with rank: 121.0
+Option left: o8, with rank: 431.0
+Option left: o10, with rank: 14.0
+Option left: o7, with rank: 6729.0
+
+Ranking
+o13
+o7
+o9
+o8
+o6
+o5
+o11
+o3
+o15
+o14
+o16
+o12
+o1
+o4/o2/o10
