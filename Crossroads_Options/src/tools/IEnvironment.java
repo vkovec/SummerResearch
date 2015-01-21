@@ -59,4 +59,11 @@ public interface IEnvironment{
 	 * @param qVals
 	 */
 	public void getQVals(double[][] qVals);
+	
+	/**
+	 * Remove an option and replace it with a new one.
+	 * @param op the option to remove
+	 * @return the new option
+	 */
+	public Option replaceOption(String op);
 }

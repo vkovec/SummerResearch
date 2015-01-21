@@ -455,4 +455,10 @@ public class Environment implements IEnvironment{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Option replaceOption(String op) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

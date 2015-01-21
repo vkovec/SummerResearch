@@ -17,6 +17,8 @@ public abstract class Agent{
 	private boolean isI = false;
 	protected boolean isEmpty = false;
 	
+	protected boolean keepAddingOptions = false; //true if we want to continually add options as we go
+	
 	//temporary
 	protected double[][] ps;
 	public double alpha = 10.0;
@@ -53,6 +55,9 @@ public abstract class Agent{
 	protected int timeSteps = 1000;
 	
 	protected String[] actions = new String[20];
+	
+	//the ranking of each option over time
+	protected double[] optionRank;
 	
 	//for stochastic policies
 	//(i.e. probability of taking action a in state s)
@@ -96,6 +101,8 @@ public abstract class Agent{
 		for(int j = 0; j < actions.length; j++){
 			System.out.println(actions[j]);
 		}
+		
+		optionRank = new double[env.howManyOptions()];
 	}
 	
 	public Agent(int n){
@@ -333,11 +340,6 @@ public abstract class Agent{
 			writer.print(sPolicy[s][i] + ",");
 			qWriter.print(qValues[s][i] + ",");
 		}
-	}
-	
-	public void printAverages(){
-		//assuming number of eps == number of timeSteps
-		
 	}
 	
 	public void randomizePolicy(double[][] policy){

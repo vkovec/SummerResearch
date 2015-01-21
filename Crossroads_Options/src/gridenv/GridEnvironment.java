@@ -1,6 +1,9 @@
 package gridenv;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -33,15 +36,18 @@ public class GridEnvironment implements IEnvironment{
 	private State[][] states;
 	private int gridSize;
 	
+	//just a random number generator
 	private Random rand = new Random();
 
 	private String[] actions = {"up", "down", "left", "right"};
 	
 	//list of options
 	private Hashtable<String, Option> options;
+	private int optionNum = 0; //how many options there have been
 	
 	private State currentState = null;
 	
+	//link to qValues in the Agent class
 	private double[][] qValues = null;
 	
 	//n is the grid size
@@ -111,119 +117,7 @@ public class GridEnvironment implements IEnvironment{
 		int size = (gridSize*gridSize)/2 + 1;
 		
 		if(!isI){
-			//two different options, one for getting to the entrance of each corridor
-			/*int[] ini = new int[9];
-			String[] pol = new String[9];
-		
-			ini[0] = 0;
-			ini[1] = 1;
-			ini[2] = 2;
-			ini[3] = 10;
-			ini[4] = 11;
-			ini[5] = 12;
-			ini[6] = 20;
-			ini[7] = 21;
-			ini[8] = 22;
-		
-			for(int i = 0; i < ini.length; i++){
-				if(i%3 == 0){
-					pol[i] = "down";
-				}
-				else{
-					pol[i] = "left";
-				}
-			}
-		
-			options.put("odown", new Option("odown", size, ini, pol));
-	
-			pol = new String[9];
-			
-			for(int i = 0; i < ini.length; i++){
-				if(i < 6){
-					pol[i] = "right";
-				}
-				else{
-					pol[i] = "up";
-				}
-			}
-		
-			options.put("oright", new Option("oright", size, ini, pol));*/
-		/*
-			//recreating experiment with 3 random options
-			int[] ini = new int[8];
-			String[] pol = new String[8];
-			
-			ini[0] = 28;
-			ini[1] = 18;
-			ini[2] = 19;
-			ini[3] = 29;
-			ini[4] = 39;
-			ini[5] = 8;
-			ini[6] = 7;
-			ini[7] = 17;
 
-			pol[0] = "up";
-			pol[1] = "up";
-			pol[2] = "left";
-			pol[3] = "left";
-			pol[4] = "up";
-			pol[5] = "left";
-			pol[6] = "left";
-			pol[7] = "up";
-			
-			options.put("o1", new Option("o1", size, ini, pol));
-			
-			ini = new int[9];
-			pol = new String[9];
-			
-			ini[0] = 65;
-			ini[1] = 66;
-			ini[2] = 56;
-			ini[3] = 55;
-			ini[4] = 54;
-			ini[5] = 53;
-			ini[6] = 52;
-			ini[7] = 51;
-			ini[8] = 50;
-
-			pol[0] = "up";
-			pol[1] = "up";
-			pol[2] = "left";
-			pol[3] = "left";
-			pol[4] = "left";
-			pol[5] = "left";
-			pol[6] = "left";
-			pol[7] = "left";
-			pol[8] = "up";
-			
-			options.put("o2", new Option("o2", size, ini, pol));
-			
-			ini = new int[9];
-			pol = new String[9];
-			
-			ini[0] = 58;
-			ini[1] = 68;
-			ini[2] = 69;
-			ini[3] = 78;
-			ini[4] = 48;
-			ini[5] = 59;
-			ini[6] = 79;
-			ini[7] = 49;
-			ini[8] = 39;
-
-			pol[0] = "up";
-			pol[1] = "up";
-			pol[2] = "left";
-			pol[3] = "up";
-			pol[4] = "up";
-			pol[5] = "up";
-			pol[6] = "up";
-			pol[7] = "left";
-			pol[8] = "left";
-			
-			options.put("o3", new Option("o3", size, ini, pol));
-			//
-			 */
 		}
 		
 		else{
@@ -294,6 +188,15 @@ public class GridEnvironment implements IEnvironment{
 			for(Option o : ops){
 				options.put(o.getName(), o);
 			}
+			
+			//initialize 16 random options
+			/*Option o;
+			for(int i = 0; i < 5; i ++){
+				o = createRandomOption(size);
+				options.put(o.getName(), o);
+			}
+			
+			oWriter.close();*/
 		}
 		else{
 			Option o = createRandomOption(size);
@@ -332,7 +235,8 @@ public class GridEnvironment implements IEnvironment{
 		
 		//assuming we won't be deleting any options after they have
 		//been created
-		String name = "o" + (options.size()+1);
+		String name = "o" + (/*options.size()+1*/+optionNum);
+		optionNum++;
 		
 		oWriter.println(name);
 			
@@ -345,7 +249,8 @@ public class GridEnvironment implements IEnvironment{
 		int[] iniSet;
 		int goal = 0;
 		if(!isEmpty){
-			iniSet = new int[rand.nextInt(16) + 15];
+			//iniSet = new int[rand.nextInt(16) + 15];
+			iniSet = new int[rand.nextInt(4)+10]; //at least 10, at most 14
 		}
 		else{
 		
@@ -536,6 +441,29 @@ public class GridEnvironment implements IEnvironment{
 		return currBest;
 	}
 	//
+	
+	/**
+	 * Remove an option and replace it with a new one.
+	 * @param op the option to remove
+	 * @return the new option
+	 */
+	public Option replaceOption(String op){
+		options.remove(op); //remove the option we no longer want
+		
+		Option o; //new option
+		
+		try {
+			oWriter = new PrintWriter(new BufferedWriter(new FileWriter("options.txt", true)));
+		} catch (IOException e) { e.printStackTrace(); }
+		
+		int size = (gridSize*gridSize)/2 + 1;
+		o = createRandomOption(size);
+		options.put(o.getName(), o);
+		
+		oWriter.close();
+		return o;
+	}
+	
 	
 	//initializes the obstacles in the environment
 	//change this to change how the environment looks

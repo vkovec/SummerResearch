@@ -11,6 +11,7 @@ import tools.State;
 
 public class InfTheoryLearning extends Agent{
 
+	//should calculations be made at squares which are obstacles
 	private boolean withObs = false;
 	
 	//the probability distribution for states and actions
@@ -381,23 +382,11 @@ public class InfTheoryLearning extends Agent{
 			double distDiff = Math.abs(getDistrDiff(q, qPrev));
 			double prevDistDiff = distDiff+1;
 			
-			double bestDistDiff = distDiff;
-			double[][] bestPol = q;
-			
 			//also stop if the difference between the two distributions starts increasing
 			//or stays the same (infinite loop otherwise)
 			while(distDiff > 0.5){ 
 				//distribution differences are too high (can only find local optimum anyway)
 				if(distDiff >= prevDistDiff){
-					/*if(distDiff < bestDistDiff){
-						bestDistDiff = distDiff;
-						bestPol = copyArray(q);
-					}
-					
-					//try starting with a different q
-					randomPolicy(q);
-					count++;*/
-					
 					break;
 				}
 				
@@ -589,13 +578,7 @@ public class InfTheoryLearning extends Agent{
 				prevDistDiff = distDiff;
 				distDiff = getDistrDiff(q,qPrev);
 			}
-			
-			/*if(bestDistDiff > distDiff){
-				sPolicy = copyArray(bestPol);
-			}
-			else{*/
-				sPolicy = copyArray(q);
-			//}
+			sPolicy = copyArray(q);
 			
 			//d) choose action a (using pi) and obtain reward and next state
 			action = selectAction(state);
@@ -691,7 +674,7 @@ public class InfTheoryLearning extends Agent{
 				}
 			}*/
 			
-			//if probability of option being taken goes below 0.01 at every state where it can be taken
+			//if probability of option being taken goes below 0.001 at every state where it can be taken
 			//we remove this option completely and renormalize all policies that can take it
 			if (!isEmpty) {
 				//pjWriter.println("");
@@ -699,7 +682,7 @@ public class InfTheoryLearning extends Agent{
 					if (actions[a].charAt(0) == 'o') {
 						Option o = env.getOption(actions[a]);
 						
-						boolean isTaken = false;
+	/*					boolean isTaken = false;
 
 						//pjWriter.println("\n" + actions[a] + " - ");
 						int[] ini = o.getIni();
@@ -717,7 +700,7 @@ public class InfTheoryLearning extends Agent{
 						if (isTaken || ini.length < 1) {
 							continue;
 						}
-
+						
 						//remove the option from all policies
 						double norm;
 						for (int j = 0; j < ini.length; j++) {
@@ -738,8 +721,40 @@ public class InfTheoryLearning extends Agent{
 
 						//the option that was removed
 						paWriter.println("Option removed: " + o.getName()
-								+ ", at trial: " + counter);
-						System.out.println("Option removed: " + o.getName() + ", at trial: " + counter);
+								+ ", at trial: " + counter + ", with rank: "+ optionRank[a-4]);
+						System.out.println("Option removed: " + o.getName() + ", at trial: " + counter
+								+ ", with rank: "+ optionRank[a-4]);
+	*/					
+						/*
+						 * FOR CONTINUALLY ADDING OPTIONS:
+						 * 	- remove this option completely from the list and replace it with
+						 * 		a new random option
+						 *  - change the actions array to have the name of the new option replace
+						 *  	the name of the old option
+						 *  - renormalize the policy for the options old initiation set, and give a
+						 *  	random policy to the states of the options new initation set
+						 *  	(to give this new option a fair chance)
+						 *  - options are rated according to how long they last and how many
+						 *  	states take them at each time step. The rating is printed out when
+						 *  	the option is removed. To help know which options are good.
+						 */
+						if(keepAddingOptions){
+							Option newOp = env.replaceOption(o.getName());
+							actions[a] = newOp.getName(); //name of new option replaces name of old option
+							optionRank[a-4] = 0;
+							
+							//give a random policy to states in the new initiation set
+							//uniform for now
+							double prob = 1.0/(actions.length);
+							int[] newIni = newOp.getIni();
+							for(int k = 0; k < newIni.length; k++){
+								for(int ac = 0; ac < actions.length; ac++){
+									sPolicy[newIni[k]][ac] = prob;
+								}
+							}
+							
+							System.out.println("Option " + newOp.getName() + " added at trial: " + counter);
+						}
 					}
 				}
 			}
@@ -788,6 +803,7 @@ public class InfTheoryLearning extends Agent{
 		}
 		
 		//print for each option the number of states that are still taking that option
+		//also calculate ranking of each option
 		pjWriter.println("");
 		for (int a = 0; a < actions.length; a++) {
 			if (actions[a].charAt(0) == 'o') {
@@ -801,9 +817,19 @@ public class InfTheoryLearning extends Agent{
 					if (sPolicy[ini[j]][a] > 0.001) {
 						//this option is taken in this state
 						count++;
+						
+						//calculate rank of option
+						/*sum = 0.0;
+						for(int ac = 0; ac < 4; ac++){
+							sum += sPolicy[ini[j]][ac];
+						}
+						optionRank[a=4] += sPolicy[ini[j]][a]/(1-sum);*/
 					}
 				}
 				pjWriter.print(count + ",");
+				
+				//calculate rank of option
+				optionRank[a-4] = optionRank[a-4] + count;
 			}
 		}
 		
@@ -818,6 +844,13 @@ public class InfTheoryLearning extends Agent{
 		lambda = 1/(Math.log(counter+1.001));
 		//lambda = 1/(Math.log(counter+2));
 		counter++;
+		
+		//want to know the rank of the remaining options
+		if(counter == 2999){
+			for(int i = 4; i < actions.length; i++){
+				paWriter.println("Option left: " + actions[i] + ", with rank: "+ optionRank[i-4]);
+			}
+		}
 	}
 	
 	
