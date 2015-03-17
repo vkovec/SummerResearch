@@ -1,6 +1,7 @@
 package agent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
@@ -224,22 +225,6 @@ public class InfTheoryLearning extends Agent{
 		return sum;
 	}
 	
-	//calculates the difference between two probability distributions
-	/*private double getDistrDiff(double[][] d1, double[][] d2){
-		double sum = 0;
-		for(int x = 0; x < d1.length; x++){
-			for(int a = 0; a < actions.length; a++){
-				if(d1[x][a] != 0 && d2[x][a] != 0){
-					sum += d1[x][a]*(Math.log(d1[x][a]/d2[x][a])/Math.log(2));
-				}
-				else if(d2[x][a] == 0){
-					sum = Double.POSITIVE_INFINITY;
-				}
-			}
-		}
-		return sum;
-	}*/
-	
 	//learn using deterministic annealing
 	/*@Override
 	public void learn(int steps){
@@ -344,27 +329,6 @@ public class InfTheoryLearning extends Agent{
 			for(int x = 0; x < q.length; x++){
 				ps[i][x] = ps[i][x]/2;
 			}
-			/*if(i > 0){
-				for(int j = 0; j < pj.length; j++){
-					if(!withObs && env.isObstacle(j)){
-						continue;
-					}
-					
-					double sum = 0;
-					for(int x = 0; x < pj.length; x++){
-						//don't want to include obstacles in the calculation
-						//as it is as if they are not states
-						if(!withObs && env.isObstacle(x)){
-							continue;
-						}
-						
-						for(int a = 0; a < actions.length; a++){
-							sum += p[x][a][j]*sPolicy[x][a]*ps[i-1][x];
-						}
-					}
-					ps[i][j] = sum;
-				}
-			}*/
 			
 			//b)
 			
@@ -516,39 +480,6 @@ public class InfTheoryLearning extends Agent{
 					
 					for(int a = 0; a < actions.length; a++){
 						
-						//set Z
-						/*double sum = 0;
-						for(int k = 0; k < actions.length; k++){
-							sum += Math.exp((1/lambda)*(D[x][k] + alpha*qValues[x][k]) + Math.log(pa[k]));
-						}
-						Z[x] = sum;
-						
-						double exp = Math.exp((1/lambda)*(D[x][a] + alpha*qValues[x][a]) + Math.log(pa[a]));
-
-						if(Double.isInfinite(Z[x]) && Double.isInfinite(exp)){
-						//	System.out.println("q: " + q[x][a] + ", Z: " + Z[x] + ", D: " + D[x][a]
-						//			+ ", lambda: " + lambda);
-							q[x][a] = 1;
-						}
-						else{
-							q[x][a] = (exp)/Z[x];
-						}*/
-						
-						//attempt to avoid inf/inf problem using logs
-						//doesn't completely solve the problem..numbers still become too large
-						//set Z
-						/*double temp;
-						double log0 = Math.log(pa[0]) + ((1/lambda)*(D[x][0] + alpha*qValues[x][0]));
-						double logZ = 1;
-						for(int k = 1; k < actions.length; k++){
-							temp = ((1/lambda)*(D[x][k] + alpha*qValues[x][k]));
-							logZ += Math.exp((Math.log(pa[k]) + temp) - log0);
-						}
-						logZ = Math.log(logZ);
-						logZ += log0;
-						Z[x] = logZ;*/
-						
-						
 						//if the current action is an option that is not in the list
 						if(actions[a].charAt(0) == 'o' && !contains(acts, actions[a])){
 							q[x][a] = 0;
@@ -663,16 +594,6 @@ public class InfTheoryLearning extends Agent{
 					+ Math.pow(0.9, result.getTimeSteps())*getMaxQ(result.getState().getName()) 
 					- qValues[state][index]);*/
 
-			//dynamic programming attempt
-			/*qValues[state][index] = 0;
-			for(int x = 0; x < qValues.length; x++){
-				if(x == goalState){ //should be the states around the goal
-					qValues[state][index] += p[state][index][x]*(1 + 0.9*getMaxQ(x));
-				}
-				else{
-					qValues[state][index] += p[state][index][x]*(0 + 0.9*getMaxQ(x));
-				}
-			}*/
 			
 			//if probability of option being taken goes below 0.001 at every state where it can be taken
 			//we remove this option completely and renormalize all policies that can take it
@@ -681,8 +602,8 @@ public class InfTheoryLearning extends Agent{
 				for (int a = 0; a < actions.length; a++) {
 					if (actions[a].charAt(0) == 'o') {
 						Option o = env.getOption(actions[a]);
-						
-	/*					boolean isTaken = false;
+	///*					
+						boolean isTaken = false;
 
 						//pjWriter.println("\n" + actions[a] + " - ");
 						int[] ini = o.getIni();
@@ -715,7 +636,15 @@ public class InfTheoryLearning extends Agent{
 								sPolicy[ini[j]][k] = sPolicy[ini[j]][k] / norm;
 							}
 						}
-
+						
+						//set all Q-values in it's initiation set to 0
+						for(int j = 0; j < ini.length; j++){
+							/*for(int ac = 0; ac < actions.length; ac++){
+								qValues[ini[j]][ac] = 0;
+							}*/
+							qValues[ini[j]][a] = 0;
+						}
+						
 						//remove the option completely so it cannot be taken again (just make its initiation set empty?)
 						o.setIni(new int[0]);
 
@@ -724,7 +653,7 @@ public class InfTheoryLearning extends Agent{
 								+ ", at trial: " + counter + ", with rank: "+ optionRank[a-4]);
 						System.out.println("Option removed: " + o.getName() + ", at trial: " + counter
 								+ ", with rank: "+ optionRank[a-4]);
-	*/					
+	//*/					
 						/*
 						 * FOR CONTINUALLY ADDING OPTIONS:
 						 * 	- remove this option completely from the list and replace it with
@@ -750,7 +679,9 @@ public class InfTheoryLearning extends Agent{
 							for(int k = 0; k < newIni.length; k++){
 								for(int ac = 0; ac < actions.length; ac++){
 									sPolicy[newIni[k]][ac] = prob;
+									//qValues[newIni[k]][ac] = 0; //reinitialize Q-values as well
 								}
+								qValues[newIni[k]][a] = 0; //reinitialize Q-values as well
 							}
 							
 							System.out.println("Option " + newOp.getName() + " added at trial: " + counter);
@@ -817,13 +748,6 @@ public class InfTheoryLearning extends Agent{
 					if (sPolicy[ini[j]][a] > 0.001) {
 						//this option is taken in this state
 						count++;
-						
-						//calculate rank of option
-						/*sum = 0.0;
-						for(int ac = 0; ac < 4; ac++){
-							sum += sPolicy[ini[j]][ac];
-						}
-						optionRank[a=4] += sPolicy[ini[j]][a]/(1-sum);*/
 					}
 				}
 				pjWriter.print(count + ",");
@@ -831,6 +755,110 @@ public class InfTheoryLearning extends Agent{
 				//calculate rank of option
 				optionRank[a-4] = optionRank[a-4] + count;
 			}
+		}
+		
+		//replace the lowest ranking option only (every 300 trials)
+		if(replaceLowestRanking && counter%300 == 0){
+			double lrank = Double.POSITIVE_INFINITY;
+			int index = -1;
+			Option lowest;
+			//find lowest ranking option
+			for(int i = 0; i < optionRank.length; i++){
+				if(optionRank[i] < lrank){
+					lrank = optionRank[i];
+					index = i+4;
+				}
+			}
+			
+			//remove option
+			lowest = env.getOption(actions[index]);
+			lowest.setIni(new int[0]);
+			
+			paWriter.println("Option removed: " + lowest.getName()
+					+ ", at trial: " + counter + ", with rank: "+ optionRank[index-4]);
+			System.out.println("Option removed: " + lowest.getName() + ", at trial: " + counter
+					+ ", with rank: "+ optionRank[index-4]);
+			
+			//add new option
+			Option newOp = env.replaceOption(lowest.getName());
+			actions[index] = newOp.getName(); //name of new option replaces name of old option
+			optionRank[index-4] = 0;
+			
+			//give a random policy to states in the new initiation set
+			//uniform for now
+			double prob = 1.0/(actions.length);
+			int[] newIni = newOp.getIni();
+			for(int k = 0; k < newIni.length; k++){
+				for(int ac = 0; ac < actions.length; ac++){
+					sPolicy[newIni[k]][ac] = prob;
+				}
+			}
+			
+			System.out.println("Option " + newOp.getName() + " added at trial: " + counter);
+		}
+		
+		//find and print the greedy policy with only top 4 options included
+		if(!keepAddingOptions && counter%500 == 0){
+			//need to verify that this works
+			
+			//determine top 4 options based on rank
+			int currCount = 0; //how many slots are filled
+			int currLowest = -1; //indice of the current lowest ranked option in top4
+			int[] top4 = {-1,-1,-1,-1}; //indices of top 4 options
+			for(int i = 4; i < actions.length; i++){
+				if(currCount < 4){
+					top4[currCount] = i;
+					currCount++;
+					
+					if(currLowest > -1){
+						if(optionRank[i-4] < optionRank[currLowest-4]){
+							currLowest = i;
+						}
+					}
+					else{
+						currLowest = i;
+					}
+				}
+				
+				//if we found an option ranked higher than the currently lowest ranked option
+				//in top4, then replace currLowest with i
+				else if((optionRank[currLowest-4] < optionRank[i-4])){
+					for(int j = 0; j < top4.length; j++){
+						if(top4[j] == currLowest){
+							top4[j] = i;
+							break;
+						}
+					}
+					//find the new currLowest
+					for(int j = 0; j < top4.length; j++){
+						if(optionRank[top4[j]-4] < optionRank[currLowest-4]){
+							currLowest = top4[j];
+						}
+					}
+				}
+			}
+			
+			
+			String[] greedyPol = new String[sPolicy.length]; //greedy deterministic policy
+			//for each state, which is not an obstacle, pick the action with the highest
+			//Q value for the policy (ignoring options which are not in the top 4)
+			for(int x = 0; x < sPolicy.length; x++){
+				if(!env.isObstacle(x)){
+					int bestAct = -1;
+					double bestQ = -1;
+					for(int a = 0; a < actions.length; a++){
+						//check that this works
+						if(a < 4 || Arrays.asList(top4).contains(a)){
+							if(qValues[x][a] > bestQ){
+								bestAct = a;
+								bestQ = qValues[x][a];
+							}
+						}
+					}
+					greedyPol[x] = actions[bestAct]; //print instead of putting in array
+				}
+			}
+			
 		}
 		
 		//print D values to a file
@@ -852,7 +880,6 @@ public class InfTheoryLearning extends Agent{
 			}
 		}
 	}
-	
 	
 	//need to also account for options
 	/**

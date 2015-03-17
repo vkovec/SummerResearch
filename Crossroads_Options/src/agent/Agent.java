@@ -17,7 +17,8 @@ public abstract class Agent{
 	private boolean isI = false;
 	protected boolean isEmpty = false;
 	
-	protected boolean keepAddingOptions = false; //true if we want to continually add options as we go
+	protected boolean keepAddingOptions = true; //true if we want to continually add options as we go
+	protected boolean replaceLowestRanking = false; //true if we want to replace the lowest ranking option at each trial
 	
 	//temporary
 	protected double[][] ps;
@@ -36,7 +37,7 @@ public abstract class Agent{
 	//the state we want to examine more closely
 	protected int stat;
 	
-	protected int[] actionDist = new int[20];
+	protected int[] actionDist = new int[9];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -45,6 +46,7 @@ public abstract class Agent{
 	protected PrintWriter pjWriter;
 	protected PrintWriter DWriter;
 	protected PrintWriter polWriter;
+	protected PrintWriter returnWriter;
 	
 	protected IEnvironment env;
 	
@@ -54,7 +56,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[20];
+	protected String[] actions = new String[9];
 	
 	//the ranking of each option over time
 	protected double[] optionRank;
@@ -112,6 +114,7 @@ public abstract class Agent{
 				writer = new PrintWriter("gc2.txt", "UTF-8");
 				qWriter = new PrintWriter("gc2q.txt", "UTF-8");
 				polWriter = new PrintWriter("gc2pol.txt", "UTF-8");
+				returnWriter = new PrintWriter("return.txt", "UTF-8");
 				
 				psWriter = new PrintWriter("gc2ps.txt", "UTF-8");
 				paWriter = new PrintWriter("gc2pa.txt", "UTF-8");
@@ -275,6 +278,13 @@ public abstract class Agent{
 	
 			if(!average){
 				printPolicyToFile(stat);
+				
+				//calculate the return and print that to a file
+				double r = 0;	
+				for(int a = 0; a < actions.length; a++){
+					r += sPolicy[0][a]*qValues[0][a];
+				}
+				returnWriter.println(r);
 			}
 			else{
 				//average the policy and qValues for each trial
@@ -331,6 +341,7 @@ public abstract class Agent{
 		pjWriter.close();
 		DWriter.close();
 		polWriter.close();
+		returnWriter.close();
 	}
 	
 	public void printPolicyToFile(int s){

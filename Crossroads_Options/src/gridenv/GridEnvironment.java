@@ -68,14 +68,14 @@ public class GridEnvironment implements IEnvironment{
 
 		setObstacles();
 		
-		if(isEmpty){
+		//if(isEmpty){
 			try {
 				oWriter = new PrintWriter("options.txt", "UTF-8");
 			} 
 			catch (FileNotFoundException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		}
+		//}
 		
 		initializeOptions();
 		
@@ -183,20 +183,20 @@ public class GridEnvironment implements IEnvironment{
 		
 		if(!isEmpty){
 			//for reading in options from a file
-			OptionReader reader = new OptionReader();
+			/*OptionReader reader = new OptionReader();
 			ArrayList<Option> ops = reader.getOptions();
 			for(Option o : ops){
 				options.put(o.getName(), o);
-			}
+			}*/
 			
 			//initialize 16 random options
-			/*Option o;
+			Option o;
 			for(int i = 0; i < 5; i ++){
 				o = createRandomOption(size);
 				options.put(o.getName(), o);
 			}
 			
-			oWriter.close();*/
+			oWriter.close();
 		}
 		else{
 			Option o = createRandomOption(size);
@@ -337,6 +337,7 @@ public class GridEnvironment implements IEnvironment{
 		//figure out how to give subgoals
 		//maybe increase the reward at the subgoal states (for now only the center state)
 		//and remove the reward at the actual goal (or just don't set an actual goal)
+		getState(99).setReward(0); //remove the reward at the actual goal
 		getState(n).setReward(1);
 		
 		//use the modified Q-learning algorithm and above method to
@@ -413,6 +414,7 @@ public class GridEnvironment implements IEnvironment{
 		
 		//set the reward for the subgoal states back to 0
 		getState(n).setReward(0);
+		getState(99).setReward(1); //set the reward at the goal back to 1
 		
 		opLearn = false;
 	}
