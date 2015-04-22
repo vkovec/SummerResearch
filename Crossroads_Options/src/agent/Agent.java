@@ -17,7 +17,7 @@ public abstract class Agent{
 	private boolean isI = false;
 	protected boolean isEmpty = false;
 	
-	protected boolean keepAddingOptions = true; //true if we want to continually add options as we go
+	protected boolean keepAddingOptions = false; //true if we want to continually add options as we go
 	protected boolean replaceLowestRanking = false; //true if we want to replace the lowest ranking option at each trial
 	
 	//temporary
@@ -37,7 +37,7 @@ public abstract class Agent{
 	//the state we want to examine more closely
 	protected int stat;
 	
-	protected int[] actionDist = new int[9];
+	protected int[] actionDist = new int[20];
 	
 	protected PrintWriter writer;
 	protected PrintWriter qWriter;
@@ -56,7 +56,7 @@ public abstract class Agent{
 	
 	protected int timeSteps = 1000;
 	
-	protected String[] actions = new String[9];
+	protected String[] actions = new String[20];
 	
 	//the ranking of each option over time
 	protected double[] optionRank;
@@ -279,12 +279,14 @@ public abstract class Agent{
 			if(!average){
 				printPolicyToFile(stat);
 				
-				//calculate the return and print that to a file
-				double r = 0;	
-				for(int a = 0; a < actions.length; a++){
-					r += sPolicy[0][a]*qValues[0][a];
+				if(keepAddingOptions){
+					//calculate the return and print that to a file
+					double r = 0;	
+					for(int a = 0; a < actions.length; a++){
+						r += sPolicy[0][a]*qValues[0][a];
+					}
+					returnWriter.println(r);
 				}
-				returnWriter.println(r);
 			}
 			else{
 				//average the policy and qValues for each trial
@@ -346,10 +348,15 @@ public abstract class Agent{
 	
 	public void printPolicyToFile(int s){
 		writer.println("");
-		qWriter.println("");
+		//TEMPORARY
+		if(replaceLowestRanking || keepAddingOptions){
+			qWriter.println("");
+		}
 		for(int i = 0; i < actions.length; i++){
 			writer.print(sPolicy[s][i] + ",");
-			qWriter.print(qValues[s][i] + ",");
+			if(replaceLowestRanking || keepAddingOptions){
+				qWriter.print(qValues[s][i] + ",");
+			}
 		}
 	}
 	

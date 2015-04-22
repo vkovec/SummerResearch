@@ -68,14 +68,14 @@ public class GridEnvironment implements IEnvironment{
 
 		setObstacles();
 		
-		//if(isEmpty){
+		if(isEmpty){
 			try {
 				oWriter = new PrintWriter("options.txt", "UTF-8");
 			} 
 			catch (FileNotFoundException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		//}
+		}
 		
 		initializeOptions();
 		
@@ -183,20 +183,20 @@ public class GridEnvironment implements IEnvironment{
 		
 		if(!isEmpty){
 			//for reading in options from a file
-			/*OptionReader reader = new OptionReader();
+			OptionReader reader = new OptionReader();
 			ArrayList<Option> ops = reader.getOptions();
 			for(Option o : ops){
 				options.put(o.getName(), o);
-			}*/
+			}
 			
 			//initialize 16 random options
-			Option o;
-			for(int i = 0; i < 5; i ++){
+			/*Option o;
+			for(int i = 0; i < 16; i ++){
 				o = createRandomOption(size);
 				options.put(o.getName(), o);
 			}
 			
-			oWriter.close();
+			oWriter.close();*/
 		}
 		else{
 			Option o = createRandomOption(size);

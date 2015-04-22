@@ -602,7 +602,7 @@ public class InfTheoryLearning extends Agent{
 				for (int a = 0; a < actions.length; a++) {
 					if (actions[a].charAt(0) == 'o') {
 						Option o = env.getOption(actions[a]);
-	///*					
+	/*					
 						boolean isTaken = false;
 
 						//pjWriter.println("\n" + actions[a] + " - ");
@@ -639,9 +639,9 @@ public class InfTheoryLearning extends Agent{
 						
 						//set all Q-values in it's initiation set to 0
 						for(int j = 0; j < ini.length; j++){
-							/*for(int ac = 0; ac < actions.length; ac++){
-								qValues[ini[j]][ac] = 0;
-							}*/
+							//for(int ac = 0; ac < actions.length; ac++){
+							//	qValues[ini[j]][ac] = 0;
+							//}
 							qValues[ini[j]][a] = 0;
 						}
 						
@@ -653,7 +653,7 @@ public class InfTheoryLearning extends Agent{
 								+ ", at trial: " + counter + ", with rank: "+ optionRank[a-4]);
 						System.out.println("Option removed: " + o.getName() + ", at trial: " + counter
 								+ ", with rank: "+ optionRank[a-4]);
-	//*/					
+	*/					
 						/*
 						 * FOR CONTINUALLY ADDING OPTIONS:
 						 * 	- remove this option completely from the list and replace it with
@@ -803,9 +803,12 @@ public class InfTheoryLearning extends Agent{
 			
 			//determine top 4 options based on rank
 			int currCount = 0; //how many slots are filled
-			int currLowest = -1; //indice of the current lowest ranked option in top4
+			int currLowest = -1; //index of the current lowest ranked option in top4
 			int[] top4 = {-1,-1,-1,-1}; //indices of top 4 options
 			for(int i = 4; i < actions.length; i++){
+				
+				System.out.print(actions[i] + ": " + optionRank[i-4] + ", ");
+				
 				if(currCount < 4){
 					top4[currCount] = i;
 					currCount++;
@@ -822,7 +825,7 @@ public class InfTheoryLearning extends Agent{
 				
 				//if we found an option ranked higher than the currently lowest ranked option
 				//in top4, then replace currLowest with i
-				else if((optionRank[currLowest-4] < optionRank[i-4])){
+				else if(optionRank[currLowest-4] < optionRank[i-4]){
 					for(int j = 0; j < top4.length; j++){
 						if(top4[j] == currLowest){
 							top4[j] = i;
@@ -830,14 +833,20 @@ public class InfTheoryLearning extends Agent{
 						}
 					}
 					//find the new currLowest
-					for(int j = 0; j < top4.length; j++){
-						if(optionRank[top4[j]-4] < optionRank[currLowest-4]){
-							currLowest = top4[j];
+					int min_index = top4[0];
+					for(int j = 1; j < top4.length; j++){
+						if(optionRank[top4[j]-4] < optionRank[min_index-4]){
+							min_index = top4[j];
 						}
 					}
+					currLowest = min_index;
 				}
 			}
-			
+			System.out.println();
+			for(int t = 0; t < 4; t++){
+				System.out.print(actions[top4[t]] + ", ");
+			}
+			System.out.println("Lowest: " + currLowest);
 			
 			String[] greedyPol = new String[sPolicy.length]; //greedy deterministic policy
 			//for each state, which is not an obstacle, pick the action with the highest
@@ -846,18 +855,39 @@ public class InfTheoryLearning extends Agent{
 				if(!env.isObstacle(x)){
 					int bestAct = -1;
 					double bestQ = -1;
+					//check that this works
+					qWriter.println("\n" + x);
 					for(int a = 0; a < actions.length; a++){
-						//check that this works
-						if(a < 4 || Arrays.asList(top4).contains(a)){
+						if(a < 4 /*|| Arrays.asList(top4).contains(a)*/){
+							qWriter.print(actions[a] + ": " + qValues[x][a] + ", ");
 							if(qValues[x][a] > bestQ){
 								bestAct = a;
 								bestQ = qValues[x][a];
 							}
 						}
+						else{
+							for(int t = 0; t < top4.length; t++){
+								if(top4[t] == a){
+									qWriter.print(actions[a] + ": " + qValues[x][a] + ", ");
+									if(qValues[x][a] > bestQ){
+										bestAct = a;
+										bestQ = qValues[x][a];
+									}
+									break;
+								}
+							}
+							
+						}
 					}
 					greedyPol[x] = actions[bestAct]; //print instead of putting in array
 				}
 			}
+			System.out.println();
+			//print the greedyPol to a file (just use return file for now)
+			for(int x = 0; x < greedyPol.length; x++){
+				returnWriter.println(x + ":" + greedyPol[x]);
+			}
+			returnWriter.println();
 			
 		}
 		
